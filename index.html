@@ -1058,37 +1058,87 @@ body{min-height:100svh;overflow-x:clip}
   .modal-native-field input[type=time]::-webkit-calendar-picker-indicator,
   .modal-native-field input[type=date]::-webkit-calendar-picker-indicator {cursor:pointer;opacity:.68}
 }
-/* Liquid-glass-inspired, reduced-motion-friendly sliding selection. */
-.tabbar {--selection-index:0;isolation:isolate}
+/* Natural navigation motion: stable circular capsules that compress only horizontally.
+   Translate and scale are separate transform properties, so width and radius never warp. */
+.tabbar,.unified-switch,.modal-tabs {--selection-index:0;isolation:isolate}
 .tabbar::before {
   content:'';position:absolute;z-index:0;pointer-events:none;
-  left:5px;top:5px;bottom:5px;
-  width:calc((100% - 18px) / 3);
+  left:5px;top:5px;bottom:5px;width:calc((100% - 18px) / 3);
   border-radius:999px;background:var(--capsule-selected);
   box-shadow:inset 0 1px 1px #ffffff66,0 1px 3px #0000000b;
   transform:translateX(calc(var(--selection-index) * (100% + 4px)));
-  transition:transform 380ms cubic-bezier(.22,1.14,.28,1), border-radius 260ms ease,filter 260ms ease;
+  scale:1 1;
+  transition:transform 340ms cubic-bezier(.25,.82,.25,1);
   will-change:transform;
 }
-.tabbar.is-sliding::before {border-radius:42% 58% 53% 47% / 50% 51% 49% 50%;filter:saturate(1.2)}
-.tabbar>button {position:relative;z-index:1;transition:color 220ms ease}
-.tabbar>button.active,html[data-theme=dark] .tabbar>button.active {background:transparent;box-shadow:none}
-.unified-switch,.modal-tabs{position:relative;isolation:isolate;--selection-index:0}
+.unified-switch,.modal-tabs {position:relative}
 .unified-switch::before,.modal-tabs::before {
   content:'';position:absolute;pointer-events:none;z-index:0;
   left:4px;top:4px;bottom:4px;width:calc((100% - 10px) / 2);
   background:var(--capsule-selected);border-radius:999px;
   transform:translateX(calc(var(--selection-index) * (100% + 2px)));
-  transition:transform 330ms cubic-bezier(.22,1.12,.3,1),border-radius 240ms ease;
+  scale:1 1;
+  transition:transform 320ms cubic-bezier(.25,.82,.25,1);
+  will-change:transform;
 }
-.unified-switch.is-sliding::before,.modal-tabs.is-sliding::before{border-radius:42% 58% 53% 47% / 50% 51% 49% 50%}
-.unified-switch>button,.modal-tabs>button{position:relative;z-index:1;transition:color 190ms ease}
-.unified-switch>button.active,.modal-tabs>button.active{background:transparent!important;box-shadow:none!important}
-.modal-tabs{background:color-mix(in srgb,var(--panel) 97%,transparent);border:1px solid var(--line);border-radius:999px;padding:4px}
-.modal-tabs>button{border-radius:999px}
-@media(prefers-reduced-motion:reduce){
-  .tabbar::before,.unified-switch::before,.modal-tabs::before{transition:none!important;will-change:auto}
-  .tabbar>button,.unified-switch>button,.modal-tabs>button{transition:none!important}
+@keyframes pill-soft-squeeze {
+  0%,100% {scale:1 1}
+  46% {scale:.95 1}
+}
+.tabbar.is-sliding::before {animation:pill-soft-squeeze 340ms ease-in-out both}
+.unified-switch.is-sliding::before,.modal-tabs.is-sliding::before {animation:pill-soft-squeeze 320ms ease-in-out both}
+.tabbar>button,.unified-switch>button,.modal-tabs>button{
+  position:relative;z-index:1;transition:color 210ms ease;
+}
+.tabbar>button.active,html[data-theme=dark] .tabbar>button.active,
+.unified-switch>button.active,.modal-tabs>button.active{
+  background:transparent!important;box-shadow:none!important;
+}
+.modal-tabs {background:color-mix(in srgb,var(--panel) 97%,transparent);border:1px solid var(--line);border-radius:999px;padding:4px}
+.modal-tabs>button {border-radius:999px}
+/* Restrained visual feedback: subtle page arrival, dialogs, and content changes. */
+@keyframes ui-soft-arrival {
+  from {opacity:.76;transform:translateY(5px)}
+  to   {opacity:1;transform:translateY(0)}
+}
+@keyframes ui-dialog-arrival {
+  from {opacity:.55;transform:translateY(7px) scale(.985)}
+  to   {opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes ui-backdrop-arrival {from{opacity:0}to{opacity:1}}
+.page.active {animation:ui-soft-arrival 210ms ease-out both}
+.modal-pane.active {animation:ui-soft-arrival 180ms ease-out both}
+#calendar-card.content-arriving,#list-card.content-arriving,
+#pay-shifts.content-arriving {animation:ui-soft-arrival 220ms ease-out both}
+.modal-wrap.open,.sync-modal-wrap.show,.copy-wrap.open {animation:ui-backdrop-arrival 170ms ease-out both}
+.modal-wrap.open>.modal,.sync-modal-wrap.show>.sync-modal,.copy-wrap.open>.copy-panel {
+  animation:ui-dialog-arrival 240ms cubic-bezier(.2,.82,.3,1) both;
+}
+button.primary,button.secondary,button.textbtn {
+  transition:transform 135ms ease,background-color 160ms ease,
+             border-color 160ms ease,box-shadow 160ms ease,color 160ms ease;
+}
+button.primary:active,button.secondary:active,button.textbtn:active {transform:scale(.985)}
+.copy-day {transition:background-color 170ms ease,border-color 170ms ease,color 170ms ease}
+.toggle-track {transition:background-color 200ms ease}
+.toggle-track::before {transition:transform 200ms cubic-bezier(.2,.8,.2,1)}
+.gauge-plan,.gauge-done {transition:stroke-dasharray 420ms ease,stroke-dashoffset 420ms ease}
+@media(hover:hover) and (pointer:fine){
+  button.primary:hover{filter:brightness(1.06)}
+  button.secondary:hover{border-color:color-mix(in srgb,var(--blue) 26%,var(--line));}
+  .day:hover,#list-card .date-row:hover{box-shadow:0 3px 13px #18346516}
+}
+@media(prefers-reduced-motion:reduce) {
+  .tabbar::before,.unified-switch::before,.modal-tabs::before {transition:none!important;will-change:auto;animation:none!important;scale:1 1!important}
+  .tabbar>button,.unified-switch>button,.modal-tabs>button,
+  button.primary,button.secondary,button.textbtn,.toggle-track,.toggle-track::before,
+  .copy-day,.gauge-plan,.gauge-done {transition:none!important}
+  .page.active,.modal-pane.active,#calendar-card.content-arriving,#list-card.content-arriving,
+  #pay-shifts.content-arriving,.modal-wrap.open,.sync-modal-wrap.show,.copy-wrap.open,
+  .modal-wrap.open>.modal,.sync-modal-wrap.show>.sync-modal,.copy-wrap.open>.copy-panel {
+    animation:none!important;
+  }
+  button.primary:active,button.secondary:active,button.textbtn:active {transform:none!important}
 }
 
 </style></head><body><main class="shell">
@@ -1460,24 +1510,62 @@ function receiveShortcutCalendar(){
 window.addEventListener('hashchange',receiveShortcutCalendar);
 receiveShortcutCalendar();
 
-// Visual-only sliding pill; app navigation and saved state remain unchanged.
-(function initSlidingSelections(){
+// Natural selection motion and small, non-blocking UI transitions.
+// These handlers only animate existing controls; payroll, storage and iCloud import are unchanged.
+(function initSubtleMotion(){
+  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
   document.querySelectorAll('.tabbar,.unified-switch,.modal-tabs').forEach(group=>{
     const buttons=Array.from(group.querySelectorAll(':scope > button'));
     if(!buttons.length)return;
     let last=-1,clearMotion;
     const paint=()=>{
       const index=Math.max(0,buttons.findIndex(button=>button.classList.contains('active')));
+      if(index===last)return;
+      group.classList.remove('is-sliding');
+      // Reset the squeeze animation before starting another one on rapid taps.
+      if(last!==-1&&!reduceMotion.matches)void group.offsetWidth;
       group.style.setProperty('--selection-index',String(index));
-      if(last!==-1&&last!==index&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
-        group.classList.remove('is-sliding');void group.offsetWidth;
-        group.classList.add('is-sliding');clearTimeout(clearMotion);
+      if(last!==-1&&!reduceMotion.matches){
+        group.classList.add('is-sliding');
+        clearTimeout(clearMotion);
         clearMotion=setTimeout(()=>group.classList.remove('is-sliding'),380);
       }
       last=index;
     };
-    new MutationObserver(paint).observe(group,{subtree:true,attributes:true,attributeFilter:['class']});
+    // Observe the actual tab buttons, not the group's animation class.
+    const observer=new MutationObserver(paint);
+    buttons.forEach(button=>observer.observe(button,{attributes:true,attributeFilter:['class']}));
     paint();
   });
+  const animateArea=(element)=>{
+    if(!element||reduceMotion.matches)return;
+    element.classList.remove('content-arriving');
+    void element.offsetWidth;
+    element.classList.add('content-arriving');
+    element.addEventListener('animationend',()=>element.classList.remove('content-arriving'),{once:true});
+  };
+  // Animations only follow user input, not the periodic calendar auto-refresh.
+  let lastCalendarMode=calMode;
+  for(const id of ['mode-cal','mode-list']){
+    $(id).addEventListener('click',()=>{
+      if(calMode===lastCalendarMode)return;
+      lastCalendarMode=calMode;
+      animateArea($(calMode==='calendar'?'calendar-card':'list-card'));
+    });
+  }
+  let lastPayMode=annual;
+  for(const id of ['monthly','yearly']){
+    $(id).addEventListener('click',()=>{
+      if(annual===lastPayMode)return;
+      lastPayMode=annual;
+      animateArea($('pay-shifts'));
+    });
+  }
+  for(const id of ['prev','next','cal-today']){
+    $(id).addEventListener('click',()=>animateArea($(calMode==='calendar'?'calendar-card':'list-card')));
+  }
+  for(const id of ['pay-prev','pay-next','pay-today']){
+    $(id).addEventListener('click',()=>animateArea($('pay-shifts')));
+  }
 })();
 </script></body></html>
