@@ -1334,6 +1334,23 @@ html[data-theme=dark]{
 #list-card .date-row.future-list .list-time,
 #list-card .date-row.future-list .list-pay,
 #list-card .date-row.future-list .list-status{color:var(--text)!important}
+
+/* Smooth composited selection layer. The static glass border stays still. */
+.tabbar::before,.unified-switch::before,.modal-tabs::before{content:none!important;animation:none!important}
+.tabbar,.unified-switch,.modal-tabs{isolation:isolate}
+.tabbar>.selection-glider,.unified-switch>.selection-glider,.modal-tabs>.selection-glider{
+  position:absolute;pointer-events:none;z-index:0;
+  background:var(--nav-glass-selected);border-radius:7px;
+  transform:translate3d(0,0,0);transform-origin:center center;
+  will-change:transform;backface-visibility:hidden;
+}
+.tabbar>.selection-glider{border-radius:999px}
+.tabbar>button,.unified-switch>button,.modal-tabs>button{position:relative;z-index:1}
+/* Avoid translating whole pages while the tab glider is moving. */
+.page.active{animation:none!important}
+@media(prefers-reduced-motion:reduce){
+ .selection-glider{transition:none!important;animation:none!important;will-change:auto!important}
+}
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -1371,7 +1388,7 @@ html[data-theme=dark]{
   </div>
 </div>
 <div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標（円）</label><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></section>
-<section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>実働</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label><span class="overtime-time-caption">を超えた分</span></div><label class="rate-wage"><span>割増率</span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">1出勤あたり</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">1給与期間あたり</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card default-plan-settings"><h2>勤務予定の初期設定</h2><div class="fields default-plan-grid"><label>開始<span class="default-plan-time"><input type="time" id="default-plan-start" aria-label="予定の開始時刻"></span></label><label>終了<span class="default-plan-time"><input type="time" id="default-plan-end" aria-label="予定の終了時刻"></span></label><label>休憩開始<span class="default-plan-time"><input type="time" id="default-plan-break-start" aria-label="予定の休憩開始時刻"></span></label><label>休憩<input type="number" inputmode="numeric" min="0" id="default-plan-break-min" aria-label="予定の休憩時間（分）"></label></div></div><div class="card"><h2>休憩</h2><div class="fields"><label>基本モード<select id="break-mode"><option value="manual">手動</option><option value="auto">自動</option></select></label><label>休憩開始までの時間<input type="number" min="0" id="break-offset"></label><label>45分休憩の適用基準<input type="number" min="0" id="break-45"></label><label>60分休憩の適用基準<input type="number" min="0" id="break-60"></label></div><p class="muted" style="font-size:12px">自動休憩は概算です。実際の休憩時刻は日ごとに変更できます。</p></div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダー連携</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、同期ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/5c407e90e48d4e6ebf2af0d814d84541" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>「ShiftPay同期」をダウンロード <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクを開き、iPhoneの「ショートカット」に追加します。</li><li>「ShiftPay同期」を編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloud同期」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は同期で上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"><button class="secondary danger" id="reset">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月22日 04:50</p></section></main>
+<section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>実働</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label><span class="overtime-time-caption">を超えた分</span></div><label class="rate-wage"><span>割増率</span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">1出勤あたり</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">1給与期間あたり</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card default-plan-settings"><h2>勤務予定の初期設定</h2><div class="fields default-plan-grid"><label>開始<span class="default-plan-time"><input type="time" id="default-plan-start" aria-label="予定の開始時刻"></span></label><label>終了<span class="default-plan-time"><input type="time" id="default-plan-end" aria-label="予定の終了時刻"></span></label><label>休憩開始<span class="default-plan-time"><input type="time" id="default-plan-break-start" aria-label="予定の休憩開始時刻"></span></label><label>休憩<input type="number" inputmode="numeric" min="0" id="default-plan-break-min" aria-label="予定の休憩時間（分）"></label></div></div><div class="card"><h2>休憩</h2><div class="fields"><label>基本モード<select id="break-mode"><option value="manual">手動</option><option value="auto">自動</option></select></label><label>休憩開始までの時間<input type="number" min="0" id="break-offset"></label><label>45分休憩の適用基準<input type="number" min="0" id="break-45"></label><label>60分休憩の適用基準<input type="number" min="0" id="break-60"></label></div><p class="muted" style="font-size:12px">自動休憩は概算です。実際の休憩時刻は日ごとに変更できます。</p></div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダー連携</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、同期ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/5c407e90e48d4e6ebf2af0d814d84541" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>「ShiftPay同期」をダウンロード <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクを開き、iPhoneの「ショートカット」に追加します。</li><li>「ShiftPay同期」を編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloud同期」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は同期で上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"><button class="secondary danger" id="reset">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月22日 04:57</p></section></main>
 <nav class="tabbar" aria-label="メインメニュー">
 <button data-page="calendar" class="active" type="button"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7.5 14h2M14.5 14h2M7.5 18h2"/></svg><span>カレンダー</span></button>
 <button data-page="pay" type="button"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="m8 6 4 6 4-6M8 12h8M8 15h8M12 12v6"/></svg><span>給与計算</span></button>
@@ -1759,32 +1776,68 @@ function receiveShortcutCalendar(){
 window.addEventListener('hashchange',receiveShortcutCalendar);
 receiveShortcutCalendar();
 
-// Tab selection indicator translates horizontally and stops: no elasticity or follow-up animation.
+// GPU-composited tab indicator: no forced reflow, keyframe restart, or bouncing pseudo-element.
 (function initSubtleMotion(){
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
   document.querySelectorAll('.tabbar,.unified-switch,.modal-tabs').forEach(group=>{
     const buttons=Array.from(group.querySelectorAll(':scope > button'));
     if(!buttons.length)return;
-    let last=-1;
-    const paint=()=>{
+    const indicator=document.createElement('span');
+    indicator.className='selection-glider';
+    indicator.setAttribute('aria-hidden','true');
+    group.prepend(indicator);
+    let lastIndex=-1;
+    let lastX=0;
+    let running=null;
+    const paint=(allowMotion=true)=>{
       const index=Math.max(0,buttons.findIndex(button=>button.classList.contains('active')));
-      if(index===last)return;
-      if(last!==-1&&!reduceMotion.matches){
-        group.classList.remove('selection-moving');
-        group.style.setProperty('--selection-from',String(last));
-        group.style.setProperty('--selection-mid',String((last+index)/2));
-        group.style.setProperty('--selection-index',String(index));
-        void group.offsetWidth;
-        group.classList.add('selection-moving');
-      }else{
-        group.style.setProperty('--selection-index',String(index));
+      const selected=buttons[index];
+      // The group can be display:none in another page. ResizeObserver will measure it when opened.
+      if(!selected || !selected.offsetWidth)return;
+      const destX=selected.offsetLeft;
+      const destY=selected.offsetTop;
+      const destW=selected.offsetWidth;
+      const destH=selected.offsetHeight;
+      if(lastIndex===index && lastX===destX && indicator.offsetWidth===destW && indicator.offsetHeight===destH)return;
+      const moved=lastIndex!==-1 && lastIndex!==index;
+      let fromX=lastX, fromScale=1;
+      if(running){
+        // Continue from the live position if the user taps again before the prior motion ends.
+        const live=getComputedStyle(indicator).transform;
+        if(live && live!=='none'){
+          const parts=new DOMMatrixReadOnly(live);
+          fromX=parts.m41;
+          fromScale=parts.a||1;
+        }
+        running.cancel();running=null;
       }
-      last=index;
+      indicator.style.left='0px';
+      indicator.style.top=destY+'px';
+      indicator.style.width=destW+'px';
+      indicator.style.height=destH+'px';
+      const target=`translate3d(${destX}px,0,0) scaleX(1)`;
+      indicator.style.transform=target;
+      if(allowMotion && moved && !reduceMotion.matches && indicator.animate){
+        const travel=Math.abs(destX-fromX);
+        if(travel>0.5){
+          const halfway=fromX+(destX-fromX)*.55;
+          running=indicator.animate([
+            {transform:`translate3d(${fromX}px,0,0) scaleX(${fromScale})`,offset:0},
+            {transform:`translate3d(${halfway}px,0,0) scaleX(.975)`,offset:.55},
+            {transform:target,offset:1}
+          ],{duration:260,easing:'cubic-bezier(.22,.74,.25,1)',fill:'none'});
+          running.addEventListener('finish',()=>{running=null},{once:true});
+        }
+      }
+      lastX=destX;
+      lastIndex=index;
     };
-    const observer=new MutationObserver(paint);
+    const observer=new MutationObserver(()=>paint(true));
     buttons.forEach(button=>observer.observe(button,{attributes:true,attributeFilter:['class']}));
-    group.addEventListener('animationend',event=>{if(event.animationName==='selection-liquid-glide')group.classList.remove('selection-moving')});
-    paint();
+    const resizeObserver=new ResizeObserver(()=>paint(false));
+    resizeObserver.observe(group);
+    buttons.forEach(button=>resizeObserver.observe(button));
+    paint(false);
   });
   const animateArea=(element)=>{
     if(!element||reduceMotion.matches)return;
