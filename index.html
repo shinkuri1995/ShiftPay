@@ -653,6 +653,98 @@ body{min-height:100svh;overflow-x:clip}
 #calendar .unified-toolbar .unified-switch button{overflow:hidden;text-overflow:clip}
 #calendar .unified-toolbar .unified-switch button span{white-space:nowrap;font-size:inherit}
 @media(max-width:360px){#calendar .unified-toolbar .unified-switch svg{width:10px;height:10px}#calendar .unified-toolbar .unified-switch button{font-size:8.6px;gap:0}}
+
+/* 2026-10-22: Compact, fixed-alignment page switches. The same slot width is
+   used in both pages, so month navigation never jumps horizontally. */
+.unified-toolbar{
+  grid-template-columns:124px minmax(0,1fr);
+  max-width:510px;
+  column-gap:8px;
+  align-items:center;
+  min-height:50px;
+}
+.unified-toolbar .unified-switch{
+  width:124px;
+  height:50px;
+  min-height:50px;
+  padding:4px;
+  gap:2px;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:stretch;
+}
+#calendar .unified-toolbar .unified-switch button{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:3px;
+  height:100%;
+  padding:2px 1px;
+  min-width:0;
+  line-height:1.1;
+  overflow:hidden;
+}
+#calendar .unified-toolbar .unified-switch svg{
+  display:block;
+  flex:none;
+  width:17px;
+  height:17px;
+}
+#calendar .unified-toolbar .unified-switch button span{
+  font-size:9.2px;
+  font-weight:650;
+  white-space:nowrap;
+  flex:none;
+  letter-spacing:-.12px;
+  line-height:1.1;
+}
+#pay .unified-toolbar .unified-switch button{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  padding:3px 2px;
+  line-height:1.1;
+  min-width:0;
+  height:100%;
+}
+#calendar .unified-toolbar .toolbar-period,
+#pay .unified-toolbar .toolbar-period{
+  grid-template-columns:minmax(26px,.58fr) minmax(0,2fr) minmax(26px,.58fr) minmax(35px,.88fr)!important;
+  min-width:0;
+  gap:3px;
+}
+.unified-toolbar .toolbar-period>button{height:44px!important;min-height:44px!important;}
+@media(max-width:650px){
+  .unified-toolbar{grid-template-columns:120px minmax(0,1fr);column-gap:6px;min-height:48px;}
+  .unified-toolbar .unified-switch{width:120px;height:48px;min-height:48px;}
+  #calendar .unified-toolbar .unified-switch svg{width:16px;height:16px;}
+  #calendar .unified-toolbar .unified-switch button span{font-size:9px;}
+  #pay .unified-toolbar .unified-switch button{font-size:11px;}
+  .unified-toolbar .toolbar-period>button{height:42px!important;min-height:42px!important;}
+}
+@media(max-width:355px){
+  .unified-toolbar{grid-template-columns:116px minmax(0,1fr);gap:5px;}
+  .unified-toolbar .unified-switch{width:116px;padding:3px;}
+  #calendar .unified-toolbar .unified-switch button span{font-size:8.7px;letter-spacing:-.2px;}
+  #calendar .unified-toolbar .unified-switch svg{width:15px;height:15px;}
+  .unified-toolbar .toolbar-period>button{height:40px!important;min-height:40px!important;}
+}
+
+/* A tighter aligned segment leaves enough room for the payroll date on small phones. */
+.payday-prefix{display:inline}
+.unified-toolbar .pay-period-stack{width:100%;max-width:100%;overflow:hidden}
+@media(max-width:650px){
+  .unified-toolbar{grid-template-columns:110px minmax(0,1fr)}
+  .unified-toolbar .unified-switch{width:110px}
+  .unified-toolbar .pay-period-date{font-size:clamp(9px,2.35vw,10.5px);letter-spacing:-.15px;line-height:1.1}
+  .payday-prefix{display:none}
+}
+@media(max-width:355px){
+  .unified-toolbar{grid-template-columns:108px minmax(0,1fr)}
+  .unified-toolbar .unified-switch{width:108px}
+  #calendar .unified-toolbar .unified-switch button span{font-size:8.6px}
+}
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -772,7 +864,7 @@ function calendarTimeHTML(shift){
 }
 
 function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport:0,minutes:0,days:0};for(let item of list){let p=comp(item,false),a=comp(item,true),done=item.status==='worked';sum.planned+=p.total;sum.forecast+=(done?a:p).total;if(done){sum.actual+=a.total;sum.wage+=a.wage;sum.transport+=a.transport;sum.minutes+=a.mins;sum.days++}}return sum}function shiftsForMonth(y,m){let [start,end]=datesInPay(y,m);return data.shifts.filter(x=>{let d=parseDate(x.date);return d>=start&&d<=end}).sort((a,b)=>a.date.localeCompare(b.date))}function shiftsForYear(y){return Array.from({length:12},(_,m)=>shiftsForMonth(y,m)).flat()}function renderCal(){let title=new Date(cy,cm,1);$('cal-title').textContent=title.toLocaleDateString('ja-JP',{year:'numeric',month:'long'});let first=new Date(cy,cm,1).getDay(),days=new Date(cy,cm+1,0).getDate(),html=['日','月','火','水','木','金','土'].map(x=>`<div class="dow">${x}</div>`).join('');for(let i=0;i<first;i++)html+='<div></div>';for(let d=1;d<=days;d++){let date=daystr(cy,cm,d),found=data.shifts.filter(x=>x.date===date),total=found.reduce((a,x)=>a+comp(x,x.status==='worked').total,0);html+=`<button class="day ${date===daystr(today.getFullYear(),today.getMonth(),today.getDate())?'today':date<daystr(today.getFullYear(),today.getMonth(),today.getDate())?'past':'future'} ${found.some(x=>x.status==='worked')?'worked':''}" data-date="${date}"><div class="date">${d}</div>${found.length?`<div class="shift">${found.map(x=>`<div class="shift-entry ${x.status==='worked'?'done':''}">${calendarTimeHTML(x)}</div>`).join('')}</div><div class="yen">${money(total)}</div>`:''}</button>`} for(let slot=first+days;slot<42;slot++)html+='<div class="calendar-empty" aria-hidden="true"></div>'; $('cal').innerHTML=html;$('cal').querySelectorAll('[data-date]').forEach(el=>el.onclick=()=>{let x=data.shifts.find(v=>v.date===el.dataset.date);openModal(x||null,el.dataset.date)});let items=data.shifts.filter(x=>parseDate(x.date).getFullYear()===cy&&parseDate(x.date).getMonth()===cm).sort((a,b)=>a.date.localeCompare(b.date));/* List rows are rendered by updateCalendarPresentation(), not legacy renderCal(). */}
-function renderPay(){let entries=annual?shiftsForYear(py):shiftsForMonth(py,pm),sum=aggregate(entries);let circ=2*Math.PI*98,maxGauge=Math.max(1,sum.planned,sum.forecast,sum.actual);for(let [id,value] of [['gauge-plan',sum.planned],['gauge-done',sum.actual]]){let c=$(id);c.style.strokeDasharray=`${circ*Math.min(1,value/maxGauge)} ${circ}`;c.style.strokeDashoffset='0'}$('gauge-earned').textContent=money(sum.actual);$('gauge-forecast').textContent=money(sum.forecast);$('gauge-caption').textContent=`予定どおり働いた場合 ${money(sum.planned)} ・ 勤務確定 ${sum.days}回`;$('pay-period').textContent=annual?`${py}年`:`${py}年${pm+1}月分`; $('pay-today').textContent=annual?'今年':'今月';$('payday-under-gauge').textContent=annual?'':`振込予定日 ${payDate(py,pm)}`;$('monthly').classList.toggle('active',!annual);$('yearly').classList.toggle('active',annual);let tax=Number(data.settings.tax)||0;let taxTotal=annual?12*tax:tax;let detail=[['記録分の給与（交通費除く）',money(sum.wage)],['記録分の交通費',money(sum.transport)],['記録した勤務時間',formatWorkTime(sum.minutes)],['記録した出勤回数',sum.days+'回'],['手入力の所得税（参考）','−'+money(taxTotal)],['記録分の暫定手取り',money(sum.actual-taxTotal)]];if(!annual)detail.push(['振込予定日',payDate(py,pm)]);$('breakdown').innerHTML=detail.map(([a,b])=>`<div class="detail"><span class="muted">${a}</span><strong>${b}</strong></div>`).join('');if(annual){let sums=Array.from({length:12},(_,m)=>aggregate(shiftsForMonth(py,m)));let max=Math.max(1,...sums.map(x=>x.forecast));$('period-list-title').textContent='月別推移';$('pay-shifts').innerHTML='<div class="months">'+sums.map((x,i)=>`<div class="month-cell"><small class="muted">${i+1}月</small><br><strong>${money(x.forecast)}</strong><div class="bar"><span style="width:${100*x.forecast/max}%"></span></div></div>`).join('')+'</div>'}else{$('period-list-title').textContent='勤務別の計算';$('pay-shifts').innerHTML=entries.length?entries.map(x=>{let p=comp(x,false),a=comp(x,true);return `<div class="list-item row"><div><strong>${escapeHtml(x.date.slice(5))}　${escapeHtml(x.start)}～${escapeHtml(x.end)}</strong><br><small class="muted">${x.status==='worked'?'勤務済み':'予定'}</small></div><div style="text-align:right"><small class="muted">予定 ${money(p.total)}</small><br><strong>${x.status==='worked'?'実績 '+money(a.total):'未確定'}</strong></div></div>`}).join(''):'<p class="muted">この給与期間にシフトはない。</p>'}}
+function renderPay(){let entries=annual?shiftsForYear(py):shiftsForMonth(py,pm),sum=aggregate(entries);let circ=2*Math.PI*98,maxGauge=Math.max(1,sum.planned,sum.forecast,sum.actual);for(let [id,value] of [['gauge-plan',sum.planned],['gauge-done',sum.actual]]){let c=$(id);c.style.strokeDasharray=`${circ*Math.min(1,value/maxGauge)} ${circ}`;c.style.strokeDashoffset='0'}$('gauge-earned').textContent=money(sum.actual);$('gauge-forecast').textContent=money(sum.forecast);$('gauge-caption').textContent=`予定どおり働いた場合 ${money(sum.planned)} ・ 勤務確定 ${sum.days}回`;$('pay-period').textContent=annual?`${py}年`:`${py}年${pm+1}月分`; $('pay-today').textContent=annual?'今年':'今月';$('payday-under-gauge').innerHTML=annual?'':`<span class="payday-prefix">振込予定日 </span>${payDate(py,pm)}`;$('monthly').classList.toggle('active',!annual);$('yearly').classList.toggle('active',annual);let tax=Number(data.settings.tax)||0;let taxTotal=annual?12*tax:tax;let detail=[['記録分の給与（交通費除く）',money(sum.wage)],['記録分の交通費',money(sum.transport)],['記録した勤務時間',formatWorkTime(sum.minutes)],['記録した出勤回数',sum.days+'回'],['手入力の所得税（参考）','−'+money(taxTotal)],['記録分の暫定手取り',money(sum.actual-taxTotal)]];if(!annual)detail.push(['振込予定日',payDate(py,pm)]);$('breakdown').innerHTML=detail.map(([a,b])=>`<div class="detail"><span class="muted">${a}</span><strong>${b}</strong></div>`).join('');if(annual){let sums=Array.from({length:12},(_,m)=>aggregate(shiftsForMonth(py,m)));let max=Math.max(1,...sums.map(x=>x.forecast));$('period-list-title').textContent='月別推移';$('pay-shifts').innerHTML='<div class="months">'+sums.map((x,i)=>`<div class="month-cell"><small class="muted">${i+1}月</small><br><strong>${money(x.forecast)}</strong><div class="bar"><span style="width:${100*x.forecast/max}%"></span></div></div>`).join('')+'</div>'}else{$('period-list-title').textContent='勤務別の計算';$('pay-shifts').innerHTML=entries.length?entries.map(x=>{let p=comp(x,false),a=comp(x,true);return `<div class="list-item row"><div><strong>${escapeHtml(x.date.slice(5))}　${escapeHtml(x.start)}～${escapeHtml(x.end)}</strong><br><small class="muted">${x.status==='worked'?'勤務済み':'予定'}</small></div><div style="text-align:right"><small class="muted">予定 ${money(p.total)}</small><br><strong>${x.status==='worked'?'実績 '+money(a.total):'未確定'}</strong></div></div>`}).join(''):'<p class="muted">この給与期間にシフトはない。</p>'}}
 function renderRates(){
  $('rates').innerHTML=data.settings.rates.map((r,i)=>`<div class="rate-card" data-rate-card="${i}">
    <div class="rate-card-head"><strong>時間帯 ${i+1}</strong><button class="rate-delete" type="button" data-remove="${i}" aria-label="時間帯 ${i+1} を削除" title="削除"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v7m4-7v7"/></svg></button></div>
