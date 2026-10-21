@@ -1152,6 +1152,47 @@ button.primary:active,button.secondary:active,button.textbtn:active {transform:s
   #pay .gauge-plan,#pay .gauge-done,#pay .month-cell .bar .bar-done,#pay .month-cell .bar .bar-planned{transition:none!important}
 }
 
+
+/* 2026-10-22 UI: a stable six-row calendar including adjacent month dates. */
+#cal.calendar {grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:26px repeat(6,99px);grid-auto-rows:99px;align-content:start;align-items:stretch;}
+#cal .dow{height:26px;min-height:0;line-height:18px;padding:3px 0 5px;align-self:center;}
+/* Past days stay on the same background as the current month's upcoming days. */
+#cal .day.past:not(.other-month){background:var(--panel)!important;opacity:1!important;}
+#cal .day.past:not(.other-month) .date{color:var(--muted)!important;background:transparent!important;}
+/* Outside-month dates remain visible as quiet gray cells, not blank placeholders. */
+#cal .day.other-month{background:color-mix(in srgb,var(--panel) 68%,var(--bg) 32%)!important;opacity:1!important;border-color:var(--line);}
+#cal .day.other-month .date,#cal .day.other-month.past .date,#cal .day.other-month.future .date{color:var(--muted)!important;background:transparent!important;}
+#cal .day.other-month .date::after{display:none!important;content:none!important;}
+@media(max-width:650px){
+  #cal.calendar{grid-template-rows:23px repeat(6,82px);grid-auto-rows:82px;gap:3px;}
+  #cal .dow{height:23px;line-height:18px;padding:2px 0 3px;}
+}
+/* Glass effect: translucency and delicate highlights without distortion or bounce. */
+:root{--nav-glass-bg:rgba(255,255,255,.72);--nav-glass-edge:rgba(255,255,255,.82);--nav-glass-selected:rgba(224,233,244,.86);--nav-glass-shadow:rgba(24,42,66,.12)}
+html[data-theme=dark]{--nav-glass-bg:rgba(37,48,65,.75);--nav-glass-edge:rgba(195,213,239,.20);--nav-glass-selected:rgba(88,107,132,.52);--nav-glass-shadow:rgba(0,0,0,.40)}
+.tabbar{background:var(--nav-glass-bg)!important;border:1px solid var(--nav-glass-edge)!important;box-shadow:0 8px 26px var(--nav-glass-shadow),inset 0 1px rgba(255,255,255,.55)!important;backdrop-filter:blur(22px) saturate(155%);-webkit-backdrop-filter:blur(22px) saturate(155%)}
+.tabbar::before{background:var(--nav-glass-selected)!important;box-shadow:0 1px 4px rgba(23,45,78,.1),inset 0 1px rgba(255,255,255,.5)}
+.unified-switch,.modal-tabs{background:var(--nav-glass-bg)!important;border:1px solid color-mix(in srgb,var(--line) 64%,var(--nav-glass-edge))!important;box-shadow:0 2px 7px var(--nav-glass-shadow),inset 0 1px rgba(255,255,255,.32)!important;backdrop-filter:blur(14px) saturate(145%);-webkit-backdrop-filter:blur(14px) saturate(145%)}
+.unified-switch::before,.modal-tabs::before{background:var(--nav-glass-selected)!important;box-shadow:0 1px 4px rgba(23,45,78,.1),inset 0 1px rgba(255,255,255,.36)}
+/* A single corner radius shared by the today buttons and all compact segmented controls. */
+#calendar .unified-toolbar>.unified-switch,#pay .unified-toolbar>.unified-switch,.modal-tabs{border-radius:11px!important}
+#calendar .unified-toolbar>.unified-switch>button,#pay .unified-toolbar>.unified-switch>button,.modal-tabs>button,.unified-switch::before,.modal-tabs::before{border-radius:7px!important}
+#calendar .unified-toolbar #cal-today,#pay .unified-toolbar #pay-today{border-radius:11px!important}
+/* Keep the arrows as accessible touch targets without visible boxes. */
+#calendar .unified-toolbar #prev,#calendar .unified-toolbar #next,#pay .unified-toolbar #pay-prev,#pay .unified-toolbar #pay-next{background:transparent!important;border:0!important;box-shadow:none!important}
+#calendar .unified-toolbar #prev:focus-visible,#calendar .unified-toolbar #next:focus-visible,#pay .unified-toolbar #pay-prev:focus-visible,#pay .unified-toolbar #pay-next:focus-visible{outline:2px solid var(--blue);outline-offset:-2px;border-radius:8px}
+/* Switching planned / actual content must never rise up from below. */
+#modal-wrap .modal-pane.active{animation:none!important;transform:none!important}
+/* Horizontal swipe is handled in JS; native vertical scrolling remains available. */
+#calendar-stage{touch-action:pan-y;}
+/* On desktop, settings clocks are actual editable native time fields, not invisible overlays. */
+@media (hover:hover) and (pointer:fine) {
+ #settings .rate-time-row .time-field .time-value{display:none!important}
+ #settings .rate-card .rate-time-row .time-field input[type=time]{position:relative!important;inset:auto!important;opacity:1!important;display:block!important;width:100%!important;height:42px!important;min-height:42px!important;margin:0!important;padding:0 7px!important;border:0!important;background:transparent!important;color:var(--text)!important;font-size:16px!important;line-height:normal!important;text-align:center;text-align-last:center;cursor:text;appearance:auto;-webkit-appearance:auto;}
+ #settings .rate-time-row input[type=time]::-webkit-datetime-edit{text-align:center;margin:0 auto;padding:0}
+ #settings .rate-time-row input[type=time]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.7}
+}
+@media(prefers-reduced-motion:reduce){.calendar-stage,.calendar-motion-ghost{animation:none!important;transition:none!important}}
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -1189,7 +1230,7 @@ button.primary:active,button.secondary:active,button.textbtn:active {transform:s
   </div>
 </div>
 <div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標（円）</label><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></section>
-<section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給（円／時）<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率 <small>（％）</small></span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>実働</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label><span class="overtime-time-caption">時間を超えた分</span></div><label class="rate-wage"><span>割増率 <small>（％）</small></span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">（1出勤あたり・円）</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">（1給与期間・円）</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card"><h2>休憩</h2><div class="fields"><label>基本モード<select id="break-mode"><option value="manual">手動</option><option value="auto">自動</option></select></label><label>休憩開始までの時間（分）<input type="number" min="0" id="break-offset"></label><label>45分休憩の適用基準（分）<input type="number" min="0" id="break-45"></label><label>60分休憩の適用基準（分）<input type="number" min="0" id="break-60"></label></div><p class="muted" style="font-size:12px">自動休憩は概算です。実際の休憩時刻は日ごとに変更できます。</p></div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダー連携</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、同期ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/5c407e90e48d4e6ebf2af0d814d84541" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>「ShiftPay同期」をダウンロード <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクを開き、iPhoneの「ショートカット」に追加します。</li><li>「ShiftPay同期」を編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloud同期」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は同期で上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"><button class="secondary danger" id="reset">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月22日 03:26</p></section></main>
+<section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給（円／時）<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率 <small>（％）</small></span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>実働</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label><span class="overtime-time-caption">時間を超えた分</span></div><label class="rate-wage"><span>割増率 <small>（％）</small></span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">（1出勤あたり・円）</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">（1給与期間・円）</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card"><h2>休憩</h2><div class="fields"><label>基本モード<select id="break-mode"><option value="manual">手動</option><option value="auto">自動</option></select></label><label>休憩開始までの時間（分）<input type="number" min="0" id="break-offset"></label><label>45分休憩の適用基準（分）<input type="number" min="0" id="break-45"></label><label>60分休憩の適用基準（分）<input type="number" min="0" id="break-60"></label></div><p class="muted" style="font-size:12px">自動休憩は概算です。実際の休憩時刻は日ごとに変更できます。</p></div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダー連携</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、同期ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/5c407e90e48d4e6ebf2af0d814d84541" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>「ShiftPay同期」をダウンロード <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクを開き、iPhoneの「ショートカット」に追加します。</li><li>「ShiftPay同期」を編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloud同期」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は同期で上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"><button class="secondary danger" id="reset">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月22日 03:59</p></section></main>
 <nav class="tabbar" aria-label="メインメニュー">
 <button data-page="calendar" class="active" type="button"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7.5 14h2M14.5 14h2M7.5 18h2"/></svg><span>カレンダー</span></button>
 <button data-page="pay" type="button"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="m8 6 4 6 4-6M8 12h8M8 15h8M12 12v6"/></svg><span>給与計算</span></button>
@@ -1270,7 +1311,35 @@ function calendarTimeHTML(shift){
          `<span class="clock-compact" aria-hidden="true">${part(start)}<span class="clock-separator">-</span>${part(end)}</span>`;
 }
 
-function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport:0,minutes:0,days:0};for(let item of list){let p=comp(item,false),a=comp(item,true),done=item.status==='worked';sum.planned+=p.total;sum.forecast+=(done?a:p).total;if(done){sum.actual+=a.total;sum.wage+=a.wage;sum.transport+=a.transport;sum.minutes+=a.mins;sum.days++}}return sum}function shiftsForMonth(y,m){let [start,end]=datesInPay(y,m);return data.shifts.filter(x=>{let d=parseDate(x.date);return d>=start&&d<=end}).sort((a,b)=>a.date.localeCompare(b.date))}function shiftsForYear(y){return Array.from({length:12},(_,m)=>shiftsForMonth(y,m)).flat()}function renderCal(){let title=new Date(cy,cm,1);$('cal-title').textContent=title.toLocaleDateString('ja-JP',{year:'numeric',month:'long'});let first=new Date(cy,cm,1).getDay(),days=new Date(cy,cm+1,0).getDate(),html=['日','月','火','水','木','金','土'].map(x=>`<div class="dow">${x}</div>`).join('');for(let i=0;i<first;i++)html+='<div></div>';for(let d=1;d<=days;d++){let date=daystr(cy,cm,d),found=data.shifts.filter(x=>x.date===date),total=found.reduce((a,x)=>a+comp(x,x.status==='worked').total,0);html+=`<button class="day ${date===daystr(today.getFullYear(),today.getMonth(),today.getDate())?'today':date<daystr(today.getFullYear(),today.getMonth(),today.getDate())?'past':'future'} ${found.some(x=>x.status==='worked')?'worked':''}" data-date="${date}"><div class="date">${d}</div>${found.length?`<div class="shift">${found.map(x=>`<div class="shift-entry ${x.status==='worked'?'done':''}">${calendarTimeHTML(x)}</div>`).join('')}</div><div class="yen">${money(total)}</div>`:''}</button>`} for(let slot=first+days;slot<42;slot++)html+='<div class="calendar-empty" aria-hidden="true"></div>'; $('cal').innerHTML=html;$('cal').querySelectorAll('[data-date]').forEach(el=>el.onclick=()=>{let x=data.shifts.find(v=>v.date===el.dataset.date);openModal(x||null,el.dataset.date)});let items=data.shifts.filter(x=>parseDate(x.date).getFullYear()===cy&&parseDate(x.date).getMonth()===cm).sort((a,b)=>a.date.localeCompare(b.date));/* List rows are rendered by updateCalendarPresentation(), not legacy renderCal(). */}
+function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport:0,minutes:0,days:0};for(let item of list){let p=comp(item,false),a=comp(item,true),done=item.status==='worked';sum.planned+=p.total;sum.forecast+=(done?a:p).total;if(done){sum.actual+=a.total;sum.wage+=a.wage;sum.transport+=a.transport;sum.minutes+=a.mins;sum.days++}}return sum}function shiftsForMonth(y,m){let [start,end]=datesInPay(y,m);return data.shifts.filter(x=>{let d=parseDate(x.date);return d>=start&&d<=end}).sort((a,b)=>a.date.localeCompare(b.date))}function shiftsForYear(y){return Array.from({length:12},(_,m)=>shiftsForMonth(y,m)).flat()}function renderCal(){
+  const firstDate=new Date(cy,cm,1);
+  $('cal-title').textContent=firstDate.toLocaleDateString('ja-JP',{year:'numeric',month:'long'});
+  const beginning=firstDate.getDay();
+  const firstCell=new Date(cy,cm,1-beginning);
+  const now=new Date();
+  const todayKey=daystr(now.getFullYear(),now.getMonth(),now.getDate());
+  let html=['日','月','火','水','木','金','土'].map((w,i)=>`<div class="dow ${i===0?'sunday':i===6?'saturday':''}">${w}</div>`).join('');
+  for(let slot=0;slot<42;slot++){
+    const d=new Date(firstCell.getFullYear(),firstCell.getMonth(),firstCell.getDate()+slot);
+    const date=daystr(d.getFullYear(),d.getMonth(),d.getDate());
+    const isCurrentMonth=d.getFullYear()===cy&&d.getMonth()===cm;
+    const found=isCurrentMonth?data.shifts.filter(x=>x.date===date):[];
+    const total=found.reduce((sum,x)=>sum+comp(x,x.status==='worked').total,0);
+    const state=date===todayKey?'today':date<todayKey?'past':'future';
+    const statuses=found.map(x=>x.status==='worked'?'done':isRecordPending(x)?'wait':'');
+    html+=`<button type="button" class="day ${state} ${isCurrentMonth?'':'other-month'} ${found.some(x=>x.status==='worked')?'worked':''}" data-date="${date}" ${isCurrentMonth?'':'data-adjacent-month="true"'} aria-label="${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日${isCurrentMonth?'':'、隣の月'}"><div class="date">${d.getDate()}</div>${found.length?`<div class="shift">${found.map((x,i)=>`<div class="shift-entry ${statuses[i]}">${calendarTimeHTML(x)}</div>`).join('')}</div><div class="yen">${money(total)}</div>`:''}</button>`;
+  }
+  $('cal').innerHTML=html;
+  $('cal').querySelectorAll('[data-date]').forEach(el=>el.onclick=()=>{
+    if(el.dataset.adjacentMonth==='true'){
+      const [y,m]=el.dataset.date.split('-').map(Number);
+      if(y*12+m<cy*12+cm+1)$('prev').click();else $('next').click();
+      return;
+    }
+    const item=data.shifts.find(v=>v.date===el.dataset.date);
+    openModal(item||null,el.dataset.date);
+  });
+}
 function renderPay(){let entries=annual?shiftsForYear(py):shiftsForMonth(py,pm),sum=aggregate(entries);let circ=2*Math.PI*98,maxGauge=Math.max(1,sum.planned,sum.forecast,sum.actual);for(let [id,value] of [['gauge-plan',sum.planned],['gauge-done',sum.actual]]){let c=$(id);c.style.strokeDasharray=`${circ*Math.min(1,value/maxGauge)} ${circ}`;c.style.strokeDashoffset='0'}$('gauge-earned').textContent=money(sum.actual);$('gauge-forecast').textContent=money(sum.forecast);$('gauge-caption').textContent=`予定どおり働いた場合 ${money(sum.planned)} ・ 勤務確定 ${sum.days}回`;$('pay-period').textContent=annual?`${py}年`:`${py}年${pm+1}月分`; $('pay-today').textContent=annual?'今年':'今月';$('payday-under-gauge').innerHTML=annual?'':`<span class="payday-prefix">振込予定日 </span>${payDate(py,pm)}`;$('monthly').classList.toggle('active',!annual);$('yearly').classList.toggle('active',annual);let tax=Number(data.settings.tax)||0;let taxTotal=annual?12*tax:tax;let detail=[['記録分の給与（交通費除く）',money(sum.wage)],['記録分の交通費',money(sum.transport)],['記録した勤務時間',formatWorkTime(sum.minutes)],['記録した出勤回数',sum.days+'回'],['手入力の所得税（参考）','−'+money(taxTotal)],['記録分の暫定手取り',money(sum.actual-taxTotal)]];if(!annual)detail.push(['振込予定日',payDate(py,pm)]);$('breakdown').innerHTML=detail.map(([a,b])=>`<div class="detail"><span class="muted">${a}</span><strong>${b}</strong></div>`).join('');if(annual){let sums=Array.from({length:12},(_,m)=>aggregate(shiftsForMonth(py,m)));let max=Math.max(1,...sums.map(x=>x.forecast));$('period-list-title').textContent='月別推移';$('pay-shifts').innerHTML='<div class="months">'+sums.map((x,i)=>`<div class="month-cell"><small class="muted">${i+1}月</small><br><strong>${money(x.forecast)}</strong><div class="bar"><span class="bar-done" style="width:${100*x.actual/max}%"></span><span class="bar-planned" style="width:${100*Math.max(0,x.forecast-x.actual)/max}%"></span></div></div>`).join('')+'</div>'}else{$('period-list-title').textContent='勤務別の計算';$('pay-shifts').innerHTML=entries.length?entries.map(x=>{let p=comp(x,false),a=comp(x,true);return `<div class="list-item row"><div><strong>${escapeHtml(x.date.slice(5))}　${escapeHtml(x.start)}～${escapeHtml(x.end)}</strong><br><small class="muted">${x.status==='worked'?'勤務済み':'予定'}</small></div><div style="text-align:right"><small class="muted">予定 ${money(p.total)}</small><br><strong>${x.status==='worked'?'実績 '+money(a.total):'未確定'}</strong></div></div>`}).join(''):'<p class="muted">この給与期間に勤務予定はありません。</p>'}}
 function renderRates(){
  $('rates').innerHTML=data.settings.rates.map((r,i)=>`<div class="rate-card" data-rate-card="${i}">
@@ -1662,4 +1731,66 @@ receiveShortcutCalendar();
   }
 })();
 
+
+// Independent scroll positions for the three main pages.
+(function preservePageScroll(){
+ const pages=['calendar','pay','settings'];
+ const positions=Object.fromEntries(pages.map(p=>[p,0]));
+ let leaving=null;
+ document.querySelectorAll('.tabbar [data-page]').forEach(button=>{
+  button.addEventListener('click',()=>{
+   const current=document.querySelector('.page.active')?.id;
+   leaving=current;
+   if(current&&current!==button.dataset.page)positions[current]=window.scrollY;
+  },true);
+  button.addEventListener('click',()=>{
+   const destination=button.dataset.page;
+   if(destination===leaving)return;
+   const saved=positions[destination]||0;
+   window.scrollTo({left:0,top:saved,behavior:'instant'});
+   requestAnimationFrame(()=>window.scrollTo({left:0,top:saved,behavior:'instant'}));
+  });
+ });
+})();
+// Native vertical scrolling + deliberate horizontal swipe to change calendar/list months.
+(function enableCalendarSwipe(){
+ const stage=$('calendar-stage');
+ let start=null,lastSwipeAt=-1000;
+ stage.addEventListener('touchstart',event=>{
+  if(event.touches.length!==1){start=null;return}
+  const t=event.touches[0];
+  start={x:t.clientX,y:t.clientY,time:performance.now()};
+ },{passive:true});
+ stage.addEventListener('touchcancel',()=>{start=null},{passive:true});
+ stage.addEventListener('touchend',event=>{
+  if(!start||event.changedTouches.length!==1){start=null;return;}
+  const t=event.changedTouches[0];
+  const dx=t.clientX-start.x,dy=t.clientY-start.y,elapsed=performance.now()-start.time;
+  start=null;
+  if(elapsed>1300||Math.abs(dx)<56||Math.abs(dx)<Math.abs(dy)*1.35)return;
+  lastSwipeAt=performance.now();
+  $(dx<0?'next':'prev').click();
+ },{passive:true});
+ // A swipe beginning on a date must not accidentally open its editor as a click.
+ document.addEventListener('click',event=>{
+  if(performance.now()-lastSwipeAt<170&&stage.contains(event.target)){
+   event.preventDefault();event.stopImmediatePropagation();
+  }
+ },true);
+ // Desktop/trackpad: horizontal wheel gestures also move between months.
+ let wheelSum=0,wheelAt=0,wheelLock=-1000;
+ stage.addEventListener('wheel',event=>{
+  if(Math.abs(event.deltaX)<3||Math.abs(event.deltaX)<Math.abs(event.deltaY)*1.35)return;
+  event.preventDefault();
+  const now=performance.now();
+  if(now-wheelAt>240)wheelSum=0;
+  wheelAt=now;wheelSum+=event.deltaX;
+  if(now-wheelLock<420)return;
+  if(Math.abs(wheelSum)>=65){
+   wheelLock=now;
+   $(wheelSum>0?'next':'prev').click();
+   wheelSum=0;
+  }
+ },{passive:false});
+})();
 </script></body></html>
