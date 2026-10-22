@@ -1,5 +1,5 @@
 <!doctype html><html lang="ja"><head><meta name="robots" content="noindex"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f6fa"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><title>給与計算</title><style>
-:root{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color-scheme:light;--bg:#f5f6fa;--panel:#fff;--text:#1b2230;--muted:#6c7484;--line:#e4e8ef;--blue:#2469e8;--soft:#eaf1ff;--positive:#087657;--shadow:0 2px 14px #12213b0c}html[data-theme=dark]{color-scheme:dark;--bg:#10151e;--panel:#1b2430;--text:#edf1fa;--muted:#a6b1c1;--line:#364252;--blue:#80aaff;--soft:#253c5b;--positive:#7bdec0;--shadow:none}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text)}button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:1080px;margin:auto;padding:20px 18px 110px}header{display:flex;justify-content:space-between;align-items:center;margin:5px 0 25px}h1{font-size:25px;margin:0;letter-spacing:-.6px}h2{font-size:18px;margin:0 0 15px}h3{font-size:15px;margin:12px 0}.eyebrow{font-size:12px;color:var(--muted)}.pill{border-radius:50px;background:var(--soft);color:var(--blue);padding:8px 11px;font-size:12px;font-weight:650}.page{display:none}.page.active{display:block}.card{background:var(--panel);border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow);padding:18px;margin-bottom:15px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{background:var(--panel);padding:17px;border-radius:16px;border:1px solid var(--line)}.stat strong{display:block;font-size:24px;margin:7px 0}.muted,.stat small{color:var(--muted)}.strong{font-weight:700}.primary{border:0;background:var(--blue);color:white;border-radius:12px;padding:11px 15px;font-weight:650}.secondary{border:1px solid var(--line);color:var(--text);background:var(--panel);border-radius:11px;padding:9px 12px}.danger{color:#e35050}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.tabbar{display:flex;position:fixed;bottom:0;left:0;right:0;justify-content:center;background:var(--panel);border-top:1px solid var(--line);padding:9px 12px max(9px,env(safe-area-inset-bottom));z-index:20}.tabbar button{border:0;background:transparent;color:var(--muted);min-width:110px;padding:9px;border-radius:12px;font-weight:600}.tabbar button.active{color:var(--blue);background:var(--soft)}.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}.dow{text-align:center;color:var(--muted);font-size:12px;padding:8px 0}.day{min-height:105px;border:1px solid var(--line);border-radius:12px;background:var(--panel);text-align:left;padding:9px;position:relative;color:var(--text);overflow:hidden}.day.other{opacity:.35}.day.today{outline:2px solid var(--blue)}.day .date{font-weight:700;font-size:13px}.day .shift{font-size:11px;color:var(--blue);margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.day .yen{font-size:12px;margin-top:7px;font-weight:700}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{display:block;font-size:12px;color:var(--muted);font-weight:600}input,select{width:100%;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:6px;background:var(--panel);color:var(--text);min-width:0}input[type=checkbox]{width:auto;margin:0;accent-color:var(--blue)}.note{background:var(--soft);padding:12px;border-radius:12px;font-size:13px;line-height:1.7;color:var(--text)}.list-item{border-bottom:1px solid var(--line);padding:11px 0}.list-item:last-child{border:0}.divider{border-top:1px solid var(--line);margin:14px 0}.detail{display:grid;grid-template-columns:1fr auto;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.detail:last-child{border:0}.view-switch{display:flex;gap:5px;background:var(--bg);padding:4px;border-radius:13px}.view-switch button{border:0;border-radius:10px;background:transparent;color:var(--muted);padding:8px 16px}.view-switch button.active{background:var(--panel);color:var(--blue);box-shadow:var(--shadow)}.months{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.month-cell{border:1px solid var(--line);padding:12px;border-radius:12px}.bar{height:7px;border-radius:10px;background:var(--line);overflow:hidden;margin-top:8px}.bar span{height:100%;display:block;background:var(--blue)}.modal-wrap{position:fixed;inset:0;background:#0008;z-index:30;display:none;align-items:center;justify-content:center;padding:12px}.modal-wrap.open{display:flex}.modal{background:var(--panel);border-radius:20px;width:min(560px,100%);padding:20px;max-height:92vh;overflow:auto}.modal h2{margin:0 0 17px}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}.only-mobile{display:none}.textbtn{background:none;border:0;color:var(--blue);font-weight:600;padding:7px}.badge{font-size:11px;border-radius:20px;background:var(--soft);padding:5px 9px;color:var(--blue)}.day-breakdown{margin-top:14px;border:1px solid var(--line);border-radius:13px;padding:12px 14px;background:var(--bg)}.day-breakdown h3{margin:0 0 7px;font-size:13px}.day-breakdown .detail{font-size:13px;padding:6px 0}.day-breakdown .detail.total{font-size:15px;font-weight:700;border-top:1px solid var(--line);border-bottom:0;margin-top:5px;padding-top:10px}.day-breakdown .detail.total strong{color:var(--blue)}@media(max-width:650px){.shell{padding:18px 12px 100px}header{margin-bottom:17px}h1{font-size:21px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.stat strong{font-size:21px}.calendar{gap:3px}.day{min-height:75px;padding:5px;border-radius:8px}.day .date{font-size:12px}.day .shift{font-size:9px;margin-top:6px}.day .yen{font-size:10px;margin-top:4px}.tabbar button{min-width:0;flex:1}.fields{gap:10px}.grid{grid-template-columns:1fr}.months{grid-template-columns:repeat(2,1fr)}}
+:root{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color-scheme:light;--bg:#f5f6fa;--panel:#fff;--text:#1b2230;--muted:#6c7484;--line:#e4e8ef;--blue:#2469e8;--soft:#eaf1ff;--positive:#087657;--shadow:0 2px 14px #12213b0c}html[data-theme=dark]{color-scheme:dark;--bg:#10151e;--panel:#1b2430;--text:#edf1fa;--muted:#a6b1c1;--line:#364252;--blue:#80aaff;--soft:#253c5b;--positive:#7bdec0;--shadow:none}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text)}button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:1080px;margin:auto;padding:20px 18px 110px}header{display:flex;justify-content:space-between;align-items:center;margin:5px 0 25px}h1{font-size:25px;margin:0;letter-spacing:-.6px}h2{font-size:18px;margin:0 0 15px}h3{font-size:15px;margin:12px 0}.eyebrow{font-size:12px;color:var(--muted)}.pill{border-radius:50px;background:var(--soft);color:var(--blue);padding:8px 11px;font-size:12px;font-weight:650}.page{display:none}.page.active{display:block}.card{background:var(--panel);border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow);padding:18px;margin-bottom:15px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{background:var(--panel);padding:17px;border-radius:16px;border:1px solid var(--line)}.stat strong{display:block;font-size:24px;margin:7px 0}.muted,.stat small{color:var(--muted)}.strong{font-weight:700}.primary{border:0;background:var(--blue);color:white;border-radius:12px;padding:11px 15px;font-weight:650}.secondary{border:1px solid var(--line);color:var(--text);background:var(--panel);border-radius:11px;padding:9px 12px}.danger{color:#e35050}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.tabbar{display:flex;position:fixed;bottom:0;left:0;right:0;justify-content:center;background:var(--panel);border-top:1px solid var(--line);padding:9px 12px max(9px,env(safe-area-inset-bottom));z-index:20}.tabbar button{border:0;background:transparent;color:var(--muted);min-width:110px;padding:9px;border-radius:12px;font-weight:600}.tabbar button.active{color:var(--blue);background:var(--soft)}.calendar{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}.dow{text-align:center;color:var(--muted);font-size:12px;padding:8px 0}.day{min-height:105px;border:1px solid var(--line);border-radius:12px;background:var(--panel);text-align:left;padding:9px;position:relative;color:var(--text);overflow:hidden}.day.other{opacity:.35}.day.today{outline:2px solid var(--blue)}.day .date{font-weight:700;font-size:13px}.day .shift{font-size:11px;color:var(--blue);margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.day .yen{font-size:12px;margin-top:7px;font-weight:700}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{display:block;font-size:12px;color:var(--muted);font-weight:600}input,select{width:100%;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:6px;background:var(--panel);color:var(--text);min-width:0}input[type=checkbox]{width:auto;margin:0;accent-color:var(--blue)}.note{background:var(--soft);padding:12px;border-radius:12px;font-size:13px;line-height:1.7;color:var(--text)}.list-item{border-bottom:1px solid var(--line);padding:11px 0}.list-item:last-child{border:0}.divider{border-top:1px solid var(--line);margin:14px 0}.detail{display:grid;grid-template-columns:1fr auto;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.detail:last-child{border:0}.view-switch{display:flex;gap:5px;background:var(--bg);padding:4px;border-radius:13px}.view-switch button{border:0;border-radius:10px;background:transparent;color:var(--muted);padding:8px 16px}.view-switch button.active{background:var(--panel);color:var(--blue);box-shadow:var(--shadow)}.months{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.month-cell{border:1px solid var(--line);padding:12px;border-radius:12px}.bar{height:7px;border-radius:10px;background:var(--line);overflow:hidden;margin-top:8px}.bar span{height:100%;display:block;background:var(--blue)}.modal-wrap{position:fixed;inset:0;background:#0008;z-index:30;display:none;align-items:center;justify-content:center;padding:12px}.modal-wrap.open{display:flex}.modal{background:var(--panel);border-radius:20px;width:min(560px,100%);padding:20px;max-height:92vh;overflow:auto}.modal h2{margin:0 0 17px}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}.only-mobile{display:none}.textbtn{background:none;border:0;color:var(--blue);font-weight:600;padding:7px}.badge{font-size:11px;border-radius:20px;background:var(--soft);padding:5px 9px;color:var(--blue)}.day-breakdown{margin-top:14px;border:1px solid var(--line);border-radius:13px;padding:12px 14px;background:var(--bg)}.day-breakdown h3{margin:0 0 7px;font-size:13px}.day-breakdown .detail{font-size:13px;padding:6px 0}.day-breakdown .detail.total{font-size:15px;font-weight:700;border-top:1px solid var(--line);border-bottom:0;margin-top:5px;padding-top:10px}.day-breakdown .detail.total strong{color:var(--blue)}@media(max-width:650px){.shell{padding:18px 12px 100px}header{margin-bottom:17px}h1{font-size:21px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.stat strong{font-size:21px}.calendar{gap:3px}.day{min-height:75px;padding:5px;border-radius:8px}.day .date{font-size:12px}.day .shift{font-size:9px;margin-top:6px}.day .yen{font-size:10px;margin-top:4px}.tabbar button{min-width:0;flex:1}.fields{gap:10px}.grid{grid-template-columns:1fr}.months{grid-template-columns:repeat(2,1fr)}}
 
 /* Ver.4 interface */
 .day.past{background:color-mix(in srgb,var(--panel) 77%,var(--bg));opacity:.73}.day.future{background:var(--panel)}.day.today{outline:2px solid var(--blue);outline-offset:-2px;background:var(--soft)}.day.today .date::after{content:' 今日';font-size:9px;color:var(--blue)}.day.worked .date{color:var(--positive)}.day .shift{white-space:normal;line-height:1.35;overflow:visible;margin-top:5px}.day .shift-entry{border-radius:5px;padding:3px 4px;margin:3px 0;font-size:10px;font-weight:650;background:var(--soft);color:var(--blue)}.day .shift-entry.done{background:color-mix(in srgb,var(--positive) 14%,var(--panel));color:var(--positive)}.day .yen{font-size:11px}.modal-tabs{display:flex;background:var(--bg);padding:4px;border-radius:13px;margin-bottom:16px;gap:4px}.modal-tabs button{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 5px;border-radius:10px;font-weight:700}.modal-tabs button.active{color:var(--blue);background:var(--panel);box-shadow:var(--shadow)}.modal-pane{display:none}.modal-pane.active{display:block}.record-state{margin:12px 0;padding:13px;background:var(--soft);border-radius:12px;line-height:1.6;font-size:13px}.pay-gauge-card{text-align:center}.gauge-wrap{position:relative;width:min(270px,85%);aspect-ratio:1;margin:8px auto 0}.gauge-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}.gauge-track,.gauge-plan,.gauge-done{fill:none;stroke-width:13;stroke-linecap:round}.gauge-track{stroke:var(--line)}.gauge-plan{stroke:var(--blue);opacity:.24}.gauge-done{stroke:var(--positive)}.gauge-core{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px}.gauge-core strong{font-size:29px;letter-spacing:-1px}.gauge-legend{display:flex;gap:15px;justify-content:center;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}.legend-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}.forecast-value{font-size:25px;font-weight:750;margin-top:7px}.gauge-caption{color:var(--muted);font-size:12px;margin-top:9px}@media(max-width:650px){.day .shift-entry{font-size:9px;padding:2px 1px;letter-spacing:-.3px}.day .yen{font-size:9px}.day.today .date::after{content:'●';margin-left:2px}.gauge-core strong{font-size:26px}}
@@ -21,7 +21,7 @@
 .goal-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:12px 0}.goal-row input{width:145px;margin:0;text-align:right}.goal-row label{font-size:13px}.goal-exceeded{font-size:12px;color:var(--positive);font-weight:700;margin:5px 0}
 .copy-actions{justify-content:flex-start}.copy-wrap{position:fixed;inset:0;background:#0d1522a8;display:none;align-items:center;justify-content:center;padding:14px;z-index:45}.copy-wrap.open{display:flex}
 .copy-panel{background:var(--panel);border-radius:24px;padding:20px;width:min(530px,100%);max-height:90dvh;overflow:auto;box-shadow:0 12px 45px #0002}
-.copy-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:16px 0}.copy-day{min-width:0;border:1px solid var(--line);border-radius:12px;padding:11px 0;background:var(--panel);color:var(--text);font-size:14px;font-weight:700;position:relative}.copy-day.selected{background:var(--blue);color:white;border-color:var(--blue)}.copy-day.existing{border-style:dashed}.copy-day.source{opacity:.35;cursor:not-allowed}.copy-day:disabled{cursor:not-allowed}
+.copy-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;margin:16px 0}.copy-day{min-width:0;border:1px solid var(--line);border-radius:12px;padding:11px 0;background:var(--panel);color:var(--text);font-size:14px;font-weight:700;position:relative}.copy-day.selected{background:var(--blue);color:white;border-color:var(--blue)}.copy-day.existing{border-style:dashed}.copy-day.source{opacity:.35;cursor:not-allowed}.copy-day:disabled{cursor:not-allowed}
 .copy-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.copy-footer{position:sticky;bottom:-20px;padding:14px 0 0;background:var(--panel);display:flex;gap:10px;justify-content:flex-end}.copy-dow{text-align:center;color:var(--muted);font-size:12px}
 @media(max-width:650px){.day{padding:33px 3px 5px}.day .date{top:4px;left:4px;width:23px;height:23px;font-size:12px}.copy-panel{padding:15px}.copy-day{padding:11px 0;font-size:12px}.pay-settings-outer{padding:11px 10px 1px}}
 
@@ -1154,7 +1154,7 @@ button.primary:active,button.secondary:active,button.textbtn:active {transform:s
 
 
 /* 2026-10-22 UI: a stable six-row calendar including adjacent month dates. */
-#cal.calendar {grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:26px repeat(6,99px);grid-auto-rows:99px;align-content:start;align-items:stretch;}
+#cal.calendar {grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:26px repeat(6,99px);grid-auto-rows:99px;align-content:start;align-items:stretch;}
 #cal .dow{height:26px;min-height:0;line-height:18px;padding:3px 0 5px;align-self:center;}
 /* Past days stay on the same background as the current month's upcoming days. */
 #cal .day.past:not(.other-month){background:var(--panel)!important;opacity:1!important;}
@@ -1425,7 +1425,7 @@ body.setup-active{overflow:hidden}
 .setup-container{max-width:660px;margin:0 auto;min-height:calc(100dvh - 48px);display:flex;flex-direction:column;gap:18px}
 .setup-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px;font-weight:700;padding:8px 2px 0}
 .setup-topbar strong{color:var(--text);font-size:14px}
-.setup-progress{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
+.setup-progress{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}
 .setup-progress span{height:5px;background:var(--line);border-radius:8px;transition:background .2s}
 .setup-progress span.on{background:var(--blue)}
 .setup-panel{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:24px;min-width:0}
@@ -1473,7 +1473,7 @@ body.setup-active{overflow:hidden}
 @media(max-width:650px){.setup-clock-face{display:flex}.setup-clock input[type=time]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;z-index:1}}
 
 /* Quick Start: same rate editor and controls as Settings; iOS input sizes remain predictable. */
-#setup-wizard .setup-progress{grid-template-columns:repeat(7,minmax(0,1fr))}
+#setup-wizard .setup-progress{grid-template-columns:repeat(8,minmax(0,1fr))}
 #setup-wizard .setup-rate-card{padding:14px;background:color-mix(in srgb,var(--bg) 82%,var(--panel));border-radius:17px;gap:9px}
 #setup-wizard .setup-rate-title{min-height:36px}
 #setup-wizard .setup-remove-rate{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;margin:0;padding:0;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:#d95760;cursor:pointer}
@@ -1528,6 +1528,33 @@ body.setup-active{overflow:hidden}
 #setup-wizard .setup-managed-fields .setup-grid{margin:0}
 #setup-wizard .setup-section .setup-hint{margin-top:0}
 #setup-wizard .setup-field-disabled .setup-affixed,#setup-wizard .setup-field-disabled .setup-clock{background:var(--line)}
+
+/* October 22: unified break UI and Quick Start controls */
+.break-rules-layout{display:flex;flex-direction:column;gap:14px;min-width:0}
+.break-rule-caption{font-size:12px;font-weight:650;color:var(--muted);margin-top:1px}
+.break-rules-layout>label{display:flex;flex-direction:column;gap:7px;min-width:0;font-size:13px;font-weight:650}
+.break-rule-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0}
+.break-rule-grid>label{display:flex;flex-direction:column;min-width:0;gap:7px;font-weight:650;font-size:12px}
+.break-rule-grid>label>span:first-child{min-height:2em;display:flex;align-items:flex-end}
+.break-rule-grid .number-with-unit,.break-rules-layout .number-with-unit{width:100%;box-sizing:border-box;min-width:0;}
+.break-rule-grid .number-with-unit input{width:100%;min-width:0}
+.default-plan-settings #default-plan-manual-fields{margin-top:12px}
+#settings .reset-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:14px}
+#settings .reset-actions button{white-space:normal;min-height:44px;padding:9px 6px;font-size:12px}
+@media(max-width:650px){#settings .reset-actions{grid-template-columns:1fr;gap:8px}#settings .reset-actions button{font-size:13px}}
+#setup-wizard .setup-premium-toggle{position:relative;display:flex;align-items:center;gap:8px}
+#setup-wizard .setup-premium-toggle input{position:absolute;opacity:0;width:100%;height:100%;inset:0;cursor:pointer;z-index:1;margin:0}
+#setup-wizard .setup-premium-toggle .toggle-caption{font-size:12px}
+#setup-wizard .setup-toggle{gap:12px}
+#setup-wizard .setup-toggle>strong{font-size:16px}
+#setup-wizard .setup-premium-inputs{display:flex;flex-direction:column;gap:13px}
+#setup-wizard .setup-premium-inputs>.setup-grid{margin:0}
+#setup-wizard .setup-break-thresholds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0}
+#setup-wizard .setup-break-thresholds>.setup-field{min-width:0}
+#setup-wizard .setup-break-thresholds .setup-affixed{min-width:0}
+#setup-wizard .setup-break-thresholds .setup-field>span:first-child{font-size:12px;min-height:27px;display:flex;align-items:flex-end}
+#setup-wizard .setup-managed-fields.setup-auto-rule-fields{display:flex;flex-direction:column;gap:15px}
+#setup-wizard .setup-premium-inputs.setup-field-disabled .setup-clock,#setup-wizard .setup-premium-inputs.setup-field-disabled .setup-affixed{background:var(--line)}
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -1567,13 +1594,14 @@ body.setup-active{overflow:hidden}
 <div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標（円）</label><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></section>
 <section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>基準実働時間</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">1出勤あたり</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">1給与期間あたり</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card break-settings-card" id="break-settings-card">
 <h2>休憩</h2>
-<label class="break-mode-label">休憩の設定方法<select id="break-mode"><option value="manual">手動</option><option value="auto">自動</option></select></label>
+<label class="break-mode-label">休憩の設定方法<select id="break-mode"><option value="auto">自動</option><option value="manual">手動</option></select></label>
 <fieldset class="break-rule-fields" id="break-rule-fields">
-<div class="fields">
-<label>休憩開始までの時間<input type="number" min="0" id="break-offset"></label>
-<label>45分休憩の適用基準<input type="number" min="0" id="break-45"></label>
-<label>60分休憩の適用基準<input type="number" min="0" id="break-60"></label>
-</div></fieldset>
+<div class="break-rules-layout">
+<label class="break-offset-item">休憩開始までの時間<input type="number" min="0" id="break-offset"></label>
+<div class="break-rule-caption">休憩時間の適用基準</div><div class="break-rule-grid" aria-label="休憩時間の適用基準">
+<label><span>45分休憩</span><input type="number" min="0" id="break-45"></label>
+<label><span>60分休憩</span><input type="number" min="0" id="break-60"></label>
+</div></div></fieldset>
 <p class="hint" id="break-mode-hint">自動の場合、勤務時間から休憩時間を算出します。</p>
 </div>
 <div class="card default-plan-settings"><h2>デフォルトの勤務予定</h2>
@@ -1581,16 +1609,16 @@ body.setup-active{overflow:hidden}
 <label class="default-plan-item"><span class="default-plan-caption">開始</span><span class="default-plan-time"><span class="default-plan-clock" aria-hidden="true">15:00</span><input type="time" id="default-plan-start" aria-label="予定の開始時刻"></span></label>
 <label class="default-plan-item"><span class="default-plan-caption">終了</span><span class="default-plan-time"><span class="default-plan-clock" aria-hidden="true">22:00</span><input type="time" id="default-plan-end" aria-label="予定の終了時刻"></span></label>
 </div>
-<label class="break-mode-label default-break-mode-label">休憩の設定方法<select id="default-plan-break-mode"><option value="manual">手動</option><option value="auto">自動</option></select></label>
+
 <fieldset id="default-plan-manual-fields" class="default-break-manual-fields">
 <div class="fields default-plan-grid">
 <label class="default-plan-item"><span class="default-plan-caption">休憩</span><span class="number-with-unit suffix default-plan-number"><input type="number" inputmode="numeric" min="0" id="default-plan-break-min" aria-label="予定の休憩時間（分）"><span class="input-affix" aria-hidden="true">分</span></span></label>
 <label class="default-plan-item"><span class="default-plan-caption">休憩開始</span><span class="default-plan-time"><span class="default-plan-clock" aria-hidden="true">18:00</span><input type="time" id="default-plan-break-start" aria-label="予定の休憩開始時刻"></span></label>
 </div></fieldset>
-<p class="hint" id="default-plan-break-hint">新しく勤務を追加するときの初期値です。</p>
-</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/5c407e90e48d4e6ebf2af0d814d84541" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>「ShiftPay同期」をダウンロード <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクを開き、iPhoneの「ショートカット」に追加します。</li><li>「ShiftPay同期」を編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"><button class="secondary danger" id="reset">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月22日 18:30</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
+<p class="hint" id="default-plan-break-hint">休憩が自動の場合は、休憩時間と休憩開始時刻を設定できません。</p>
+</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクから追加し、ショートカットの名前を「勤務予定を取得」に設定します。</li><li>追加したショートカットを編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"></div><div class="reset-actions" aria-label="データの初期化"><button class="secondary danger" id="reset-shifts" type="button">勤務データの初期化</button><button class="secondary danger" id="reset-settings" type="button">設定の初期化</button><button class="secondary danger" id="reset" type="button">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月22日 20:12</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
  <div class="setup-container">
-  <div class="setup-topbar"><strong>給与計算 · 初期設定</strong><span id="setup-number">1 / 7</span></div>
+  <div class="setup-topbar"><strong>給与計算 · 初期設定</strong><span id="setup-number">1 / 8</span></div>
   <div class="setup-progress" id="setup-progress" aria-label="設定の進行状況"></div>
   <div class="setup-panel"><div id="setup-fields"></div><p id="setup-error" role="alert" hidden></p></div>
   <div class="setup-footer"><button type="button" class="secondary" id="setup-back" hidden>戻る</button><div class="setup-footer-actions"><button type="button" class="textbtn" id="setup-skip" hidden>スキップ</button><button type="button" class="primary" id="setup-next">次へ</button></div></div>
@@ -1617,7 +1645,7 @@ const key='shiftpay-prototype-v1';window.__shiftpayInitialSetupRequired=(()=>{
   localStorage.setItem(statusKey,'in-progress');return true;
  }catch(e){return true}
 })();
-const defaults={theme:'auto',workplace:'ウエルシア',baseRate:1326,rates:[{from:'17:00',to:'20:00',rate:1346},{from:'20:00',to:'05:00',rate:1376}],nightStart:'22:00',nightEnd:'05:00',nightBonus:25,nightEnabled:true,overtimeEnabled:true,overtimeHours:8,overtimeBonus:25,defaultPlanStart:'15:00',defaultPlanEnd:'22:00',defaultPlanBreakStart:'18:00',defaultPlanBreakMin:0,breakMode:'manual',breakOffset:180,break45:360,break60:480,closingDay:10,payday:25,payMonth:0,holidayPolicy:'before',transport:500,tax:0};let data;try{data=JSON.parse(localStorage.getItem(key))}catch{}if(!data||!data.settings||!Array.isArray(data.shifts))data={settings:structuredClone(defaults),shifts:[]};data.settings={...defaults,...data.settings};if(!data.settings.ver8FontConverted){const old=data.settings.fontSize;data.settings.fontSize=old==='standard'?'small':old==='large'?'standard':old==='extra'?'large':'standard';data.settings.ver8FontConverted=true;try{localStorage.setItem(key,JSON.stringify(data))}catch(e){}}let today=new Date(),cy=today.getFullYear(),cm=today.getMonth(),py=cy,pm=cm,annual=false,editing=null;const $=id=>document.getElementById(id),money=x=>'¥'+Math.round(x).toLocaleString('ja-JP'),pad=x=>String(x).padStart(2,'0'),daystr=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`,parseDate=s=>new Date(s+'T00:00:00'),minutes=t=>{let [h,m]=(t||'00:00').split(':').map(Number);return h*60+m},duration=(a,b)=>{let n=minutes(b)-minutes(a);return n<=0?n+1440:n},inSlot=(m,a,b)=>{a=minutes(a);b=minutes(b);return a===b?true:a<b?m>=a&&m<b:m>=a||m<b};const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function store(){localStorage.setItem(key,JSON.stringify(data))}function theme(){let t=data.settings.theme;document.documentElement.dataset.theme=t==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.dataset.fontSize=data.settings.fontSize||'standard';const meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#f5f6fa'}theme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
+const defaults={theme:'auto',workplace:'ウエルシア',baseRate:1326,rates:[{from:'17:00',to:'20:00',rate:1346},{from:'20:00',to:'05:00',rate:1376}],nightStart:'22:00',nightEnd:'05:00',nightBonus:25,nightEnabled:true,overtimeEnabled:true,overtimeHours:8,overtimeBonus:25,defaultPlanStart:'15:00',defaultPlanEnd:'22:00',defaultPlanBreakStart:'18:00',defaultPlanBreakMin:0,breakMode:'auto',breakOffset:180,break45:360,break60:480,closingDay:32,payday:15,payMonth:1,holidayPolicy:'before',transport:500,tax:0};let data;try{data=JSON.parse(localStorage.getItem(key))}catch{}if(!data||!data.settings||!Array.isArray(data.shifts))data={settings:structuredClone(defaults),shifts:[]};data.settings={...defaults,...data.settings};if(!data.settings.ver8FontConverted){const old=data.settings.fontSize;data.settings.fontSize=old==='standard'?'small':old==='large'?'standard':old==='extra'?'large':'standard';data.settings.ver8FontConverted=true;try{localStorage.setItem(key,JSON.stringify(data))}catch(e){}}let today=new Date(),cy=today.getFullYear(),cm=today.getMonth(),py=cy,pm=cm,annual=false,editing=null;const $=id=>document.getElementById(id),money=x=>'¥'+Math.round(x).toLocaleString('ja-JP'),pad=x=>String(x).padStart(2,'0'),daystr=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`,parseDate=s=>new Date(s+'T00:00:00'),minutes=t=>{let [h,m]=(t||'00:00').split(':').map(Number);return h*60+m},duration=(a,b)=>{let n=minutes(b)-minutes(a);return n<=0?n+1440:n},inSlot=(m,a,b)=>{a=minutes(a);b=minutes(b);return a===b?true:a<b?m>=a&&m<b:m>=a||m<b};const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function store(){localStorage.setItem(key,JSON.stringify(data))}function theme(){let t=data.settings.theme;document.documentElement.dataset.theme=t==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.dataset.fontSize=data.settings.fontSize||'standard';const meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#f5f6fa'}theme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
 function ratePartsAt(min){let s=data.settings,base=Number(s.baseRate)||0;for(const r of s.rates)if(inSlot(min,r.from,r.to))base=Number(r.rate)||0;let premium=s.nightEnabled!==false&&inSlot(min,s.nightStart,s.nightEnd)?base*(Number(s.nightBonus)||0)/100:0;return {base,premium}}function rateAt(min){let r=ratePartsAt(min);return r.base+r.premium}
 function comp(shift,useActual){
  const s=data.settings,start=useActual&&(shift.actualStart||shift.start)||shift.start,end=useActual&&(shift.actualEnd||shift.end)||shift.end;
@@ -1781,9 +1809,7 @@ document.addEventListener('change',event=>{
 function syncSettingBreak(){
  const s=data.settings, mode=s.breakMode==='auto'?'auto':'manual';
  const auto=mode==='auto';
- for(const id of ['break-mode','default-plan-break-mode']){
-  const select=document.getElementById(id);if(select)select.value=mode;
- }
+ const select=document.getElementById('break-mode');if(select)select.value=mode;
  const rules=$('break-rule-fields');
  if(rules){rules.disabled=!auto;rules.classList.toggle('is-disabled',!auto);}
  const plan=$('default-plan-manual-fields');
@@ -1825,11 +1851,7 @@ function renderSettings(){
    if(id==='break-mode'||id==='default-plan-break-min')syncSettingBreak();
   };
  }
- $('default-plan-break-mode').value=s.breakMode;
- $('default-plan-break-mode').onchange=()=>{
-  s.breakMode=$('default-plan-break-mode').value;
-  store();syncSettingBreak();renderCal();renderPay();
- };
+ 
  renderRates();renderPremiumToggles();updateTimeDisplays();
  decorateSettingsNumbers($('settings'));syncDefaultPlanClockLabels();syncSettingBreak();
 }
@@ -1846,7 +1868,26 @@ function closeModal(){$('modal-wrap').classList.remove('open')}
 function persistShift(status){let x=candidate();if(status)x.status=status;if(!x.date||!x.start||!x.end){alert('日付と勤務予定の開始・終了時刻を入力してください。');return false}if(editing)data.shifts=data.shifts.map(o=>o.id===editing?x:o);else data.shifts.push(x);editing=x.id;$('m-status').value=x.status;store();renderCal();renderPay();preview();return true}
 document.querySelectorAll('#modal-wrap input').forEach(el=>el.addEventListener('input',preview));$('save-shift').onclick=()=>{if(persistShift())closeModal()};$('confirm-worked').onclick=()=>{if(!$('m-actual-start').value)$('m-actual-start').value=$('m-start').value;if(!$('m-actual-end').value)$('m-actual-end').value=$('m-end').value;if(persistShift('worked')){preview();closeModal()}};$('undo-worked').onclick=()=>{if(confirm('勤務の確定を取り消しますか？')){persistShift('planned')}};$('delete-shift').onclick=()=>{if(editing&&confirm('この勤務予定を削除しますか？')){data.shifts=data.shifts.filter(x=>x.id!==editing);store();closeModal();renderCal();renderPay()}};$('close-modal').onclick=$('cancel-modal').onclick=closeModal;$('modal-wrap').addEventListener('click',e=>{if(e.target===$('modal-wrap'))closeModal()});
 $('prev').onclick=()=>{cm--;if(cm<0){cm=11;cy--}renderCal()};$('next').onclick=()=>{cm++;if(cm>11){cm=0;cy++}renderCal()};$('monthly').onclick=()=>{annual=false;renderPay()};$('yearly').onclick=()=>{annual=true;renderPay()};$('pay-prev').onclick=()=>{if(annual)py--;else if(--pm<0){pm=11;py--}renderPay()};$('pay-next').onclick=()=>{if(annual)py++;else if(++pm>11){pm=0;py++}renderPay()};$('add-rate').onclick=()=>{data.settings.rates.push({from:'12:00',to:'13:00',rate:data.settings.baseRate});store();renderRates()};document.querySelectorAll('[data-page]').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===btn.dataset.page));if(btn.dataset.page==='pay')renderPay();if(btn.dataset.page==='settings')renderSettings()});for(let id of ['closing-day','payday']){$(id).innerHTML=Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}日</option>`).join('')+'<option value="32">月末</option>'} // 月末(32)は実日付に丸める
-$('export').onclick=()=>{let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='shiftpay-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};$('import-btn').onclick=()=>$('import-file').click();$('import-file').onchange=async e=>{try{let d=JSON.parse(await e.target.files[0].text());if(!d.settings||!Array.isArray(d.shifts))throw Error();if(!confirm('現在のデータを読み込んだデータで置き換えますか？\nこの操作は取り消せません。'))return;data={settings:{...defaults,...d.settings},shifts:d.shifts};store();theme();renderSettings();renderCal();renderPay()}catch{alert('正しいバックアップファイルを選択してください。')}};$('reset').onclick=()=>{if(!confirm('すべてのデータを初期化しますか？\n登録された勤務予定・勤務記録・給与目標・各種設定が削除されます。\nこの操作は取り消せません。'))return;data={settings:structuredClone(defaults),shifts:[]};for(const k of ['shiftpay-monthly-goals-v5','shiftpay-yearly-goals-v6','shiftpay-last-planned-times','shiftpay-display-mode','shiftpay-show-empty']){try{localStorage.removeItem(k)}catch(e){}}goals={};yearlyGoals={};lastPlannedTimes=null;calMode='calendar';showEmptyDays=false;store();theme();renderSettings();renderCal();renderPay();alert('すべてのデータを初期化しました。')};
+$('export').onclick=()=>{let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='shiftpay-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};$('import-btn').onclick=()=>$('import-file').click();$('import-file').onchange=async e=>{try{let d=JSON.parse(await e.target.files[0].text());if(!d.settings||!Array.isArray(d.shifts))throw Error();if(!confirm('現在のデータを読み込んだデータで置き換えますか？\nこの操作は取り消せません。'))return;data={settings:{...defaults,...d.settings},shifts:d.shifts};store();theme();renderSettings();renderCal();renderPay()}catch{alert('正しいバックアップファイルを選択してください。')}};const resetDisplay=()=>{theme();renderSettings();renderCal();renderPay();};
+const clearShiftView=()=>{try{localStorage.removeItem('shiftpay-last-planned-times')}catch(e){}lastPlannedTimes=null;};
+const clearGoals=()=>{for(const k of ['shiftpay-monthly-goals-v5','shiftpay-yearly-goals-v6']){try{localStorage.removeItem(k)}catch(e){}}goals={};yearlyGoals={};};
+$('reset-shifts').onclick=()=>{
+ if(!confirm('勤務データを初期化しますか？\n登録された勤務予定と勤務記録をすべて削除します。各種設定や給与目標は残ります。\nこの操作は取り消せません。'))return;
+ data.shifts=[];clearShiftView();store();resetDisplay();alert('勤務データを初期化しました。');
+};
+$('reset-settings').onclick=()=>{
+ if(!confirm('設定を初期化しますか？\n各種設定を初期状態に戻して、初期設定画面を開きます。勤務予定・勤務記録と給与目標は残ります。\nこの操作は取り消せません。'))return;
+ data.settings=structuredClone(defaults);data.settings.ver8FontConverted=true;store();resetDisplay();
+ window.shiftpayOpenFreshSetup?.();
+};
+$('reset').onclick=()=>{
+ if(!confirm('すべてのデータを初期化しますか？\n勤務予定・勤務記録・給与目標・各種設定を削除し、初期設定画面に戻ります。\nこの操作は取り消せません。'))return;
+ data={settings:structuredClone(defaults),shifts:[]};data.settings.ver8FontConverted=true;
+ clearGoals();clearShiftView();
+ for(const k of ['shiftpay-display-mode','shiftpay-show-empty']){try{localStorage.removeItem(k)}catch(e){}}
+ calMode='calendar';showEmptyDays=false;store();resetDisplay();
+ window.shiftpayOpenFreshSetup?.();
+};
 // Independent calendar/list presentation state. No shift records are changed by filtering.
 let calMode='calendar';let showEmptyDays=false;
 try{calMode=localStorage.getItem('shiftpay-display-mode')==='list'?'list':'calendar';showEmptyDays=localStorage.getItem('shiftpay-show-empty')==='true'}catch(e){}
@@ -1990,7 +2031,7 @@ setInterval(()=>{renderCal();if($('modal-wrap').classList.contains('open'))previ
 renderSettings();renderCal();renderPay();
 
 // Private iCloud calendar import bridge. No CalDAV credentials are stored or transmitted.
-const syncShortcutName='ShiftPay同期';
+const syncShortcutName='勤務予定を取得';
 $('icloud-sync').addEventListener('click',()=>{
  if(!/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)){
   alert('iCloudからの取得にはAppleの「ショートカット」アプリを使います。iPhoneのSafariから実行してください。');return;
@@ -2318,9 +2359,9 @@ receiveShortcutCalendar();
  const wizard=document.getElementById('setup-wizard');
  const statusKey='shiftpay-setup-status-v1';
  const draftKey='shiftpay-setup-draft-v1';
- const stepLabels=['基本時給','時間帯別時給','割増設定','勤務・休憩','給与支払','iCloudから取得','完了'];
+ const stepLabels=['基本時給','時間帯別時給','割増設定','休憩','デフォルトの勤務予定','給与支払','iCloudから取得','完了'];
  const field=document.getElementById('setup-fields');
- const freshSettings={...structuredClone(defaults),workplace:'',baseRate:0,rates:[],transport:0,tax:0,defaultPlanStart:'09:00',defaultPlanEnd:'18:00',defaultPlanBreakStart:'12:00',defaultPlanBreakMin:60,closingDay:32,payday:15,payMonth:1};
+ const freshSettings={...structuredClone(defaults),workplace:'',baseRate:0,rates:[],transport:0,tax:0,defaultPlanStart:'09:00',defaultPlanEnd:'18:00',defaultPlanBreakStart:'12:00',defaultPlanBreakMin:60,closingDay:32,payday:15,payMonth:1,breakMode:'auto'};
  let draft=null,step=0,active=false,revisiting=false;
  const esc=s=>escapeHtml(String(s??''));
  const clone=x=>structuredClone(x);
@@ -2328,59 +2369,80 @@ receiveShortcutCalendar();
  const yenField=(name,caption)=>`<label class="setup-field"><span>${caption}</span><span class="setup-affixed"><span aria-hidden="true">¥</span><input aria-label="${caption.replace(/<[^>]*>/g,' ')}" data-setup-field="${name}" type="number" min="0" inputmode="numeric" value="${esc(draft[name])}"></span></label>`;
  const suffixField=(name,caption,unit,extras='')=>`<label class="setup-field"><span>${caption}</span><span class="setup-affixed suffix"><input aria-label="${caption}" data-setup-field="${name}" type="number" inputmode="decimal" value="${esc(draft[name])}" ${extras}><span aria-hidden="true">${unit}</span></span></label>`;
  const selectField=(name,caption,opts)=>`<label class="setup-field"><span>${caption}</span><select data-setup-field="${name}">${opts.map(([v,label])=>`<option value="${esc(v)}" ${String(draft[name])===String(v)?'selected':''}>${label}</option>`).join('')}</select></label>`;
- const toggle=(name,caption,desc)=>`<label class="setup-toggle"><span><strong>${caption}</strong><small>${desc}</small></span><input type="checkbox" data-setup-field="${name}" ${draft[name]!==false?'checked':''} aria-label="${caption}のオンオフ"></label>`;
+ const toggle=(name,caption)=>`<label class="setup-toggle"><strong>${caption}</strong><span class="setup-premium-toggle premium-toggle"><input type="checkbox" data-setup-field="${name}" ${draft[name]!==false?'checked':''} aria-label="${caption}のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption">${draft[name]!==false?'オン':'オフ'}</span></span></label>`;
  const time=(name,caption)=>settingInput(name,caption,'time');
  const rateClock=(i,key,value)=>`<span class="setup-clock"><span class="setup-clock-face" aria-hidden="true">${esc(value)}</span><input type="time" data-setup-rate-index="${i}" data-setup-rate-field="${key}" value="${esc(value)}" aria-label="時間帯 ${i+1} の${key==='from'?'開始':'終了'}時刻" lang="en-GB"></span>`;
  const fieldGrid=(html)=>`<div class="setup-grid">${html}</div>`;
- function syncSetupBreak(){
-  if(step!==3)return;
-  const auto=draft.breakMode==='auto';
-  field.querySelectorAll('[data-setup-field="breakMode"],[data-setup-mode-mirror]').forEach(el=>el.value=auto?'auto':'manual');
-  const rule=field.querySelector('.setup-auto-rule-fields');
-  const manual=field.querySelector('.setup-manual-plan-fields');
-  if(rule){rule.disabled=!auto;rule.classList.toggle('setup-field-disabled',!auto);}
-  if(manual){manual.disabled=auto;manual.classList.toggle('setup-field-disabled',auto);}
-  const mins=field.querySelector('[data-setup-field="defaultPlanBreakMin"]');
-  const start=field.querySelector('[data-setup-field="defaultPlanBreakStart"]');
-  if(mins&&start){
-   const off=auto||Number(mins.value||0)<=0;
-   if(!auto&&off&&start.value){start.value='';draft.defaultPlanBreakStart='';persistDraft();}
-   start.disabled=off;
-   const wrapper=start.closest('.setup-field');
-   if(wrapper)wrapper.classList.toggle('setup-field-disabled',off);
-   const face=start.closest('.setup-clock')?.querySelector('.setup-clock-face');
-   if(face)face.textContent=off?'--:--':start.value||'--:--';
+ function syncSetupPremium(){
+  for(const [name,cls] of [['nightEnabled','night'],['overtimeEnabled','overtime']]){
+   const enabled=draft[name]!==false;
+   const zone=field.querySelector('.setup-premium-'+cls);
+   if(!zone)continue;
+   const area=zone.querySelector('fieldset');
+   if(area){area.disabled=!enabled;area.classList.toggle('setup-field-disabled',!enabled);}
+   const caption=zone.querySelector('.toggle-caption');if(caption)caption.textContent=enabled?'オン':'オフ';
   }
-  const note=field.querySelector('#setup-break-rule-hint');
-  if(note)note.textContent=auto?'勤務時間に応じて休憩を自動計算します。開始時刻は指定した経過時間で決まります。':'自動休憩の適用基準は編集できません。手動の休憩は下の勤務予定で設定してください。';
-  const planNote=field.querySelector('#setup-plan-break-hint');
-  if(planNote)planNote.textContent=auto?'新しく勤務を追加するときは自動計算の休憩を適用します。':'指定した休憩時間・開始時刻を新規勤務の初期値にします。';
+ }
+ function syncSetupBreak(){
+  if(step!==3&&step!==4)return;
+  const auto=draft.breakMode==='auto';
+  if(step===3){
+   const rule=field.querySelector('.setup-auto-rule-fields');
+   if(rule){rule.disabled=!auto;rule.classList.toggle('setup-field-disabled',!auto);}
+   const note=field.querySelector('#setup-break-rule-hint');
+   if(note)note.textContent=auto?'勤務時間に応じて休憩を自動計算します。開始時刻は「休憩開始までの時間」で決まります。':'自動休憩の適用基準は編集できません。';
+  }
+  if(step===4){
+   const manual=field.querySelector('.setup-manual-plan-fields');
+   if(manual){manual.disabled=auto;manual.classList.toggle('setup-field-disabled',auto);}
+   const mins=field.querySelector('[data-setup-field="defaultPlanBreakMin"]');
+   const start=field.querySelector('[data-setup-field="defaultPlanBreakStart"]');
+   if(mins&&start){
+    const off=auto||Number(mins.value||0)<=0;
+    if(!auto&&off&&start.value){start.value='';draft.defaultPlanBreakStart='';persistDraft();}
+    start.disabled=off;
+    const wrapper=start.closest('.setup-field');
+    if(wrapper)wrapper.classList.toggle('setup-field-disabled',off);
+    const face=start.closest('.setup-clock')?.querySelector('.setup-clock-face');
+    if(face)face.textContent=off?'--:--':start.value||'--:--';
+   }
+   const note=field.querySelector('#setup-plan-break-hint');
+   if(note)note.textContent=auto?'休憩が自動の場合は、休憩時間と休憩開始時刻を設定できません。':'休憩時間・休憩開始時刻を新規勤務の初期値として使用します。';
+  }
  }
  const stepHtml=()=>{
   if(step===0)return `<div class="setup-intro"><span class="setup-step-icon" aria-hidden="true">¥</span><h2>基本時給を設定</h2><p>時間帯別時給を設定していない時間に適用される時給です。</p></div>${yenField('baseRate','基本時給')}<p class="setup-hint">実際の時給を入力してください。設定は後から変更できます。</p>`;
   if(step===1)return `<div class="setup-intro"><h2>時間帯別時給</h2><p>時間によって時給が異なる場合に登録してください。必要なければ追加せず進められます。</p></div><div class="setup-rates">${draft.rates.map((r,i)=>`<div class="setup-rate-card" data-setup-rate="${i}"><div class="setup-rate-title"><strong>時間帯 ${i+1}</strong><button class="setup-remove-rate" data-setup-remove="${i}" type="button" aria-label="時間帯 ${i+1} を削除" title="削除"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v7m4-7v7"/></svg></button></div><div class="setup-rate-editor"><div class="setup-rate-times"><label class="setup-time-row"><span>開始</span>${rateClock(i,'from',r.from)}</label><label class="setup-time-row"><span>終了</span>${rateClock(i,'to',r.to)}</label></div><div class="setup-rate-pay">${yenRate(i,r.rate)}</div></div></div>`).join('')}</div><button id="setup-add-rate" type="button" class="setup-add-rate">＋ 時間帯を追加</button><p class="setup-hint">重複する時間帯は、下にある設定が優先されます。日付をまたぐ時間帯も登録できます。</p>`;
-  if(step===2)return `<div class="setup-intro"><h2>割増設定</h2><p>深夜・残業の割増を必要に応じて設定してください。</p></div><div class="setup-section">${toggle('nightEnabled','深夜割増','設定した時間帯に割増を加算します。')}${fieldGrid(time('nightStart','開始時刻')+time('nightEnd','終了時刻'))}${suffixField('nightBonus','割増率','%', 'min="0" step="0.5"')}</div><div class="setup-section">${toggle('overtimeEnabled','残業割増','休憩を除く実働時間で判定します。')}${fieldGrid(suffixField('overtimeHours','基準実働時間','時間','min="0" max="24" step="0.25"')+suffixField('overtimeBonus','割増率','%', 'min="0" step="0.5"'))}</div>`;
-  if(step===3)return `<div class="setup-intro"><h2>休憩・デフォルトの勤務予定</h2><p>休憩のルールを設定してから、勤務追加時の初期値を決めます。</p></div>
-  <div class="setup-section"><h3>休憩</h3>
-   ${selectField('breakMode','休憩の設定方法',[['manual','手動'],['auto','自動']])}
-   <fieldset class="setup-managed-fields setup-auto-rule-fields">
-    <div class="setup-grid">${suffixField('breakOffset','休憩開始までの時間','分','min="0"')}${suffixField('break45','45分休憩の適用基準','分','min="0"')}${suffixField('break60','60分休憩の適用基準','分','min="0"')}</div>
-   </fieldset><p class="setup-hint" id="setup-break-rule-hint">自動の場合、勤務時間から休憩時間を算出します。</p>
+  if(step===2)return `<div class="setup-intro"><h2>割増設定</h2><p>深夜・残業の割増を必要に応じて設定してください。</p></div>
+  <div class="setup-section setup-premium-night">${toggle('nightEnabled','深夜割増')}
+   <fieldset class="setup-managed-fields setup-premium-inputs">${fieldGrid(time('nightStart','開始')+time('nightEnd','終了'))}${suffixField('nightBonus','割増率','%','min="0" step="0.5"')}</fieldset>
   </div>
-  <div class="setup-section"><h3>デフォルトの勤務予定</h3>
-   ${fieldGrid(time('defaultPlanStart','開始')+time('defaultPlanEnd','終了'))}
-   ${selectField('breakMode','休憩の設定方法',[['manual','手動'],['auto','自動']]).replace('data-setup-field="breakMode"','data-setup-mode-mirror="true"')}
-   <fieldset class="setup-managed-fields setup-manual-plan-fields">
-    ${fieldGrid(suffixField('defaultPlanBreakMin','休憩','分','min="0" step="1"')+time('defaultPlanBreakStart','休憩開始'))}
-   </fieldset><p class="setup-hint" id="setup-plan-break-hint"></p>
+  <div class="setup-section setup-premium-overtime">${toggle('overtimeEnabled','残業割増')}
+   <fieldset class="setup-managed-fields setup-premium-inputs">${fieldGrid(suffixField('overtimeHours','基準実働時間','時間','min="0" max="24" step="0.25"')+suffixField('overtimeBonus','割増率','%','min="0" step="0.5"'))}</fieldset>
   </div>`;
-  if(step===4)return `<div class="setup-intro"><h2>給与支払</h2><p>給与の締め日・支払日、交通費などを設定します。</p></div>${fieldGrid(selectField('closingDay','締め日',monthDays())+selectField('payday','支払日',monthDays())+selectField('payMonth','支払月',[['0','当月'],['1','翌月']])+selectField('holidayPolicy','銀行休業日の振替',[['before','前営業日'],['after','翌営業日'],['none','変更なし']]))}<div class="setup-section">${fieldGrid(yenField('transport','交通費<span class="setup-subcaption">1出勤あたり</span>')+yenField('tax','所得税の初期控除<span class="setup-subcaption">1給与期間あたり</span>'))}</div><p class="setup-hint">銀行休業日の振替は、選択したルールで計算します。</p>`;
-  if(step===5)return `<div class="setup-intro"><h2>iCloudから取得</h2><p>iPhoneの勤務用カレンダーから予定を取り込むための設定です。利用しない場合はスキップできます。</p></div><div class="setup-section"><h3>ショートカットを追加</h3><a class="secondary shortcut-link setup-shortcut-link" href="https://www.icloud.com/shortcuts/5c407e90e48d4e6ebf2af0d814d84541" target="_blank" rel="noopener noreferrer">「ShiftPay同期」をダウンロード <span aria-hidden="true">↗</span></a><ol class="sync-steps setup-sync-steps"><li>リンクから「ShiftPay同期」をiPhoneのショートカットに追加します。</li><li>ショートカットの「カレンダーの予定を検索」で、勤務用カレンダーを選択します。</li><li>設定完了後、カレンダー画面の「iCloudから取得」を押すと予定を取り込めます。</li></ol></div><p class="setup-hint">取得は自動ではありません。既存の勤務記録は上書きしません。後から設定ページでも確認できます。</p>`;
+  if(step===3)return `<div class="setup-intro"><h2>休憩</h2><p>休憩時間の設定方法と、必要に応じて適用基準を設定してください。</p></div>
+   <div class="setup-section">${selectField('breakMode','休憩の設定方法',[['auto','自動'],['manual','手動']])}
+    <fieldset class="setup-managed-fields setup-auto-rule-fields">
+     ${suffixField('breakOffset','休憩開始までの時間','分','min="0"')}
+     <div class="break-rule-caption">休憩時間の適用基準</div><div class="setup-break-thresholds">
+      ${suffixField('break45','45分休憩','分','min="0"')}
+      ${suffixField('break60','60分休憩','分','min="0"')}
+     </div>
+    </fieldset><p class="setup-hint" id="setup-break-rule-hint"></p>
+   </div>`;
+  if(step===4)return `<div class="setup-intro"><h2>デフォルトの勤務予定</h2><p>新しく勤務を追加するときの開始・終了時刻を設定してください。</p></div>
+   <div class="setup-section">${fieldGrid(time('defaultPlanStart','開始')+time('defaultPlanEnd','終了'))}
+    <fieldset class="setup-managed-fields setup-manual-plan-fields">
+     ${fieldGrid(suffixField('defaultPlanBreakMin','休憩','分','min="0" step="1"')+time('defaultPlanBreakStart','休憩開始'))}
+    </fieldset><p class="setup-hint" id="setup-plan-break-hint"></p>
+   </div>`;
+  if(step===5)return `<div class="setup-intro"><h2>給与支払</h2><p>給与の締め日・支払日、交通費などを設定します。</p></div>${fieldGrid(selectField('closingDay','締め日',monthDays())+selectField('payday','支払日',monthDays())+selectField('payMonth','支払月',[['0','当月'],['1','翌月']])+selectField('holidayPolicy','銀行休業日の振替',[['before','前営業日'],['after','翌営業日'],['none','変更なし']]))}<div class="setup-section">${fieldGrid(yenField('transport','交通費<span class="setup-subcaption">1出勤あたり</span>')+yenField('tax','所得税の初期控除<span class="setup-subcaption">1給与期間あたり</span>'))}</div><p class="setup-hint">銀行休業日の振替は、選択したルールで計算します。</p>`;
+  if(step===6)return `<div class="setup-intro"><h2>iCloudから取得</h2><p>iPhoneの勤務用カレンダーから予定を取り込むための設定です。利用しない場合はスキップできます。</p></div><div class="setup-section"><h3>ショートカットを追加</h3><a class="secondary shortcut-link setup-shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer">ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps setup-sync-steps"><li>リンクからiPhoneに追加し、名前を「勤務予定を取得」に設定します。</li><li>ショートカットの「カレンダーの予定を検索」で、勤務用カレンダーを選択します。</li><li>設定完了後、カレンダー画面の「iCloudから取得」を押すと予定を取り込めます。</li></ol></div><p class="setup-hint">取得は自動ではありません。既存の勤務記録は上書きしません。後から設定ページでも確認できます。</p>`;
   return `<div class="setup-intro setup-complete"><div class="setup-complete-symbol" aria-hidden="true">✓</div><h2>設定の準備ができました</h2><p>内容を確認し、カレンダーを開いてください。</p></div><div class="setup-summary"><div><span>基本時給</span><strong>¥${Math.round(Number(draft.baseRate)||0).toLocaleString('ja-JP')}</strong></div><div><span>時間帯別時給</span><strong>${draft.rates.length}件</strong></div><div><span>深夜割増</span><strong>${draft.nightEnabled?'オン':'オフ'}</strong></div><div><span>残業割増</span><strong>${draft.overtimeEnabled?'オン':'オフ'}</strong></div><div><span>勤務予定</span><strong>${esc(draft.defaultPlanStart)} ～ ${esc(draft.defaultPlanEnd)}</strong></div><div><span>締め日・支払日</span><strong>${draft.closingDay===32?'月末':draft.closingDay+'日'}・${draft.payday===32?'月末':draft.payday+'日'}</strong></div></div><p class="setup-hint">後から設定ページで変更できます。勤務データはこの端末のブラウザに保存されます。</p>`;
  };
  function yenRate(i,value){return `<label class="setup-field"><span>時給</span><span class="setup-affixed"><span aria-hidden="true">¥</span><input aria-label="時間帯 ${i+1} の時給" type="number" min="0" inputmode="numeric" data-setup-rate-index="${i}" data-setup-rate-field="rate" value="${esc(value)}"></span></label>`;}
  function monthDays(){return [...Array.from({length:31},(_,i)=>[String(i+1),`${i+1}日`]),['32','月末']];}
- function persistDraft(){if(!active)return;try{localStorage.setItem(draftKey,JSON.stringify({step,settings:draft,revisiting}));if(!revisiting)localStorage.setItem(statusKey,'in-progress');}catch(e){}}
+ function persistDraft(){if(!active)return;try{localStorage.setItem(draftKey,JSON.stringify({step,settings:draft,revisiting,version:2}));if(!revisiting)localStorage.setItem(statusKey,'in-progress');}catch(e){}}
  function fromValue(el){return el.type==='checkbox'?el.checked:el.type==='number'?Number(el.value):el.value;}
  function readFields(){
   if(!active)return;
@@ -2394,12 +2456,12 @@ receiveShortcutCalendar();
    if(step===0&&(!Number.isFinite(Number(draft.baseRate))||Number(draft.baseRate)<=0)){showError('基本時給を1円以上で入力してください。');return false;}
    if(step===1){for(const r of draft.rates){if(!r.from||!r.to||!Number.isFinite(Number(r.rate))||Number(r.rate)<0){showError('時間帯ごとの開始・終了時刻と時給を確認してください。');return false;}}}
    if(step===2&&(['nightBonus','overtimeBonus','overtimeHours'].some(k=>!Number.isFinite(Number(draft[k]))||Number(draft[k])<0))){showError('割増率と基準時間を0以上で入力してください。');return false;}
-   if(step===3){
+   if(step===3&&draft.breakMode==='auto'&&(['breakOffset','break45','break60'].some(k=>!Number.isFinite(Number(draft[k]))||Number(draft[k])<0)||Number(draft.break60)<Number(draft.break45))){showError('休憩の適用基準と開始までの時間を確認してください。');return false;}
+   if(step===4){
     if(!draft.defaultPlanStart||!draft.defaultPlanEnd){showError('予定開始・終了時刻を設定してください。');return false;}
-    if(draft.breakMode==='auto'&&(['breakOffset','break45','break60'].some(k=>!Number.isFinite(Number(draft[k]))||Number(draft[k])<0)||Number(draft.break60)<Number(draft.break45))){showError('休憩の適用基準と開始までの時間を確認してください。');return false;}
     if(draft.breakMode!=='auto'&&(Number(draft.defaultPlanBreakMin)<0||(Number(draft.defaultPlanBreakMin)>0&&!draft.defaultPlanBreakStart))){showError('休憩時間がある場合は休憩開始時刻も設定してください。');return false;}
    }
-   if(step===4&&(['transport','tax'].some(k=>!Number.isFinite(Number(draft[k]))||Number(draft[k])<0))){showError('交通費と所得税の金額を確認してください。');return false;}
+   if(step===5&&(['transport','tax'].some(k=>!Number.isFinite(Number(draft[k]))||Number(draft[k])<0))){showError('交通費と所得税の金額を確認してください。');return false;}
    return true;
  }
  function showError(message){const el=document.getElementById('setup-error');el.textContent=message;el.hidden=false;}
@@ -2408,11 +2470,11 @@ receiveShortcutCalendar();
    document.getElementById('setup-number').textContent=`${step+1} / ${stepLabels.length}`;
    document.getElementById('setup-progress').innerHTML=stepLabels.map((name,index)=>`<span class="${index<=step?'on':''}" aria-label="${name}"></span>`).join('');
    field.innerHTML=stepHtml();
-   syncSetupBreak();
+   syncSetupPremium();syncSetupBreak();
    const error=document.getElementById('setup-error');error.hidden=true;error.textContent='';
    document.getElementById('setup-back').hidden=step===0;
-   document.getElementById('setup-skip').hidden=step===0||step===6;
-   document.getElementById('setup-next').textContent=step===6?'設定を完了':'次へ';
+   document.getElementById('setup-skip').hidden=step===0||step===7;
+   document.getElementById('setup-next').textContent=step===7?'設定を完了':'次へ';
    wizard.scrollTo({top:0,behavior:'instant'});
    field.querySelectorAll('input,select').forEach(el=>{
      const update=()=>{
@@ -2423,7 +2485,8 @@ receiveShortcutCalendar();
          if(primary)primary.value=el.value;
        }
        readFields();
-       if(step===3)syncSetupBreak();
+       if(step===2)syncSetupPremium();
+       if(step===3||step===4)syncSetupBreak();
      };
      el.addEventListener('input',update);
      el.addEventListener('change',update);
@@ -2431,14 +2494,15 @@ receiveShortcutCalendar();
    const add=field.querySelector('#setup-add-rate');if(add)add.onclick=()=>{readFields();draft.rates.push({from:'17:00',to:'22:00',rate:Number(draft.baseRate)||0});persistDraft();render();};
    field.querySelectorAll('[data-setup-remove]').forEach(btn=>btn.onclick=()=>{readFields();draft.rates.splice(Number(btn.dataset.setupRemove),1);persistDraft();render();});
  }
- function openSetup(isRevisit=false){
+ function openSetup(isRevisit=false,forceFresh=false){
    if(active)return;
    let saved=null;
    try{saved=JSON.parse(localStorage.getItem(draftKey)||'null')}catch(e){}
    revisiting=isRevisit||Boolean(saved?.revisiting);
-   if(isRevisit){draft=clone(data.settings);step=0;}
+   if(forceFresh){draft=clone(freshSettings);step=0;revisiting=false;}
+   else if(isRevisit){draft=clone(data.settings);step=0;}
    else if(saved&&saved.settings&&Array.isArray(saved.settings.rates)){
-     draft={...clone(freshSettings),...saved.settings};step=Math.max(0,Math.min(stepLabels.length-1,Number(saved.step)||0));
+     draft={...clone(freshSettings),...saved.settings};step=Math.max(0,Math.min(stepLabels.length-1,(saved.version===2?Number(saved.step):Number(saved.step)>=4?Number(saved.step)+1:Number(saved.step))||0));
    }else{draft=clone(freshSettings);step=0;}
    active=true;wizard.hidden=false;document.body.classList.add('setup-active');persistDraft();render();
  }
@@ -2452,14 +2516,15 @@ receiveShortcutCalendar();
  }
  document.getElementById('setup-next').addEventListener('click',()=>{
    readFields();if(!validCurrent())return;
-   if(step===6){finish();return;}
+   if(step===7){finish();return;}
    step++;persistDraft();render();
  });
  document.getElementById('setup-back').addEventListener('click',()=>{readFields();if(step>0)step--;persistDraft();render()});
  document.getElementById('setup-skip').addEventListener('click',()=>{
    readFields();if(step===1&&!revisiting)draft.rates=[];
-   step=Math.min(6,step+1);persistDraft();render();
+   step=Math.min(7,step+1);persistDraft();render();
  });
+ window.shiftpayOpenFreshSetup=()=>{try{localStorage.removeItem(draftKey);localStorage.setItem(statusKey,'in-progress')}catch(e){}openSetup(false,true)};
  document.getElementById('restart-setup')?.addEventListener('click',()=>openSetup(true));
  // First visit check must be captured before any application startup writes defaults.
  if(window.__shiftpayInitialSetupRequired)openSetup(false);
