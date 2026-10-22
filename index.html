@@ -1515,6 +1515,19 @@ body.setup-active{overflow:hidden}
  #setup-wizard .setup-grid{gap:10px}
  #setup-wizard .setup-affixed{padding-left:7px;padding-right:7px}
 }
+
+/* Break mode: one shared choice, separate auto-rule and manual-default controls. */
+.break-mode-label{display:block;margin:8px 0 12px;font-weight:650;font-size:13px;color:var(--muted)}
+.break-mode-label select{min-height:46px;color:var(--text);font-size:15px}
+.break-rule-fields,.default-break-manual-fields,.setup-managed-fields{border:0;margin:0;padding:0;min-width:0;width:100%;transition:opacity .18s ease,filter .18s ease}
+.break-rule-fields.is-disabled,.default-break-manual-fields.is-disabled,.setup-managed-fields.setup-field-disabled{opacity:.42;filter:grayscale(.35)}
+.break-rule-fields:disabled input,.default-break-manual-fields:disabled input,.setup-managed-fields:disabled input{cursor:not-allowed}
+.default-plan-settings .default-break-mode-label{margin-top:16px}
+.default-break-manual-fields{margin-top:4px}
+#setup-wizard .setup-managed-fields{display:block}
+#setup-wizard .setup-managed-fields .setup-grid{margin:0}
+#setup-wizard .setup-section .setup-hint{margin-top:0}
+#setup-wizard .setup-field-disabled .setup-affixed,#setup-wizard .setup-field-disabled .setup-clock{background:var(--line)}
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -1552,13 +1565,30 @@ body.setup-active{overflow:hidden}
   </div>
 </div>
 <div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標（円）</label><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></section>
-<section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>基準実働時間</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">1出勤あたり</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">1給与期間あたり</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card default-plan-settings"><h2>勤務予定の初期設定</h2>
+<section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>基準実働時間</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">1出勤あたり</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">1給与期間あたり</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card break-settings-card" id="break-settings-card">
+<h2>休憩</h2>
+<label class="break-mode-label">休憩の設定方法<select id="break-mode"><option value="manual">手動</option><option value="auto">自動</option></select></label>
+<fieldset class="break-rule-fields" id="break-rule-fields">
+<div class="fields">
+<label>休憩開始までの時間<input type="number" min="0" id="break-offset"></label>
+<label>45分休憩の適用基準<input type="number" min="0" id="break-45"></label>
+<label>60分休憩の適用基準<input type="number" min="0" id="break-60"></label>
+</div></fieldset>
+<p class="hint" id="break-mode-hint">自動の場合、勤務時間から休憩時間を算出します。</p>
+</div>
+<div class="card default-plan-settings"><h2>デフォルトの勤務予定</h2>
 <div class="fields default-plan-grid">
 <label class="default-plan-item"><span class="default-plan-caption">開始</span><span class="default-plan-time"><span class="default-plan-clock" aria-hidden="true">15:00</span><input type="time" id="default-plan-start" aria-label="予定の開始時刻"></span></label>
 <label class="default-plan-item"><span class="default-plan-caption">終了</span><span class="default-plan-time"><span class="default-plan-clock" aria-hidden="true">22:00</span><input type="time" id="default-plan-end" aria-label="予定の終了時刻"></span></label>
+</div>
+<label class="break-mode-label default-break-mode-label">休憩の設定方法<select id="default-plan-break-mode"><option value="manual">手動</option><option value="auto">自動</option></select></label>
+<fieldset id="default-plan-manual-fields" class="default-break-manual-fields">
+<div class="fields default-plan-grid">
 <label class="default-plan-item"><span class="default-plan-caption">休憩</span><span class="number-with-unit suffix default-plan-number"><input type="number" inputmode="numeric" min="0" id="default-plan-break-min" aria-label="予定の休憩時間（分）"><span class="input-affix" aria-hidden="true">分</span></span></label>
 <label class="default-plan-item"><span class="default-plan-caption">休憩開始</span><span class="default-plan-time"><span class="default-plan-clock" aria-hidden="true">18:00</span><input type="time" id="default-plan-break-start" aria-label="予定の休憩開始時刻"></span></label>
-</div></div><div class="card"><h2>休憩</h2><div class="fields"><label>基本モード<select id="break-mode"><option value="manual">手動</option><option value="auto">自動</option></select></label><label>休憩開始までの時間<input type="number" min="0" id="break-offset"></label><label>45分休憩の適用基準<input type="number" min="0" id="break-45"></label><label>60分休憩の適用基準<input type="number" min="0" id="break-60"></label></div><p class="muted" style="font-size:12px">自動休憩は概算です。実際の休憩時刻は日ごとに変更できます。</p></div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/5c407e90e48d4e6ebf2af0d814d84541" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>「ShiftPay同期」をダウンロード <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクを開き、iPhoneの「ショートカット」に追加します。</li><li>「ShiftPay同期」を編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"><button class="secondary danger" id="reset">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月22日 16:58</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
+</div></fieldset>
+<p class="hint" id="default-plan-break-hint">新しく勤務を追加するときの初期値です。</p>
+</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/5c407e90e48d4e6ebf2af0d814d84541" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>「ShiftPay同期」をダウンロード <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクを開き、iPhoneの「ショートカット」に追加します。</li><li>「ShiftPay同期」を編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"><button class="secondary danger" id="reset">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月22日 18:30</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
  <div class="setup-container">
   <div class="setup-topbar"><strong>給与計算 · 初期設定</strong><span id="setup-number">1 / 7</span></div>
   <div class="setup-progress" id="setup-progress" aria-label="設定の進行状況"></div>
@@ -1749,19 +1779,60 @@ document.addEventListener('change',event=>{
  if(event.target.matches('#default-plan-start,#default-plan-end,#default-plan-break-start'))syncDefaultPlanClockLabels();
 });
 function syncSettingBreak(){
- const start=document.getElementById('default-plan-break-start');
- const mins=document.getElementById('default-plan-break-min');
- if(!start||!mins)return;
- const off=Number(mins.value||0)<=0;
- if(off&&start.value){start.value='';data.settings.defaultPlanBreakStart='';store();}
- start.disabled=off;
- const label=start.closest('.default-plan-item');
- if(label)label.classList.toggle('setting-break-off',off);
- const face=label?.querySelector('.default-plan-clock');
- if(face)face.textContent=off?'--:--':start.value||'--:--';
+ const s=data.settings, mode=s.breakMode==='auto'?'auto':'manual';
+ const auto=mode==='auto';
+ for(const id of ['break-mode','default-plan-break-mode']){
+  const select=document.getElementById(id);if(select)select.value=mode;
+ }
+ const rules=$('break-rule-fields');
+ if(rules){rules.disabled=!auto;rules.classList.toggle('is-disabled',!auto);}
+ const plan=$('default-plan-manual-fields');
+ if(plan){plan.disabled=auto;plan.classList.toggle('is-disabled',auto);}
+ const start=$('default-plan-break-start');
+ const mins=$('default-plan-break-min');
+ if(start&&mins){
+  const off=auto||Number(mins.value||0)<=0;
+  if(!auto&&off&&start.value){start.value='';s.defaultPlanBreakStart='';store();}
+  start.disabled=off;
+  start.closest('.default-plan-item')?.classList.toggle('setting-break-off',off);
+  const face=start.closest('.default-plan-item')?.querySelector('.default-plan-clock');
+  if(face)face.textContent=off?'--:--':start.value||'--:--';
+ }
+ const hint=$('break-mode-hint');
+ if(hint)hint.textContent=auto?'休憩時間は勤務時間と適用基準から算出し、開始時刻は「休憩開始までの時間」で決まります。':'自動休憩の適用基準は編集できません。休憩時間と開始時刻は「デフォルトの勤務予定」で設定できます。';
+ const defaultHint=$('default-plan-break-hint');
+ if(defaultHint)defaultHint.textContent=auto?'勤務追加時には休憩時間と開始時刻を自動計算します。勤務ごとに変更できます。':'休憩時間・休憩開始時刻を新規勤務の初期値として使用します。';
 }
-function renderSettings(){let s=data.settings;const fields={'theme':'theme','font-size':'fontSize','base-rate':'baseRate','default-plan-start':'defaultPlanStart','default-plan-end':'defaultPlanEnd','default-plan-break-start':'defaultPlanBreakStart','default-plan-break-min':'defaultPlanBreakMin','night-bonus':'nightBonus','night-start':'nightStart','night-end':'nightEnd','overtime-hours':'overtimeHours','overtime-bonus':'overtimeBonus','break-mode':'breakMode','break-offset':'breakOffset','break-45':'break45','break-60':'break60','closing-day':'closingDay','payday':'payday','pay-month':'payMonth','holiday-policy':'holidayPolicy','transport':'transport','tax':'tax'};for(let [id,field]of Object.entries(fields)){$(id).value=s[field];$(id).onchange=()=>{s[field]=$ (id).type==='number'||['closing-day','payday','pay-month'].includes(id)?Number($(id).value):$(id).value;if(id==='default-plan-break-min'&&Number(s.defaultPlanBreakMin)<=0){s.defaultPlanBreakStart='';$('default-plan-break-start').value='';}
- store();theme();renderPay();renderCal();if(id==='default-plan-break-min')syncSettingBreak();}}renderRates();renderPremiumToggles();updateTimeDisplays();decorateSettingsNumbers($('settings'));syncDefaultPlanClockLabels();syncSettingBreak()}
+function renderSettings(){
+ let s=data.settings;
+ const fields={'theme':'theme','font-size':'fontSize','base-rate':'baseRate',
+ 'default-plan-start':'defaultPlanStart','default-plan-end':'defaultPlanEnd',
+ 'default-plan-break-start':'defaultPlanBreakStart','default-plan-break-min':'defaultPlanBreakMin',
+ 'night-bonus':'nightBonus','night-start':'nightStart','night-end':'nightEnd',
+ 'overtime-hours':'overtimeHours','overtime-bonus':'overtimeBonus',
+ 'break-mode':'breakMode','break-offset':'breakOffset','break-45':'break45','break-60':'break60',
+ 'closing-day':'closingDay','payday':'payday','pay-month':'payMonth',
+ 'holiday-policy':'holidayPolicy','transport':'transport','tax':'tax'};
+ for(const [id,field] of Object.entries(fields)){
+  const input=$(id);
+  input.value=s[field];
+  input.onchange=()=>{
+   s[field]=input.type==='number'||['closing-day','payday','pay-month'].includes(id)?Number(input.value):input.value;
+   if(id==='default-plan-break-min'&&s.breakMode==='manual'&&Number(s.defaultPlanBreakMin)<=0){
+    s.defaultPlanBreakStart='';$('default-plan-break-start').value='';
+   }
+   store();theme();renderPay();renderCal();
+   if(id==='break-mode'||id==='default-plan-break-min')syncSettingBreak();
+  };
+ }
+ $('default-plan-break-mode').value=s.breakMode;
+ $('default-plan-break-mode').onchange=()=>{
+  s.breakMode=$('default-plan-break-mode').value;
+  store();syncSettingBreak();renderCal();renderPay();
+ };
+ renderRates();renderPremiumToggles();updateTimeDisplays();
+ decorateSettingsNumbers($('settings'));syncDefaultPlanClockLabels();syncSettingBreak();
+}
 let modalTab='planned';function setModalTab(tab){modalTab=tab;let modal=$('modal-wrap').querySelector('.modal');for(let [name,btn,pane] of [['planned','tab-planned','pane-planned'],['record','tab-record','pane-record']]){$(btn).classList.toggle('active',tab===name);$(btn).setAttribute('aria-selected',String(tab===name));$(pane).classList.toggle('active',tab===name)}}$('tab-planned').onclick=()=>setModalTab('planned');$('tab-record').onclick=()=>setModalTab('record');
 function openModal(item,date){editing=item?item.id:null;let x=item||{date:date||daystr(cy,cm,today.getDate()),start:'15:00',end:'22:00',actualStart:'',actualEnd:'',breakStart:'',breakMin:'',status:'planned'};$('modal-title').textContent=item?'勤務を編集':'勤務を追加';for(let [id,value] of [['m-date',x.date],['m-start',x.start],['m-end',x.end],['m-actual-start',x.actualStart||''],['m-actual-end',x.actualEnd||''],['m-plan-break-start',x.planBreakStart||''],['m-plan-break-min',x.planBreakMin??''],['m-break-start',x.breakStart||''],['m-break-min',x.breakMin??''],['m-status',x.status]])$(id).value=value;$('delete-shift').style.visibility=item?'visible':'hidden';$('modal-wrap').classList.add('open');setModalTab('planned');$('modal-wrap').querySelector('.modal').scrollTop=0;preview()}
 function candidate(){let saved=editing?data.shifts.find(o=>o.id===editing):null;let syncFields=saved&&saved.icloudSource==='shortcut'&&saved.date===$('m-date').value?{icloudSource:'shortcut',icloudKey:saved.icloudKey}:{};return {...syncFields,id:editing||String(Date.now())+'-'+Math.random().toString(36).slice(2,7),date:$('m-date').value,start:$('m-start').value,end:$('m-end').value,actualStart:$('m-actual-start').value,actualEnd:$('m-actual-end').value,planBreakStart:$('m-plan-break-start').value,planBreakMin:$('m-plan-break-min').value,breakStart:$('m-break-start').value,breakMin:$('m-break-min').value,status:$('m-status').value}}
@@ -1815,7 +1886,7 @@ openModal=function(item,date){
   // Apply settings only to a new manual entry, never to an existing or imported shift.
   if(!item){const d=data.settings;
     item={date:date||daystr(cy,cm,today.getDate()),start:d.defaultPlanStart||'15:00',end:d.defaultPlanEnd||'22:00',
-      planBreakStart:d.defaultPlanBreakStart||'',planBreakMin:d.defaultPlanBreakMin??0,
+      planBreakStart:d.breakMode==='auto'?'':(d.defaultPlanBreakStart||''),planBreakMin:d.breakMode==='auto'?'':(d.defaultPlanBreakMin??0),
       actualStart:'',actualEnd:'',breakStart:'',breakMin:'',status:'planned',id:null};
   }
   modalOpenV4(item,date);
@@ -2263,24 +2334,46 @@ receiveShortcutCalendar();
  const fieldGrid=(html)=>`<div class="setup-grid">${html}</div>`;
  function syncSetupBreak(){
   if(step!==3)return;
-  const minutesInput=field.querySelector('[data-setup-field="defaultPlanBreakMin"]');
-  const startInput=field.querySelector('[data-setup-field="defaultPlanBreakStart"]');
-  if(!minutesInput||!startInput)return;
-  const off=Number(minutesInput.value||0)<=0;
-  const wrapper=startInput.closest('.setup-field');
-  if(off){
-   if(startInput.value){startInput.value='';draft.defaultPlanBreakStart='';persistDraft();}
+  const auto=draft.breakMode==='auto';
+  field.querySelectorAll('[data-setup-field="breakMode"],[data-setup-mode-mirror]').forEach(el=>el.value=auto?'auto':'manual');
+  const rule=field.querySelector('.setup-auto-rule-fields');
+  const manual=field.querySelector('.setup-manual-plan-fields');
+  if(rule){rule.disabled=!auto;rule.classList.toggle('setup-field-disabled',!auto);}
+  if(manual){manual.disabled=auto;manual.classList.toggle('setup-field-disabled',auto);}
+  const mins=field.querySelector('[data-setup-field="defaultPlanBreakMin"]');
+  const start=field.querySelector('[data-setup-field="defaultPlanBreakStart"]');
+  if(mins&&start){
+   const off=auto||Number(mins.value||0)<=0;
+   if(!auto&&off&&start.value){start.value='';draft.defaultPlanBreakStart='';persistDraft();}
+   start.disabled=off;
+   const wrapper=start.closest('.setup-field');
+   if(wrapper)wrapper.classList.toggle('setup-field-disabled',off);
+   const face=start.closest('.setup-clock')?.querySelector('.setup-clock-face');
+   if(face)face.textContent=off?'--:--':start.value||'--:--';
   }
-  startInput.disabled=off;
-  if(wrapper)wrapper.classList.toggle('setup-field-disabled',off);
-  const face=startInput.closest('.setup-clock')?.querySelector('.setup-clock-face');
-  if(face)face.textContent=startInput.value||'--:--';
+  const note=field.querySelector('#setup-break-rule-hint');
+  if(note)note.textContent=auto?'勤務時間に応じて休憩を自動計算します。開始時刻は指定した経過時間で決まります。':'自動休憩の適用基準は編集できません。手動の休憩は下の勤務予定で設定してください。';
+  const planNote=field.querySelector('#setup-plan-break-hint');
+  if(planNote)planNote.textContent=auto?'新しく勤務を追加するときは自動計算の休憩を適用します。':'指定した休憩時間・開始時刻を新規勤務の初期値にします。';
  }
  const stepHtml=()=>{
   if(step===0)return `<div class="setup-intro"><span class="setup-step-icon" aria-hidden="true">¥</span><h2>基本時給を設定</h2><p>時間帯別時給を設定していない時間に適用される時給です。</p></div>${yenField('baseRate','基本時給')}<p class="setup-hint">実際の時給を入力してください。設定は後から変更できます。</p>`;
   if(step===1)return `<div class="setup-intro"><h2>時間帯別時給</h2><p>時間によって時給が異なる場合に登録してください。必要なければ追加せず進められます。</p></div><div class="setup-rates">${draft.rates.map((r,i)=>`<div class="setup-rate-card" data-setup-rate="${i}"><div class="setup-rate-title"><strong>時間帯 ${i+1}</strong><button class="setup-remove-rate" data-setup-remove="${i}" type="button" aria-label="時間帯 ${i+1} を削除" title="削除"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v7m4-7v7"/></svg></button></div><div class="setup-rate-editor"><div class="setup-rate-times"><label class="setup-time-row"><span>開始</span>${rateClock(i,'from',r.from)}</label><label class="setup-time-row"><span>終了</span>${rateClock(i,'to',r.to)}</label></div><div class="setup-rate-pay">${yenRate(i,r.rate)}</div></div></div>`).join('')}</div><button id="setup-add-rate" type="button" class="setup-add-rate">＋ 時間帯を追加</button><p class="setup-hint">重複する時間帯は、下にある設定が優先されます。日付をまたぐ時間帯も登録できます。</p>`;
   if(step===2)return `<div class="setup-intro"><h2>割増設定</h2><p>深夜・残業の割増を必要に応じて設定してください。</p></div><div class="setup-section">${toggle('nightEnabled','深夜割増','設定した時間帯に割増を加算します。')}${fieldGrid(time('nightStart','開始時刻')+time('nightEnd','終了時刻'))}${suffixField('nightBonus','割増率','%', 'min="0" step="0.5"')}</div><div class="setup-section">${toggle('overtimeEnabled','残業割増','休憩を除く実働時間で判定します。')}${fieldGrid(suffixField('overtimeHours','基準実働時間','時間','min="0" max="24" step="0.25"')+suffixField('overtimeBonus','割増率','%', 'min="0" step="0.5"'))}</div>`;
-  if(step===3)return `<div class="setup-intro"><h2>勤務予定の初期設定</h2><p>勤務を追加するときに自動入力する時刻を設定します。</p></div>${fieldGrid(time('defaultPlanStart','開始')+time('defaultPlanEnd','終了')+suffixField('defaultPlanBreakMin','休憩','分','min="0" step="1"')+time('defaultPlanBreakStart','休憩開始'))}<div class="setup-section"><h3>休憩</h3>${selectField('breakMode','基本モード',[['manual','手動'],['auto','自動']])}<div class="setup-optional-break" ${draft.breakMode!=='auto'?'hidden':''}>${fieldGrid(suffixField('break45','45分休憩の適用基準','分','min="0"')+suffixField('break60','60分休憩の適用基準','分','min="0"'))}</div><p class="setup-hint">自動休憩は概算です。勤務ごとに変更できます。</p></div>`;
+  if(step===3)return `<div class="setup-intro"><h2>休憩・デフォルトの勤務予定</h2><p>休憩のルールを設定してから、勤務追加時の初期値を決めます。</p></div>
+  <div class="setup-section"><h3>休憩</h3>
+   ${selectField('breakMode','休憩の設定方法',[['manual','手動'],['auto','自動']])}
+   <fieldset class="setup-managed-fields setup-auto-rule-fields">
+    <div class="setup-grid">${suffixField('breakOffset','休憩開始までの時間','分','min="0"')}${suffixField('break45','45分休憩の適用基準','分','min="0"')}${suffixField('break60','60分休憩の適用基準','分','min="0"')}</div>
+   </fieldset><p class="setup-hint" id="setup-break-rule-hint">自動の場合、勤務時間から休憩時間を算出します。</p>
+  </div>
+  <div class="setup-section"><h3>デフォルトの勤務予定</h3>
+   ${fieldGrid(time('defaultPlanStart','開始')+time('defaultPlanEnd','終了'))}
+   ${selectField('breakMode','休憩の設定方法',[['manual','手動'],['auto','自動']]).replace('data-setup-field="breakMode"','data-setup-mode-mirror="true"')}
+   <fieldset class="setup-managed-fields setup-manual-plan-fields">
+    ${fieldGrid(suffixField('defaultPlanBreakMin','休憩','分','min="0" step="1"')+time('defaultPlanBreakStart','休憩開始'))}
+   </fieldset><p class="setup-hint" id="setup-plan-break-hint"></p>
+  </div>`;
   if(step===4)return `<div class="setup-intro"><h2>給与支払</h2><p>給与の締め日・支払日、交通費などを設定します。</p></div>${fieldGrid(selectField('closingDay','締め日',monthDays())+selectField('payday','支払日',monthDays())+selectField('payMonth','支払月',[['0','当月'],['1','翌月']])+selectField('holidayPolicy','銀行休業日の振替',[['before','前営業日'],['after','翌営業日'],['none','変更なし']]))}<div class="setup-section">${fieldGrid(yenField('transport','交通費<span class="setup-subcaption">1出勤あたり</span>')+yenField('tax','所得税の初期控除<span class="setup-subcaption">1給与期間あたり</span>'))}</div><p class="setup-hint">銀行休業日の振替は、選択したルールで計算します。</p>`;
   if(step===5)return `<div class="setup-intro"><h2>iCloudから取得</h2><p>iPhoneの勤務用カレンダーから予定を取り込むための設定です。利用しない場合はスキップできます。</p></div><div class="setup-section"><h3>ショートカットを追加</h3><a class="secondary shortcut-link setup-shortcut-link" href="https://www.icloud.com/shortcuts/5c407e90e48d4e6ebf2af0d814d84541" target="_blank" rel="noopener noreferrer">「ShiftPay同期」をダウンロード <span aria-hidden="true">↗</span></a><ol class="sync-steps setup-sync-steps"><li>リンクから「ShiftPay同期」をiPhoneのショートカットに追加します。</li><li>ショートカットの「カレンダーの予定を検索」で、勤務用カレンダーを選択します。</li><li>設定完了後、カレンダー画面の「iCloudから取得」を押すと予定を取り込めます。</li></ol></div><p class="setup-hint">取得は自動ではありません。既存の勤務記録は上書きしません。後から設定ページでも確認できます。</p>`;
   return `<div class="setup-intro setup-complete"><div class="setup-complete-symbol" aria-hidden="true">✓</div><h2>設定の準備ができました</h2><p>内容を確認し、カレンダーを開いてください。</p></div><div class="setup-summary"><div><span>基本時給</span><strong>¥${Math.round(Number(draft.baseRate)||0).toLocaleString('ja-JP')}</strong></div><div><span>時間帯別時給</span><strong>${draft.rates.length}件</strong></div><div><span>深夜割増</span><strong>${draft.nightEnabled?'オン':'オフ'}</strong></div><div><span>残業割増</span><strong>${draft.overtimeEnabled?'オン':'オフ'}</strong></div><div><span>勤務予定</span><strong>${esc(draft.defaultPlanStart)} ～ ${esc(draft.defaultPlanEnd)}</strong></div><div><span>締め日・支払日</span><strong>${draft.closingDay===32?'月末':draft.closingDay+'日'}・${draft.payday===32?'月末':draft.payday+'日'}</strong></div></div><p class="setup-hint">後から設定ページで変更できます。勤務データはこの端末のブラウザに保存されます。</p>`;
@@ -2301,7 +2394,11 @@ receiveShortcutCalendar();
    if(step===0&&(!Number.isFinite(Number(draft.baseRate))||Number(draft.baseRate)<=0)){showError('基本時給を1円以上で入力してください。');return false;}
    if(step===1){for(const r of draft.rates){if(!r.from||!r.to||!Number.isFinite(Number(r.rate))||Number(r.rate)<0){showError('時間帯ごとの開始・終了時刻と時給を確認してください。');return false;}}}
    if(step===2&&(['nightBonus','overtimeBonus','overtimeHours'].some(k=>!Number.isFinite(Number(draft[k]))||Number(draft[k])<0))){showError('割増率と基準時間を0以上で入力してください。');return false;}
-   if(step===3&&(!draft.defaultPlanStart||!draft.defaultPlanEnd||Number(draft.defaultPlanBreakMin)<0||(Number(draft.defaultPlanBreakMin)>0&&!draft.defaultPlanBreakStart))){showError('休憩時間がある場合は休憩開始時刻も設定してください。');return false;}
+   if(step===3){
+    if(!draft.defaultPlanStart||!draft.defaultPlanEnd){showError('予定開始・終了時刻を設定してください。');return false;}
+    if(draft.breakMode==='auto'&&(['breakOffset','break45','break60'].some(k=>!Number.isFinite(Number(draft[k]))||Number(draft[k])<0)||Number(draft.break60)<Number(draft.break45))){showError('休憩の適用基準と開始までの時間を確認してください。');return false;}
+    if(draft.breakMode!=='auto'&&(Number(draft.defaultPlanBreakMin)<0||(Number(draft.defaultPlanBreakMin)>0&&!draft.defaultPlanBreakStart))){showError('休憩時間がある場合は休憩開始時刻も設定してください。');return false;}
+   }
    if(step===4&&(['transport','tax'].some(k=>!Number.isFinite(Number(draft[k]))||Number(draft[k])<0))){showError('交通費と所得税の金額を確認してください。');return false;}
    return true;
  }
@@ -2318,8 +2415,18 @@ receiveShortcutCalendar();
    document.getElementById('setup-next').textContent=step===6?'設定を完了':'次へ';
    wizard.scrollTo({top:0,behavior:'instant'});
    field.querySelectorAll('input,select').forEach(el=>{
-     el.addEventListener('input',()=>{const face=el.closest('.setup-clock')?.querySelector('.setup-clock-face');if(face)face.textContent=el.value||'--:--';readFields();if(el.dataset.setupField==='breakMode'){const box=field.querySelector('.setup-optional-break');if(box)box.hidden=draft.breakMode!=='auto';}if(el.dataset.setupField==='defaultPlanBreakMin')syncSetupBreak();});
-     el.addEventListener('change',()=>{const face=el.closest('.setup-clock')?.querySelector('.setup-clock-face');if(face)face.textContent=el.value||'--:--';readFields();if(el.dataset.setupField==='breakMode'){const box=field.querySelector('.setup-optional-break');if(box)box.hidden=draft.breakMode!=='auto';}if(el.dataset.setupField==='defaultPlanBreakMin')syncSetupBreak();});
+     const update=()=>{
+       const face=el.closest('.setup-clock')?.querySelector('.setup-clock-face');
+       if(face)face.textContent=el.value||'--:--';
+       if(el.matches('[data-setup-mode-mirror]')){
+         const primary=field.querySelector('[data-setup-field="breakMode"]');
+         if(primary)primary.value=el.value;
+       }
+       readFields();
+       if(step===3)syncSetupBreak();
+     };
+     el.addEventListener('input',update);
+     el.addEventListener('change',update);
    });
    const add=field.querySelector('#setup-add-rate');if(add)add.onclick=()=>{readFields();draft.rates.push({from:'17:00',to:'22:00',rate:Number(draft.baseRate)||0});persistDraft();render();};
    field.querySelectorAll('[data-setup-remove]').forEach(btn=>btn.onclick=()=>{readFields();draft.rates.splice(Number(btn.dataset.setupRemove),1);persistDraft();render();});
