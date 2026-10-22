@@ -1,5 +1,5 @@
 <!doctype html><html lang="ja"><head><meta name="robots" content="noindex"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f6fa"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><title>給与計算</title><style>
-:root{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color-scheme:light;--bg:#f5f6fa;--panel:#fff;--text:#1b2230;--muted:#6c7484;--line:#e4e8ef;--blue:#2469e8;--soft:#eaf1ff;--positive:#087657;--shadow:0 2px 14px #12213b0c}html[data-theme=dark]{color-scheme:dark;--bg:#10151e;--panel:#1b2430;--text:#edf1fa;--muted:#a6b1c1;--line:#364252;--blue:#80aaff;--soft:#253c5b;--positive:#7bdec0;--shadow:none}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text)}button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:1080px;margin:auto;padding:20px 18px 110px}header{display:flex;justify-content:space-between;align-items:center;margin:5px 0 25px}h1{font-size:25px;margin:0;letter-spacing:-.6px}h2{font-size:18px;margin:0 0 15px}h3{font-size:15px;margin:12px 0}.eyebrow{font-size:12px;color:var(--muted)}.pill{border-radius:50px;background:var(--soft);color:var(--blue);padding:8px 11px;font-size:12px;font-weight:650}.page{display:none}.page.active{display:block}.card{background:var(--panel);border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow);padding:18px;margin-bottom:15px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{background:var(--panel);padding:17px;border-radius:16px;border:1px solid var(--line)}.stat strong{display:block;font-size:24px;margin:7px 0}.muted,.stat small{color:var(--muted)}.strong{font-weight:700}.primary{border:0;background:var(--blue);color:white;border-radius:12px;padding:11px 15px;font-weight:650}.secondary{border:1px solid var(--line);color:var(--text);background:var(--panel);border-radius:11px;padding:9px 12px}.danger{color:#e35050}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.tabbar{display:flex;position:fixed;bottom:0;left:0;right:0;justify-content:center;background:var(--panel);border-top:1px solid var(--line);padding:9px 12px max(9px,env(safe-area-inset-bottom));z-index:20}.tabbar button{border:0;background:transparent;color:var(--muted);min-width:110px;padding:9px;border-radius:12px;font-weight:600}.tabbar button.active{color:var(--blue);background:var(--soft)}.calendar{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}.dow{text-align:center;color:var(--muted);font-size:12px;padding:8px 0}.day{min-height:105px;border:1px solid var(--line);border-radius:12px;background:var(--panel);text-align:left;padding:9px;position:relative;color:var(--text);overflow:hidden}.day.other{opacity:.35}.day.today{outline:2px solid var(--blue)}.day .date{font-weight:700;font-size:13px}.day .shift{font-size:11px;color:var(--blue);margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.day .yen{font-size:12px;margin-top:7px;font-weight:700}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{display:block;font-size:12px;color:var(--muted);font-weight:600}input,select{width:100%;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:6px;background:var(--panel);color:var(--text);min-width:0}input[type=checkbox]{width:auto;margin:0;accent-color:var(--blue)}.note{background:var(--soft);padding:12px;border-radius:12px;font-size:13px;line-height:1.7;color:var(--text)}.list-item{border-bottom:1px solid var(--line);padding:11px 0}.list-item:last-child{border:0}.divider{border-top:1px solid var(--line);margin:14px 0}.detail{display:grid;grid-template-columns:1fr auto;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.detail:last-child{border:0}.view-switch{display:flex;gap:5px;background:var(--bg);padding:4px;border-radius:13px}.view-switch button{border:0;border-radius:10px;background:transparent;color:var(--muted);padding:8px 16px}.view-switch button.active{background:var(--panel);color:var(--blue);box-shadow:var(--shadow)}.months{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.month-cell{border:1px solid var(--line);padding:12px;border-radius:12px}.bar{height:7px;border-radius:10px;background:var(--line);overflow:hidden;margin-top:8px}.bar span{height:100%;display:block;background:var(--blue)}.modal-wrap{position:fixed;inset:0;background:#0008;z-index:30;display:none;align-items:center;justify-content:center;padding:12px}.modal-wrap.open{display:flex}.modal{background:var(--panel);border-radius:20px;width:min(560px,100%);padding:20px;max-height:92vh;overflow:auto}.modal h2{margin:0 0 17px}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}.only-mobile{display:none}.textbtn{background:none;border:0;color:var(--blue);font-weight:600;padding:7px}.badge{font-size:11px;border-radius:20px;background:var(--soft);padding:5px 9px;color:var(--blue)}.day-breakdown{margin-top:14px;border:1px solid var(--line);border-radius:13px;padding:12px 14px;background:var(--bg)}.day-breakdown h3{margin:0 0 7px;font-size:13px}.day-breakdown .detail{font-size:13px;padding:6px 0}.day-breakdown .detail.total{font-size:15px;font-weight:700;border-top:1px solid var(--line);border-bottom:0;margin-top:5px;padding-top:10px}.day-breakdown .detail.total strong{color:var(--blue)}@media(max-width:650px){.shell{padding:18px 12px 100px}header{margin-bottom:17px}h1{font-size:21px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.stat strong{font-size:21px}.calendar{gap:3px}.day{min-height:75px;padding:5px;border-radius:8px}.day .date{font-size:12px}.day .shift{font-size:9px;margin-top:6px}.day .yen{font-size:10px;margin-top:4px}.tabbar button{min-width:0;flex:1}.fields{gap:10px}.grid{grid-template-columns:1fr}.months{grid-template-columns:repeat(2,1fr)}}
+:root{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color-scheme:light;--bg:#f5f6fa;--panel:#fff;--text:#1b2230;--muted:#6c7484;--line:#e4e8ef;--blue:#2469e8;--soft:#eaf1ff;--positive:#087657;--shadow:0 2px 14px #12213b0c}html[data-theme=dark]{color-scheme:dark;--bg:#10151e;--panel:#1b2430;--text:#edf1fa;--muted:#a6b1c1;--line:#364252;--blue:#80aaff;--soft:#253c5b;--positive:#7bdec0;--shadow:none}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text)}button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:1080px;margin:auto;padding:20px 18px 110px}header{display:flex;justify-content:space-between;align-items:center;margin:5px 0 25px}h1{font-size:25px;margin:0;letter-spacing:-.6px}h2{font-size:18px;margin:0 0 15px}h3{font-size:15px;margin:12px 0}.eyebrow{font-size:12px;color:var(--muted)}.pill{border-radius:50px;background:var(--soft);color:var(--blue);padding:8px 11px;font-size:12px;font-weight:650}.page{display:none}.page.active{display:block}.card{background:var(--panel);border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow);padding:18px;margin-bottom:15px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{background:var(--panel);padding:17px;border-radius:16px;border:1px solid var(--line)}.stat strong{display:block;font-size:24px;margin:7px 0}.muted,.stat small{color:var(--muted)}.strong{font-weight:700}.primary{border:0;background:var(--blue);color:white;border-radius:12px;padding:11px 15px;font-weight:650}.secondary{border:1px solid var(--line);color:var(--text);background:var(--panel);border-radius:11px;padding:9px 12px}.danger{color:#e35050}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.tabbar{display:flex;position:fixed;bottom:0;left:0;right:0;justify-content:center;background:var(--panel);border-top:1px solid var(--line);padding:9px 12px max(9px,env(safe-area-inset-bottom));z-index:20}.tabbar button{border:0;background:transparent;color:var(--muted);min-width:110px;padding:9px;border-radius:12px;font-weight:600}.tabbar button.active{color:var(--blue);background:var(--soft)}.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}.dow{text-align:center;color:var(--muted);font-size:12px;padding:8px 0}.day{min-height:105px;border:1px solid var(--line);border-radius:12px;background:var(--panel);text-align:left;padding:9px;position:relative;color:var(--text);overflow:hidden}.day.other{opacity:.35}.day.today{outline:2px solid var(--blue)}.day .date{font-weight:700;font-size:13px}.day .shift{font-size:11px;color:var(--blue);margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.day .yen{font-size:12px;margin-top:7px;font-weight:700}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{display:block;font-size:12px;color:var(--muted);font-weight:600}input,select{width:100%;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:6px;background:var(--panel);color:var(--text);min-width:0}input[type=checkbox]{width:auto;margin:0;accent-color:var(--blue)}.note{background:var(--soft);padding:12px;border-radius:12px;font-size:13px;line-height:1.7;color:var(--text)}.list-item{border-bottom:1px solid var(--line);padding:11px 0}.list-item:last-child{border:0}.divider{border-top:1px solid var(--line);margin:14px 0}.detail{display:grid;grid-template-columns:1fr auto;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.detail:last-child{border:0}.view-switch{display:flex;gap:5px;background:var(--bg);padding:4px;border-radius:13px}.view-switch button{border:0;border-radius:10px;background:transparent;color:var(--muted);padding:8px 16px}.view-switch button.active{background:var(--panel);color:var(--blue);box-shadow:var(--shadow)}.months{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.month-cell{border:1px solid var(--line);padding:12px;border-radius:12px}.bar{height:7px;border-radius:10px;background:var(--line);overflow:hidden;margin-top:8px}.bar span{height:100%;display:block;background:var(--blue)}.modal-wrap{position:fixed;inset:0;background:#0008;z-index:30;display:none;align-items:center;justify-content:center;padding:12px}.modal-wrap.open{display:flex}.modal{background:var(--panel);border-radius:20px;width:min(560px,100%);padding:20px;max-height:92vh;overflow:auto}.modal h2{margin:0 0 17px}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}.only-mobile{display:none}.textbtn{background:none;border:0;color:var(--blue);font-weight:600;padding:7px}.badge{font-size:11px;border-radius:20px;background:var(--soft);padding:5px 9px;color:var(--blue)}.day-breakdown{margin-top:14px;border:1px solid var(--line);border-radius:13px;padding:12px 14px;background:var(--bg)}.day-breakdown h3{margin:0 0 7px;font-size:13px}.day-breakdown .detail{font-size:13px;padding:6px 0}.day-breakdown .detail.total{font-size:15px;font-weight:700;border-top:1px solid var(--line);border-bottom:0;margin-top:5px;padding-top:10px}.day-breakdown .detail.total strong{color:var(--blue)}@media(max-width:650px){.shell{padding:18px 12px 100px}header{margin-bottom:17px}h1{font-size:21px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.stat strong{font-size:21px}.calendar{gap:3px}.day{min-height:75px;padding:5px;border-radius:8px}.day .date{font-size:12px}.day .shift{font-size:9px;margin-top:6px}.day .yen{font-size:10px;margin-top:4px}.tabbar button{min-width:0;flex:1}.fields{gap:10px}.grid{grid-template-columns:1fr}.months{grid-template-columns:repeat(2,1fr)}}
 
 /* Ver.4 interface */
 .day.past{background:color-mix(in srgb,var(--panel) 77%,var(--bg));opacity:.73}.day.future{background:var(--panel)}.day.today{outline:2px solid var(--blue);outline-offset:-2px;background:var(--soft)}.day.today .date::after{content:' 今日';font-size:9px;color:var(--blue)}.day.worked .date{color:var(--positive)}.day .shift{white-space:normal;line-height:1.35;overflow:visible;margin-top:5px}.day .shift-entry{border-radius:5px;padding:3px 4px;margin:3px 0;font-size:10px;font-weight:650;background:var(--soft);color:var(--blue)}.day .shift-entry.done{background:color-mix(in srgb,var(--positive) 14%,var(--panel));color:var(--positive)}.day .yen{font-size:11px}.modal-tabs{display:flex;background:var(--bg);padding:4px;border-radius:13px;margin-bottom:16px;gap:4px}.modal-tabs button{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 5px;border-radius:10px;font-weight:700}.modal-tabs button.active{color:var(--blue);background:var(--panel);box-shadow:var(--shadow)}.modal-pane{display:none}.modal-pane.active{display:block}.record-state{margin:12px 0;padding:13px;background:var(--soft);border-radius:12px;line-height:1.6;font-size:13px}.pay-gauge-card{text-align:center}.gauge-wrap{position:relative;width:min(270px,85%);aspect-ratio:1;margin:8px auto 0}.gauge-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}.gauge-track,.gauge-plan,.gauge-done{fill:none;stroke-width:13;stroke-linecap:round}.gauge-track{stroke:var(--line)}.gauge-plan{stroke:var(--blue);opacity:.24}.gauge-done{stroke:var(--positive)}.gauge-core{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px}.gauge-core strong{font-size:29px;letter-spacing:-1px}.gauge-legend{display:flex;gap:15px;justify-content:center;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}.legend-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}.forecast-value{font-size:25px;font-weight:750;margin-top:7px}.gauge-caption{color:var(--muted);font-size:12px;margin-top:9px}@media(max-width:650px){.day .shift-entry{font-size:9px;padding:2px 1px;letter-spacing:-.3px}.day .yen{font-size:9px}.day.today .date::after{content:'●';margin-left:2px}.gauge-core strong{font-size:26px}}
@@ -21,7 +21,7 @@
 .goal-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:12px 0}.goal-row input{width:145px;margin:0;text-align:right}.goal-row label{font-size:13px}.goal-exceeded{font-size:12px;color:var(--positive);font-weight:700;margin:5px 0}
 .copy-actions{justify-content:flex-start}.copy-wrap{position:fixed;inset:0;background:#0d1522a8;display:none;align-items:center;justify-content:center;padding:14px;z-index:45}.copy-wrap.open{display:flex}
 .copy-panel{background:var(--panel);border-radius:24px;padding:20px;width:min(530px,100%);max-height:90dvh;overflow:auto;box-shadow:0 12px 45px #0002}
-.copy-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;margin:16px 0}.copy-day{min-width:0;border:1px solid var(--line);border-radius:12px;padding:11px 0;background:var(--panel);color:var(--text);font-size:14px;font-weight:700;position:relative}.copy-day.selected{background:var(--blue);color:white;border-color:var(--blue)}.copy-day.existing{border-style:dashed}.copy-day.source{opacity:.35;cursor:not-allowed}.copy-day:disabled{cursor:not-allowed}
+.copy-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:16px 0}.copy-day{min-width:0;border:1px solid var(--line);border-radius:12px;padding:11px 0;background:var(--panel);color:var(--text);font-size:14px;font-weight:700;position:relative}.copy-day.selected{background:var(--blue);color:white;border-color:var(--blue)}.copy-day.existing{border-style:dashed}.copy-day.source{opacity:.35;cursor:not-allowed}.copy-day:disabled{cursor:not-allowed}
 .copy-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.copy-footer{position:sticky;bottom:-20px;padding:14px 0 0;background:var(--panel);display:flex;gap:10px;justify-content:flex-end}.copy-dow{text-align:center;color:var(--muted);font-size:12px}
 @media(max-width:650px){.day{padding:33px 3px 5px}.day .date{top:4px;left:4px;width:23px;height:23px;font-size:12px}.copy-panel{padding:15px}.copy-day{padding:11px 0;font-size:12px}.pay-settings-outer{padding:11px 10px 1px}}
 
@@ -1154,7 +1154,7 @@ button.primary:active,button.secondary:active,button.textbtn:active {transform:s
 
 
 /* 2026-10-22 UI: a stable six-row calendar including adjacent month dates. */
-#cal.calendar {grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:26px repeat(6,99px);grid-auto-rows:99px;align-content:start;align-items:stretch;}
+#cal.calendar {grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:26px repeat(6,99px);grid-auto-rows:99px;align-content:start;align-items:stretch;}
 #cal .dow{height:26px;min-height:0;line-height:18px;padding:3px 0 5px;align-self:center;}
 /* Past days stay on the same background as the current month's upcoming days. */
 #cal .day.past:not(.other-month){background:var(--panel)!important;opacity:1!important;}
@@ -1425,7 +1425,7 @@ body.setup-active{overflow:hidden}
 .setup-container{max-width:660px;margin:0 auto;min-height:calc(100dvh - 48px);display:flex;flex-direction:column;gap:18px}
 .setup-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px;font-weight:700;padding:8px 2px 0}
 .setup-topbar strong{color:var(--text);font-size:14px}
-.setup-progress{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}
+.setup-progress{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
 .setup-progress span{height:5px;background:var(--line);border-radius:8px;transition:background .2s}
 .setup-progress span.on{background:var(--blue)}
 .setup-panel{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:24px;min-width:0}
@@ -1473,7 +1473,7 @@ body.setup-active{overflow:hidden}
 @media(max-width:650px){.setup-clock-face{display:flex}.setup-clock input[type=time]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;z-index:1}}
 
 /* Quick Start: same rate editor and controls as Settings; iOS input sizes remain predictable. */
-#setup-wizard .setup-progress{grid-template-columns:repeat(8,minmax(0,1fr))}
+#setup-wizard .setup-progress{grid-template-columns:repeat(7,minmax(0,1fr))}
 #setup-wizard .setup-rate-card{padding:14px;background:color-mix(in srgb,var(--bg) 82%,var(--panel));border-radius:17px;gap:9px}
 #setup-wizard .setup-rate-title{min-height:36px}
 #setup-wizard .setup-remove-rate{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;margin:0;padding:0;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:#d95760;cursor:pointer}
@@ -1555,6 +1555,63 @@ body.setup-active{overflow:hidden}
 #setup-wizard .setup-break-thresholds .setup-field>span:first-child{font-size:12px;min-height:27px;display:flex;align-items:flex-end}
 #setup-wizard .setup-managed-fields.setup-auto-rule-fields{display:flex;flex-direction:column;gap:15px}
 #setup-wizard .setup-premium-inputs.setup-field-disabled .setup-clock,#setup-wizard .setup-premium-inputs.setup-field-disabled .setup-affixed{background:var(--line)}
+
+/* 2026-10-22 follow-up: consistent seven-day grid and unobstructed mobile controls */
+#cal.calendar{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;grid-template-rows:22px repeat(6,96px);grid-auto-rows:96px!important;gap:7px;min-width:0;align-content:start}
+#cal.calendar>.dow,#cal.calendar>.day{min-width:0;grid-column:auto!important;grid-row:auto!important}
+@media(max-width:650px){#cal.calendar{grid-template-rows:21px repeat(6,79px);grid-auto-rows:79px!important;gap:3px}}
+/* Inputs use a filled surface instead of a prominent border, in both themes. */
+:root{--input-fill:#ebeff5}
+html[data-theme=dark]{--input-fill:#111a26}
+#settings input:not([type=checkbox]):not([type=file]),#settings select,
+#setup-wizard .setup-affixed,#setup-wizard .setup-clock,#setup-wizard .setup-field>input,#setup-wizard .setup-field>select,
+#modal-wrap .modal-native-field,#modal-wrap .modal-break-unit{
+  background:var(--input-fill)!important;border:0!important;box-shadow:none!important;outline-offset:1px;
+}
+#settings .number-with-unit>input,#settings .default-plan-grid .default-plan-time,
+#settings .default-plan-grid .default-plan-number,
+#settings .rate-card .time-field,
+#settings .break-rules-layout .number-with-unit,
+#settings .premium-rate-card input{background:var(--input-fill)!important;border:0!important;box-shadow:none!important}
+#setup-wizard .setup-affixed>input,#setup-wizard .setup-clock>input{border:0!important;background:transparent!important}
+#settings input:focus-visible,#settings select:focus-visible,#setup-wizard input:focus-visible,
+#modal-wrap input:focus-visible{outline:2px solid var(--blue)!important;outline-offset:1px}
+#settings .break-mode-label,#settings .break-rule-caption,
+#settings .break-rules-layout>label,#settings .break-rule-grid>label,
+#settings .break-rule-grid>label>span:first-child{font-size:.84rem!important;line-height:1.45}
+#settings .break-rule-grid>label>span:first-child{min-height:22px}
+#settings #overtime-settings-card .premium-rate-card .rate-time-row,
+#settings #overtime-settings-card .premium-rate-card .rate-wage{min-width:0}
+#settings #overtime-settings-card .rate-editor input[type=number],
+#settings #overtime-settings-card .rate-editor .number-with-unit,
+#settings #overtime-settings-card .rate-editor .number-with-unit>input{height:46px!important;min-height:46px!important;max-height:46px!important;box-sizing:border-box!important}
+#settings #overtime-settings-card .rate-editor{align-items:center!important}
+#settings #overtime-settings-card .rate-time-row>span,
+#settings #overtime-settings-card .rate-wage>span:first-child{line-height:18px;min-height:18px}
+#settings .json-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:stretch;width:100%}
+#settings .json-actions>button{min-width:0;width:100%;min-height:46px;padding:9px 7px;font-size:clamp(12px,3.2vw,14px);white-space:nowrap}
+#settings label,#setup-wizard .setup-field,#modal-wrap label{overflow-wrap:break-word;word-break:normal;line-break:strict}
+#settings .number-with-unit,#setup-wizard .setup-affixed{white-space:nowrap}
+#settings .number-with-unit .input-affix,#setup-wizard .setup-affixed>span{white-space:nowrap;flex-shrink:0}
+/* Planned rest is calculated by the auto rule; actual recorded rest remains editable. */
+#modal-wrap .modal-break-unit{display:flex;align-items:center;position:relative;border-radius:11px;min-width:0;margin-top:6px;height:45px}
+#modal-wrap .modal-break-unit input{width:100%;height:100%;min-width:0;margin:0;background:transparent!important;border:0!important;text-align:center;font-size:16px;padding:5px 32px 5px 10px;box-sizing:border-box}
+#modal-wrap .modal-break-unit .unit-label{position:absolute;right:12px;color:var(--muted);pointer-events:none;font-size:13px}
+#modal-wrap .modal-break-unit .auto-placeholder{display:none;position:absolute;inset:0;align-items:center;justify-content:center;pointer-events:none;font-weight:650;color:var(--muted)}
+#modal-wrap #pane-planned .auto-break-disabled .modal-native-field,
+#modal-wrap #pane-planned .auto-break-disabled .modal-break-unit{background:color-mix(in srgb,var(--input-fill) 65%,var(--panel) 35%)!important;opacity:.55}
+#modal-wrap #pane-planned .auto-break-disabled .modal-break-unit input{color:transparent!important;-webkit-text-fill-color:transparent!important}
+#modal-wrap #pane-planned .auto-break-disabled .unit-label{display:none}
+#modal-wrap #pane-planned .auto-break-disabled .auto-placeholder{display:flex}
+#modal-wrap #pane-planned .auto-break-disabled .modal-native-value{color:var(--muted)}
+#modal-wrap #pane-planned .auto-break-disabled label{color:var(--muted)}
+#pay-stage{position:relative;min-width:0;touch-action:pan-y}
+#pay-stage.is-changing-period{overflow:hidden}
+.pay-motion-ghost{position:absolute!important;inset:0 auto auto 0;width:100%;z-index:2;pointer-events:none!important}
+#setup-wizard .setup-progress span{transition:background-color 200ms ease,opacity 200ms ease}
+#setup-wizard .setup-panel{will-change:auto}
+@media(prefers-reduced-motion:reduce){#setup-wizard .setup-progress span{transition:none!important}}
+
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -1591,7 +1648,7 @@ body.setup-active{overflow:hidden}
     <button class="secondary" id="pay-today" type="button">今月</button>
   </div>
 </div>
-<div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標（円）</label><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></section>
+<div id="pay-stage" class="pay-stage"><div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標（円）</label><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></div></section>
 <section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>基準実働時間</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">1出勤あたり</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">1給与期間あたり</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card break-settings-card" id="break-settings-card">
 <h2>休憩</h2>
 <label class="break-mode-label">休憩の設定方法<select id="break-mode"><option value="auto">自動</option><option value="manual">手動</option></select></label>
@@ -1616,7 +1673,7 @@ body.setup-active{overflow:hidden}
 <label class="default-plan-item"><span class="default-plan-caption">休憩開始</span><span class="default-plan-time"><span class="default-plan-clock" aria-hidden="true">18:00</span><input type="time" id="default-plan-break-start" aria-label="予定の休憩開始時刻"></span></label>
 </div></fieldset>
 <p class="hint" id="default-plan-break-hint">休憩が自動の場合は、休憩時間と休憩開始時刻を設定できません。</p>
-</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクから追加し、ショートカットの名前を「勤務予定を取得」に設定します。</li><li>追加したショートカットを編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"></div><div class="reset-actions" aria-label="データの初期化"><button class="secondary danger" id="reset-shifts" type="button">勤務データの初期化</button><button class="secondary danger" id="reset-settings" type="button">設定の初期化</button><button class="secondary danger" id="reset" type="button">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月22日 20:12</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
+</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクから追加し、ショートカットの名前を「勤務予定を取得」に設定します。</li><li>追加したショートカットを編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls json-actions"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"></div><div class="reset-actions" aria-label="データの初期化"><button class="secondary danger" id="reset-shifts" type="button">勤務データの初期化</button><button class="secondary danger" id="reset-settings" type="button">設定の初期化</button><button class="secondary danger" id="reset" type="button">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月22日 22:42</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
  <div class="setup-container">
   <div class="setup-topbar"><strong>給与計算 · 初期設定</strong><span id="setup-number">1 / 8</span></div>
   <div class="setup-progress" id="setup-progress" aria-label="設定の進行状況"></div>
@@ -1630,7 +1687,7 @@ body.setup-active{overflow:hidden}
 <button data-page="pay" type="button"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="m8 6 4 6 4-6M8 12h8M8 15h8M12 12v6"/></svg><span>給与計算</span></button>
 <button data-page="settings" type="button"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.7 3.1 10 5.3a7 7 0 0 1 4 0l.3-2.2 2.1 1.2-1 2a7 7 0 0 1 2.1 2l2.1-1 1.2 2.1-1.9 1.3a7 7 0 0 1 0 3l1.9 1.3-1.2 2.1-2.1-1a7 7 0 0 1-2.1 2l1 2-2.1 1.2-.3-2.2a7 7 0 0 1-4 0l-.3 2.2-2.1-1.2 1-2a7 7 0 0 1-2.1-2l-2.1 1-1.2-2.1 1.9-1.3a7 7 0 0 1 0-3L3.1 9.4l1.2-2.1 2.1 1a7 7 0 0 1 2.1-2l-1-2z"/><circle cx="12" cy="12" r="3"/></svg><span>設定</span></button>
 </nav>
-<div class="modal-wrap" id="modal-wrap"><div class="modal"><div class="row"><h2 id="modal-title">勤務を登録</h2><button class="secondary" id="close-modal">✕</button></div><div class="modal-tabs" role="tablist"><button id="tab-planned" class="active" type="button" role="tab" aria-selected="true">勤務予定</button><button id="tab-record" type="button" role="tab" aria-selected="false">勤務記録</button></div><div class="modal-pane active" id="pane-planned"><div class="fields"><label>日付<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-date" type="date"></span></label><label>予定開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-start" type="time"></span></label><label>予定終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-end" type="time"></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-plan-break-start" type="time"></span></label><label>休憩（分）<input id="m-plan-break-min" type="number" min="0" placeholder="自動なら空欄"></label></div><div id="plan-breakdown"></div><div class="actions copy-actions"><button id="copy-shift" class="secondary" type="button">予定をコピー</button><button id="delete-shift" class="textbtn danger" type="button">この勤務を削除</button><button class="primary" id="save-shift" type="button">予定を保存</button></div></div><div class="modal-pane" id="pane-record"><div class="record-state" id="record-state">勤務予定を登録すると記録できます。</div><div class="fields"><label>勤務開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-start" type="time"></span></label><label>勤務終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-end" type="time"></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-break-start" type="time"></span></label><label>休憩（分）<input id="m-break-min" type="number" min="0" placeholder="自動なら空欄"></label></div><div id="record-breakdown"></div><div class="actions record-actions"><span class="action-spacer" aria-hidden="true"></span><button class="secondary danger" id="undo-worked" type="button">勤務記録を削除</button><button class="primary" id="confirm-worked" type="button">勤務記録を確定</button></div></div><select id="m-status" hidden><option value="planned">予定</option><option value="worked">勤務済み</option></select><div id="modal-pay" hidden></div><button id="cancel-modal" hidden></button></div></div>
+<div class="modal-wrap" id="modal-wrap"><div class="modal"><div class="row"><h2 id="modal-title">勤務を登録</h2><button class="secondary" id="close-modal">✕</button></div><div class="modal-tabs" role="tablist"><button id="tab-planned" class="active" type="button" role="tab" aria-selected="true">勤務予定</button><button id="tab-record" type="button" role="tab" aria-selected="false">勤務記録</button></div><div class="modal-pane active" id="pane-planned"><div class="fields"><label>日付<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-date" type="date"></span></label><label>予定開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-start" type="time"></span></label><label>予定終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-plan-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span><span class="auto-placeholder" aria-hidden="true">自動</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-plan-break-start" type="time"></span></label></div><div id="plan-breakdown"></div><div class="actions copy-actions"><button id="copy-shift" class="secondary" type="button">予定をコピー</button><button id="delete-shift" class="textbtn danger" type="button">この勤務を削除</button><button class="primary" id="save-shift" type="button">予定を保存</button></div></div><div class="modal-pane" id="pane-record"><div class="record-state" id="record-state">勤務予定を登録すると記録できます。</div><div class="fields"><label>勤務開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-start" type="time"></span></label><label>勤務終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-break-start" type="time"></span></label></div><div id="record-breakdown"></div><div class="actions record-actions"><span class="action-spacer" aria-hidden="true"></span><button class="secondary danger" id="undo-worked" type="button">勤務記録を削除</button><button class="primary" id="confirm-worked" type="button">勤務記録を確定</button></div></div><select id="m-status" hidden><option value="planned">予定</option><option value="worked">勤務済み</option></select><div id="modal-pay" hidden></div><button id="cancel-modal" hidden></button></div></div>
 <div id="sync-feedback" class="sync-modal-wrap" aria-hidden="true"><section class="sync-modal" role="dialog" aria-modal="true" aria-labelledby="sync-modal-title" aria-describedby="sync-modal-message" tabindex="-1"><div class="sync-modal-heading"><h2 id="sync-modal-title">iCloudからの取得結果</h2></div><p id="sync-modal-message" role="status" aria-live="polite"></p><button type="button" class="primary sync-modal-close" id="sync-modal-close">閉じる</button></section></div><div class="copy-wrap" id="copy-wrap"><div class="copy-panel"><div class="row"><div><h2 style="margin:0">勤務予定をコピー</h2><small class="muted" id="copy-source"></small></div><button class="secondary" id="copy-close" type="button">✕</button></div><p class="hint">コピー先の日付を選択し、「選択した日にコピー」を押してください。元の勤務予定は残ります。すでに勤務がある日は上書きしません。</p><div class="copy-toolbar"><div class="controls"><button class="secondary" id="copy-prev" type="button">‹</button><strong id="copy-month"></strong><button class="secondary" id="copy-next" type="button">›</button></div><small class="muted" id="copy-count">0日選択中</small></div><div id="copy-grid" class="copy-grid"></div><div class="copy-footer"><button class="secondary" id="copy-cancel" type="button">キャンセル</button><button class="primary" id="copy-apply" type="button">✓ 選択した日にコピー</button></div></div></div><script>
 const key='shiftpay-prototype-v1';window.__shiftpayInitialSetupRequired=(()=>{
  const statusKey='shiftpay-setup-status-v1';
@@ -2194,9 +2251,7 @@ receiveShortcutCalendar();
   }
   // Month changes use a directional slide installed below.
 
-  for(const id of ['pay-prev','pay-next','pay-today']){
-    $(id).addEventListener('click',()=>animateArea($('pay-shifts')));
-  }
+  // Period transitions are handled by the shared swipe/slide animation below.
 })();
 
 
@@ -2235,11 +2290,11 @@ receiveShortcutCalendar();
     const oldAnim=before.animate([
       {transform:'translateX(0)',opacity:1},
       {transform:`translateX(${-direction*distance*.8}px)`,opacity:0}
-    ],{duration:125,easing:'ease-out',fill:'both'});
+    ],{duration:155,easing:'cubic-bezier(.25,.55,.35,1)',fill:'both'});
     const nextAnim=incoming.animate([
       {transform:`translateX(${direction*distance}px)`,opacity:.78},
       {transform:'translateX(0)',opacity:1}
-    ],{duration:235,easing:'cubic-bezier(.22,.82,.25,1)',fill:'both'});
+    ],{duration:230,easing:'cubic-bezier(.2,.78,.28,1)',fill:'both'});
     currentSlide=[oldAnim,nextAnim];
     oldAnim.addEventListener('finish',()=>{
       if(ghost===before){before.remove();ghost=null;}
@@ -2465,11 +2520,20 @@ receiveShortcutCalendar();
    return true;
  }
  function showError(message){const el=document.getElementById('setup-error');el.textContent=message;el.hidden=false;}
- function render(){
+ let setupMotion=null;
+ function render(direction=0){
    if(!active)return;
    document.getElementById('setup-number').textContent=`${step+1} / ${stepLabels.length}`;
    document.getElementById('setup-progress').innerHTML=stepLabels.map((name,index)=>`<span class="${index<=step?'on':''}" aria-label="${name}"></span>`).join('');
+   if(setupMotion){setupMotion.cancel();setupMotion=null;}
    field.innerHTML=stepHtml();
+   if(direction!==0&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&field.animate){
+     setupMotion=field.animate([
+       {opacity:0,transform:`translate3d(${direction*14}px,0,0)`},
+       {opacity:1,transform:'translate3d(0,0,0)'}
+     ],{duration:210,easing:'cubic-bezier(.19,.74,.25,1)'});
+     setupMotion.addEventListener('finish',()=>{setupMotion=null},{once:true});
+   }
    syncSetupPremium();syncSetupBreak();
    const error=document.getElementById('setup-error');error.hidden=true;error.textContent='';
    document.getElementById('setup-back').hidden=step===0;
@@ -2504,6 +2568,7 @@ receiveShortcutCalendar();
    else if(saved&&saved.settings&&Array.isArray(saved.settings.rates)){
      draft={...clone(freshSettings),...saved.settings};step=Math.max(0,Math.min(stepLabels.length-1,(saved.version===2?Number(saved.step):Number(saved.step)>=4?Number(saved.step)+1:Number(saved.step))||0));
    }else{draft=clone(freshSettings);step=0;}
+   finishing=false;document.getElementById('setup-next').disabled=false;
    active=true;wizard.hidden=false;document.body.classList.add('setup-active');persistDraft();render();
  }
  function closeSetup(){active=false;wizard.hidden=true;document.body.classList.remove('setup-active');try{localStorage.setItem(statusKey,'complete');localStorage.removeItem(draftKey)}catch(e){}}
@@ -2514,20 +2579,141 @@ receiveShortcutCalendar();
    document.querySelector('.tabbar [data-page="calendar"]')?.click();
    requestAnimationFrame(()=>window.scrollTo({top:0,left:0,behavior:'instant'}));
  }
+ let finishing=false;
+ function finishWithMotion(){
+   if(finishing)return;
+   finishing=true;
+   const panel=wizard.querySelector('.setup-panel');
+   const next=document.getElementById('setup-next');
+   next.disabled=true;
+   if(matchMedia('(prefers-reduced-motion: reduce)').matches||!panel?.animate){finish();return;}
+   const a=panel.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(.985)'}],
+     {duration:230,easing:'ease-in',fill:'forwards'});
+   a.addEventListener('finish',()=>{a.cancel();finish();},{once:true});
+ }
  document.getElementById('setup-next').addEventListener('click',()=>{
    readFields();if(!validCurrent())return;
-   if(step===7){finish();return;}
-   step++;persistDraft();render();
+   if(step===7){finishWithMotion();return;}
+   step++;persistDraft();render(1);
  });
- document.getElementById('setup-back').addEventListener('click',()=>{readFields();if(step>0)step--;persistDraft();render()});
+ document.getElementById('setup-back').addEventListener('click',()=>{readFields();if(step>0)step--;persistDraft();render(-1)});
  document.getElementById('setup-skip').addEventListener('click',()=>{
    readFields();if(step===1&&!revisiting)draft.rates=[];
-   step=Math.min(7,step+1);persistDraft();render();
+   step=Math.min(7,step+1);persistDraft();render(1);
  });
  window.shiftpayOpenFreshSetup=()=>{try{localStorage.removeItem(draftKey);localStorage.setItem(statusKey,'in-progress')}catch(e){}openSetup(false,true)};
  document.getElementById('restart-setup')?.addEventListener('click',()=>openSetup(true));
  // First visit check must be captured before any application startup writes defaults.
  if(window.__shiftpayInitialSetupRequired)openSetup(false);
+})();
+
+
+/* Follow-up: maintain a consistent editing state for automatically calculated planned rest. */
+(function editorAutoBreakFix(){
+ const plannedFields=['m-plan-break-min','m-plan-break-start'];
+ function update(){
+   const isAuto=data.settings.breakMode==='auto';
+   plannedFields.forEach(id=>{
+     const input=$(id),label=input.closest('label');
+     input.disabled=isAuto;
+     label.classList.toggle('auto-break-disabled',isAuto);
+     if(isAuto&&id==='m-plan-break-start'){
+       const face=label.querySelector('.modal-native-value');
+       if(face)face.textContent='自動';
+     }
+   });
+ }
+ const originalOpen=openModal;
+ openModal=function(item,date){originalOpen(item,date);update();};
+ $('tab-planned').addEventListener('click',update);
+ const originalEditorDisplay=updateEditorNativeValues;
+ updateEditorNativeValues=function(){originalEditorDisplay();if($('modal-wrap').classList.contains('open'))update();};
+ const originalPreview=preview;
+ preview=function(){originalPreview();if($('modal-wrap').classList.contains('open'))update();};
+ $('pane-planned').querySelectorAll('input').forEach(input=>{
+   input.addEventListener('input',()=>queueMicrotask(update));
+   input.addEventListener('change',()=>queueMicrotask(update));
+ });
+ const originalSettings=renderSettings;
+ renderSettings=function(){originalSettings();if($('modal-wrap').classList.contains('open'))update();};
+})();
+/* Swipe in the payroll content without moving the tab bar or period controls. */
+(function enablePayrollSwipe(){
+ const panel=$('pay-stage');
+ const page=$('pay');
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+ let motion=[],ghost=null;
+ const stop=()=>{
+   motion.forEach(a=>{try{a.cancel()}catch(e){}});motion=[];
+   ghost?.remove();ghost=null;
+   panel.classList.remove('is-changing-period');
+ };
+ function slidePeriod(direction,update){
+   if(reduce.matches || !page.classList.contains('active')){update();return;}
+   stop();
+   const prior=panel.cloneNode(true);
+   prior.id='';prior.classList.add('pay-motion-ghost');
+   prior.removeAttribute('style');
+   prior.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+   prior.setAttribute('aria-hidden','true');
+   const year=py,month=pm,isAnnual=annual;
+   update();
+   if(year===py&&month===pm&&isAnnual===annual)return;
+   // Only after the data update do we introduce the inert outgoing layer.
+   panel.classList.add('is-changing-period');
+   panel.appendChild(prior);ghost=prior;
+   const offset=Math.min(46,Math.max(22,panel.clientWidth*.09));
+   const old=prior.animate([
+     {opacity:1,transform:'translate3d(0,0,0)'},
+     {opacity:0,transform:`translate3d(${-direction*offset}px,0,0)`}
+   ],{duration:175,easing:'cubic-bezier(.25,.55,.35,1)',fill:'both'});
+   // Animate the actual contents, but not the overlay itself.
+   const children=[...panel.children].filter(el=>el!==prior);
+   const arriving=children.map(el=>el.animate([
+     {opacity:.72,transform:`translate3d(${direction*offset}px,0,0)`},
+     {opacity:1,transform:'translate3d(0,0,0)'}
+   ],{duration:235,easing:'cubic-bezier(.2,.78,.28,1)',fill:'both'}));
+   motion=[old,...arriving];
+   let remaining=arriving.length;
+   const done=()=>{if(--remaining<=0){stop()}};
+   arriving.forEach(a=>a.addEventListener('finish',done,{once:true}));
+   old.addEventListener('finish',()=>{if(ghost===prior){prior.remove();ghost=null;}},{once:true});
+ }
+ for(const [id,dir] of [['pay-prev',-1],['pay-next',1]]){
+   const b=$(id),original=b.onclick;
+   b.onclick=()=>slidePeriod(dir,original);
+ }
+ const todayBtn=$('pay-today'),originalToday=todayBtn.onclick;
+ todayBtn.onclick=()=>{
+   const now=new Date();
+   const delta=annual?now.getFullYear()-py:(now.getFullYear()-py)*12+now.getMonth()-pm;
+   slidePeriod(delta<0?-1:1,originalToday);
+ };
+ let start=null,lastGesture=0;
+ panel.addEventListener('touchstart',e=>{
+   if(e.touches.length!==1||e.target.closest('input,select,textarea,button,a')){start=null;return}
+   const t=e.touches[0];start={x:t.clientX,y:t.clientY,t:performance.now()};
+ },{passive:true});
+ panel.addEventListener('touchcancel',()=>{start=null},{passive:true});
+ panel.addEventListener('touchend',e=>{
+   if(!start||e.changedTouches.length!==1){start=null;return;}
+   const t=e.changedTouches[0],dx=t.clientX-start.x,dy=t.clientY-start.y,elapsed=performance.now()-start.t;
+   start=null;
+   if(elapsed>1250||Math.abs(dx)<56||Math.abs(dx)<Math.abs(dy)*1.45)return;
+   lastGesture=performance.now();$(dx<0?'pay-next':'pay-prev').click();
+ },{passive:true});
+ document.addEventListener('click',e=>{
+   if(performance.now()-lastGesture<170&&panel.contains(e.target)){e.preventDefault();e.stopImmediatePropagation()}
+ },true);
+ let wheelX=0,lastWheel=0,locked=0;
+ panel.addEventListener('wheel',e=>{
+   if(Math.abs(e.deltaX)<4||Math.abs(e.deltaX)<Math.abs(e.deltaY)*1.4)return;
+   e.preventDefault();const now=performance.now();
+   if(now-lastWheel>220)wheelX=0;
+   lastWheel=now;wheelX+=e.deltaX;
+   if(now-locked<430)return;
+   if(Math.abs(wheelX)>=68){locked=now;$(wheelX>0?'pay-next':'pay-prev').click();wheelX=0}
+ },{passive:false});
 })();
 
 </script></body></html>
