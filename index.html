@@ -2599,12 +2599,70 @@ button.primary,button.secondary,button.textbtn,
   color:var(--blue)!important;
   border-radius:14px;
 }
+
+/* 2026-10-23: setup typography, natural Japanese wrapping, consistent save/confirm sizing. */
+#setup-wizard .setup-topbar strong{
+ font-size:18px!important;font-weight:750;letter-spacing:-.025em;line-height:1.35;
+}
+/* Keep description text responsive; avoid forced breaks at device-specific columns.
+   'auto-phrase' provides better Japanese phrase boundaries where supported. */
+#setup-wizard #setup-fixed-heading,
+#setup-wizard .setup-intro,
+#setup-wizard #setup-scroll-region,
+#setup-wizard #setup-fields{min-width:0;max-width:100%;box-sizing:border-box}
+#setup-wizard .setup-intro p,
+#setup-wizard .setup-hint,
+#setup-wizard .setup-sync-steps li,
+#setup-wizard .setup-toggle small,
+#setup-wizard #setup-break-rule-hint,
+#setup-wizard #setup-plan-break-hint{
+ white-space:normal!important;
+ word-break:normal;
+ line-break:strict;
+ overflow-wrap:break-word;
+ text-wrap:pretty;
+ max-width:100%;
+}
+@supports (word-break:auto-phrase){
+ #setup-wizard .setup-intro p,
+ #setup-wizard .setup-hint,
+ #setup-wizard .setup-sync-steps li,
+ #setup-wizard .setup-toggle small{word-break:auto-phrase;}
+}
+#setup-wizard .setup-intro p{width:100%;max-width:min(100%,470px);}
+/* Equal action widths (and heights) regardless of record-copy availability. */
+#modal-wrap .modal .actions.copy-actions,
+#modal-wrap .modal .actions.record-actions,
+#modal-wrap .record-actions:not(.has-copy),
+#modal-wrap .record-actions.has-copy{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ align-items:stretch;
+}
+#modal-wrap .record-actions:not(.has-copy) #confirm-worked,
+#modal-wrap .record-actions.has-copy #confirm-worked{grid-column:3!important;}
+#modal-wrap .actions #save-shift,
+#modal-wrap .actions #confirm-worked{
+ width:100%!important;
+ height:48px!important;
+ min-height:48px!important;
+ max-height:48px!important;
+ box-sizing:border-box!important;
+ padding:8px 4px!important;
+ margin:0!important;
+ display:flex;align-items:center;justify-content:center;
+ font-size:12px!important;line-height:1.2;
+}
+@media(max-width:650px){
+ #modal-wrap .actions #save-shift,
+ #modal-wrap .actions #confirm-worked{font-size:clamp(10px,2.6vw,12px)!important;}
+}
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
   <h2>カレンダー</h2>
   <div class="calendar-top-actions">
-    <button id="show-empty" class="secondary empty-toggle-button" type="button" aria-pressed="false" title="予定なしの日も表示" style="visibility:hidden"><span class="empty-toggle-long">予定なしの日も表示</span><span class="empty-toggle-short">予定なし</span></button>
+    <button id="show-empty" class="secondary empty-toggle-button" type="button" aria-pressed="false" title="勤務なしの日も表示" style="visibility:hidden"><span class="empty-toggle-long">勤務なしの日も表示</span><span class="empty-toggle-short">勤務なし</span></button>
     <button id="icloud-sync" class="secondary sync-trigger empty-toggle-button" type="button" title="iPhoneのショートカットから勤務予定を取り込む">↻ iCloudから取得</button>
   </div>
 </div>
@@ -2673,7 +2731,7 @@ button.primary,button.secondary,button.textbtn,
 <p class="hint" id="default-plan-break-hint">休憩が自動の場合は、休憩時間と休憩開始時刻を設定できません。</p>
 </div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクからショートカットを追加します。</li><li>追加したショートカットを編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls json-actions"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"></div><div class="reset-actions" aria-label="データの初期化"><button class="secondary danger" id="reset-shifts" type="button">勤務データの初期化</button><button class="secondary danger" id="reset-settings" type="button">設定の初期化</button><button class="secondary danger" id="reset" type="button">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月23日</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
  <div class="setup-container">
-  <div class="setup-topbar"><strong>給与計算 · 初期設定</strong><span id="setup-number">1 / 8</span></div>
+  <div class="setup-topbar"><strong>初期設定</strong><span id="setup-number">1 / 8</span></div>
   <div class="setup-progress" id="setup-progress" aria-label="設定の進行状況"></div>
   <div class="setup-panel"><div id="setup-fixed-heading"></div><div id="setup-scroll-region"><div id="setup-fields"></div><p id="setup-error" role="alert" hidden></p></div></div>
   <div class="setup-footer"><button type="button" class="secondary" id="setup-back" hidden>戻る</button><div class="setup-footer-actions"><button type="button" class="textbtn" id="setup-skip" hidden>スキップ</button><button type="button" class="primary" id="setup-next">次へ</button></div></div>
