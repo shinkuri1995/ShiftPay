@@ -1950,6 +1950,163 @@ html[data-theme=dark]{
  #copy-wrap .copy-footer button,#copy-wrap #copy-close{transition:none!important;}
 }
 
+
+/* 2026-10-23: approved, consolidated appearance updates. */
+:root {
+  --cal-tile: #edf1f7;
+  --cal-today-tile: #eaf1ff;
+}
+html[data-theme="dark"] {
+  --cal-tile: #293546;
+  --cal-today-tile: #263d56;
+}
+/* The grid squares have their own fill, visibly distinct from the calendar card. */
+#calendar #cal .day:not(.other-month):not(.today) {
+  background: var(--cal-tile)!important;
+  border: 0!important;
+  box-shadow: none!important;
+}
+#calendar #cal .day.today:not(.other-month) {
+  background:var(--cal-today-tile)!important;
+  /* Keep the existing today outline and red date marker. */
+}
+/* Outside-month tiles retain their existing subtle contrasting shade. */
+
+/* Both shortcut links are identical to Settings' JSON action buttons. */
+#settings a.shortcut-link,
+#setup-wizard a.setup-shortcut-link {
+  display: flex!important;
+  align-items: center!important;
+  justify-content: center!important;
+  gap: 8px!important;
+  box-sizing: border-box;
+  width: 100%!important;
+  min-width: 0;
+  min-height: 48px!important;
+  padding: 11px 9px!important;
+  border: 0!important;
+  border-radius: 12px!important;
+  background: var(--input-fill)!important;
+  color: var(--text)!important;
+  box-shadow: none!important;
+  backdrop-filter: none!important;
+  -webkit-backdrop-filter: none!important;
+  text-align: center!important;
+  text-decoration: none!important;
+  font-size: 13px!important;
+  font-weight: 650!important;
+  line-height: 1.4;
+  cursor:pointer;
+  transition: background-color .18s ease, transform .16s ease;
+}
+@media (hover:hover) {
+  #settings a.shortcut-link:hover,
+  #setup-wizard a.setup-shortcut-link:hover {
+    background:color-mix(in srgb,var(--input-fill) 82%,var(--text) 18%)!important;
+  }
+}
+#settings a.shortcut-link:active,
+#setup-wizard a.setup-shortcut-link:active {transform:scale(.98)}
+#settings a.shortcut-link:focus-visible,
+#setup-wizard a.setup-shortcut-link:focus-visible {
+  outline:2px solid var(--blue);outline-offset:2px;
+}
+
+/* Shift editor Planned / Recorded control matches the bottom pill navigation. */
+#modal-wrap .modal-tabs {
+  position:relative;
+  isolation:isolate;
+  display:flex;
+  align-items:stretch;
+  border:1px solid var(--ios-glass-stroke)!important;
+  border-radius:999px!important;
+  background:var(--ios-glass)!important;
+  box-shadow:0 6px 19px var(--ios-shadow),inset 0 1px 0 var(--ios-glass-highlight)!important;
+  backdrop-filter:blur(18px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(125%)!important;
+  padding:5px!important;
+  gap:3px!important;
+}
+#modal-wrap .modal-tabs>button {
+  flex:1;
+  min-width:0;
+  min-height:43px;
+  border:0!important;
+  border-radius:999px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:var(--muted)!important;
+  transition:color .17s ease;
+}
+#modal-wrap .modal-tabs>button.active {color:var(--blue)!important}
+#modal-wrap .modal-tabs>.selection-glider {
+  background:var(--ios-selected)!important;
+  border-radius:999px!important;
+  box-shadow:none!important;
+}
+
+/* Date-number chips in the list: weekday / Saturday / Sunday and holidays. */
+#list-card .date-row.future-list:not(.today-list) .date-number {
+  --date-chip-bg:#e9eef5;
+  --date-chip-text:#263445;
+}
+#list-card .date-row.future-list:not(.today-list) .date-number.saturday {
+  --date-chip-bg:#e8f1ff;
+  --date-chip-text:#245ea8;
+}
+#list-card .date-row.future-list:not(.today-list) .date-number.holiday {
+  --date-chip-bg:#ffe9ec;
+  --date-chip-text:#b23443;
+}
+#list-card .date-row.past-list:not(.today-list) .date-number {
+  --date-chip-bg:#f5f7fa;
+  --date-chip-text:#8995a3;
+}
+#list-card .date-row.past-list:not(.today-list) .date-number.saturday {
+  --date-chip-bg:#f4f8ff;
+  --date-chip-text:#99b5d6;
+}
+#list-card .date-row.past-list:not(.today-list) .date-number.holiday {
+  --date-chip-bg:#fff5f6;
+  --date-chip-text:#dca0a8;
+}
+html[data-theme="dark"] #list-card .date-row.future-list:not(.today-list) .date-number {
+  --date-chip-bg:#303846;
+  --date-chip-text:#e2e8f0;
+}
+html[data-theme="dark"] #list-card .date-row.future-list:not(.today-list) .date-number.saturday {
+  --date-chip-bg:#203b60;
+  --date-chip-text:#9ac7ff;
+}
+html[data-theme="dark"] #list-card .date-row.future-list:not(.today-list) .date-number.holiday {
+  --date-chip-bg:#522c39;
+  --date-chip-text:#ffadb9;
+}
+html[data-theme="dark"] #list-card .date-row.past-list:not(.today-list) .date-number {
+  --date-chip-bg:#242932;
+  --date-chip-text:#8a919e;
+}
+html[data-theme="dark"] #list-card .date-row.past-list:not(.today-list) .date-number.saturday {
+  --date-chip-bg:#202c3b;
+  --date-chip-text:#748ea9;
+}
+html[data-theme="dark"] #list-card .date-row.past-list:not(.today-list) .date-number.holiday {
+  --date-chip-bg:#342830;
+  --date-chip-text:#a17d88;
+}
+#list-card .date-row:is(.future-list,.past-list):not(.today-list) .date-number {
+  background:var(--date-chip-bg)!important;
+  color:var(--date-chip-text)!important;
+}
+#list-card .date-row:is(.future-list,.past-list):not(.today-list) .date-number .weekday {
+  color:var(--date-chip-text)!important;
+}
+/* No override for .today-list: the current-day presentation is unchanged. */
+@media(prefers-reduced-motion:reduce) {
+  #settings a.shortcut-link,#setup-wizard a.setup-shortcut-link,
+  #modal-wrap .modal-tabs>button {transition:none!important}
+}
+
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -2011,7 +2168,7 @@ html[data-theme=dark]{
 <label class="default-plan-item"><span class="default-plan-caption">休憩開始</span><span class="default-plan-time"><span class="default-plan-clock" aria-hidden="true">18:00</span><input type="time" id="default-plan-break-start" aria-label="予定の休憩開始時刻"></span></label>
 </div></fieldset>
 <p class="hint" id="default-plan-break-hint">休憩が自動の場合は、休憩時間と休憩開始時刻を設定できません。</p>
-</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクからショートカットを追加します。</li><li>追加したショートカットを編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls json-actions"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"></div><div class="reset-actions" aria-label="データの初期化"><button class="secondary danger" id="reset-shifts" type="button">勤務データの初期化</button><button class="secondary danger" id="reset-settings" type="button">設定の初期化</button><button class="secondary danger" id="reset" type="button">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月23日 12:37</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
+</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクからショートカットを追加します。</li><li>追加したショートカットを編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls json-actions"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"></div><div class="reset-actions" aria-label="データの初期化"><button class="secondary danger" id="reset-shifts" type="button">勤務データの初期化</button><button class="secondary danger" id="reset-settings" type="button">設定の初期化</button><button class="secondary danger" id="reset" type="button">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月23日</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
  <div class="setup-container">
   <div class="setup-topbar"><strong>給与計算 · 初期設定</strong><span id="setup-number">1 / 8</span></div>
   <div class="setup-progress" id="setup-progress" aria-label="設定の進行状況"></div>
