@@ -2107,6 +2107,108 @@ html[data-theme="dark"] #list-card .date-row.past-list:not(.today-list) .date-nu
   #modal-wrap .modal-tabs>button {transition:none!important}
 }
 
+
+/* 2026-10-23: finalized calendar colors. Each day square is visibly distinct from the surrounding calendar card. */
+:root {
+ --day-week-bg:#E0E6EE;
+ --day-sat-bg:#D9EAFE;
+ --day-holiday-bg:#FFDFE5;
+ --day-week-fg:#263445;
+ --day-sat-fg:#245EA8;
+ --day-holiday-fg:#B23443;
+ --day-week-past:#95A1B1;
+ --day-sat-past:#86ABD3;
+ --day-holiday-past:#D493A0;
+ --day-other-week-bg:#EEF2F6;
+ --day-other-sat-bg:#EAF2FC;
+ --day-other-holiday-bg:#FFF0F3;
+ --day-other-week-fg:#A5AFBB;
+ --day-other-sat-fg:#9CB5D2;
+ --day-other-holiday-fg:#D8A1AD;
+}
+html[data-theme="dark"] {
+ --day-week-bg:#303A49;
+ --day-sat-bg:#203D60;
+ --day-holiday-bg:#522E3B;
+ --day-week-fg:#F0F4F9;
+ --day-sat-fg:#ABD2FF;
+ --day-holiday-fg:#FFC0CA;
+ --day-week-past:#92A0B2;
+ --day-sat-past:#82A8D5;
+ --day-holiday-past:#D198A8;
+ --day-other-week-bg:#222B37;
+ --day-other-sat-bg:#1C2C40;
+ --day-other-holiday-bg:#382630;
+ --day-other-week-fg:#788493;
+ --day-other-sat-fg:#7592B1;
+ --day-other-holiday-fg:#AC7F8E;
+}
+/* Current-month past and future share EXACTLY the same backgrounds. Only the date text is muted for past days. */
+#calendar #cal .day.cal-weekday:not(.other-month):not(.today) {background:var(--day-week-bg)!important;}
+#calendar #cal .day.cal-saturday:not(.other-month):not(.today) {background:var(--day-sat-bg)!important;}
+#calendar #cal .day.cal-holiday:not(.other-month):not(.today) {background:var(--day-holiday-bg)!important;}
+#calendar #cal .day.cal-weekday:not(.other-month):not(.today) .date {color:var(--day-week-fg)!important;}
+#calendar #cal .day.cal-saturday:not(.other-month):not(.today) .date {color:var(--day-sat-fg)!important;}
+#calendar #cal .day.cal-holiday:not(.other-month):not(.today) .date {color:var(--day-holiday-fg)!important;}
+#calendar #cal .day.cal-weekday.past:not(.other-month):not(.today) .date {color:var(--day-week-past)!important;}
+#calendar #cal .day.cal-saturday.past:not(.other-month):not(.today) .date {color:var(--day-sat-past)!important;}
+#calendar #cal .day.cal-holiday.past:not(.other-month):not(.today) .date {color:var(--day-holiday-past)!important;}
+/* Adjacent months keep weekday hues, but with subdued fills and numerals. */
+#calendar #cal .day.other-month.cal-weekday {background:var(--day-other-week-bg)!important;}
+#calendar #cal .day.other-month.cal-saturday {background:var(--day-other-sat-bg)!important;}
+#calendar #cal .day.other-month.cal-holiday {background:var(--day-other-holiday-bg)!important;}
+#calendar #cal .day.other-month.cal-weekday .date {color:var(--day-other-week-fg)!important;}
+#calendar #cal .day.other-month.cal-saturday .date {color:var(--day-other-sat-fg)!important;}
+#calendar #cal .day.other-month.cal-holiday .date {color:var(--day-other-holiday-fg)!important;}
+/* Preserve the original today's date badge and outline without overriding its existing background. */
+
+/* Initial setup: fixed title + description, only the content below scrolls. */
+#setup-wizard .setup-panel {
+ display:flex!important;
+ flex-direction:column!important;
+ min-height:0!important;
+ overflow:hidden!important;
+ padding-top:0!important;
+ padding-bottom:0!important;
+}
+#setup-wizard #setup-fixed-heading {
+ position:relative;
+ flex:none;
+ z-index:2;
+ background:var(--panel);
+ padding:21px 0 0;
+}
+#setup-wizard #setup-fixed-heading .setup-intro {padding-bottom:17px;}
+#setup-wizard #setup-scroll-region {
+ flex:1 1 auto;
+ min-height:0;
+ overflow-x:hidden;
+ overflow-y:auto;
+ overscroll-behavior:contain;
+ -webkit-overflow-scrolling:touch;
+ padding:2px 0 21px;
+ scrollbar-gutter:stable;
+}
+#setup-wizard #setup-scroll-region #setup-fields {min-width:0;}
+@media(max-width:650px) {
+ #setup-wizard #setup-fixed-heading {padding-top:18px;}
+ #setup-wizard #setup-fixed-heading .setup-intro {padding-bottom:14px;}
+ #setup-wizard #setup-scroll-region {padding-bottom:18px;}
+}
+
+/* Planned/recorded control: constant-size selection capsule, ONLY 220ms horizontal translation. */
+#modal-wrap .modal-tabs > .selection-glider {
+ transition:transform 220ms cubic-bezier(.25,.1,.25,1)!important;
+ animation:none!important;
+ will-change:transform;
+}
+#modal-wrap .modal-tabs > button,
+#modal-wrap .modal-tabs > button.active {transition:none!important;animation:none!important;transform:none!important;}
+#modal-wrap .modal-pane.active {animation:none!important;}
+@media(prefers-reduced-motion:reduce) {
+ #modal-wrap .modal-tabs > .selection-glider {transition:none!important;}
+}
+
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -2172,7 +2274,7 @@ html[data-theme="dark"] #list-card .date-row.past-list:not(.today-list) .date-nu
  <div class="setup-container">
   <div class="setup-topbar"><strong>給与計算 · 初期設定</strong><span id="setup-number">1 / 8</span></div>
   <div class="setup-progress" id="setup-progress" aria-label="設定の進行状況"></div>
-  <div class="setup-panel"><div id="setup-fields"></div><p id="setup-error" role="alert" hidden></p></div>
+  <div class="setup-panel"><div id="setup-fixed-heading"></div><div id="setup-scroll-region"><div id="setup-fields"></div><p id="setup-error" role="alert" hidden></p></div></div>
   <div class="setup-footer"><button type="button" class="secondary" id="setup-back" hidden>戻る</button><div class="setup-footer-actions"><button type="button" class="textbtn" id="setup-skip" hidden>スキップ</button><button type="button" class="primary" id="setup-next">次へ</button></div></div>
  </div>
 </section>
@@ -2277,6 +2379,7 @@ function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport
   const firstCell=new Date(cy,cm,1-beginning);
   const now=new Date();
   const todayKey=daystr(now.getFullYear(),now.getMonth(),now.getDate());
+  const holidaySets=new Map();
   let html=['日','月','火','水','木','金','土'].map((w,i)=>`<div class="dow ${i===0?'sunday':i===6?'saturday':''}">${w}</div>`).join('');
   for(let slot=0;slot<42;slot++){
     const d=new Date(firstCell.getFullYear(),firstCell.getMonth(),firstCell.getDate()+slot);
@@ -2285,8 +2388,11 @@ function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport
     const found=isCurrentMonth?data.shifts.filter(x=>x.date===date):[];
     const total=found.reduce((sum,x)=>sum+comp(x,x.status==='worked').total,0);
     const state=date===todayKey?'today':date<todayKey?'past':'future';
+    const year=d.getFullYear();
+    if(!holidaySets.has(year))holidaySets.set(year,japaneseHolidays(year));
+    const weekdayTone=d.getDay()===0||holidaySets.get(year).has(date)?'cal-holiday':d.getDay()===6?'cal-saturday':'cal-weekday';
     const statuses=found.map(x=>x.status==='worked'?'done':isRecordPending(x)?'wait':'');
-    html+=`<button type="button" class="day ${state} ${isCurrentMonth?'':'other-month'} ${found.some(x=>x.status==='worked')?'worked':''}" data-date="${date}" ${isCurrentMonth?'':'data-adjacent-month="true"'} aria-label="${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日${isCurrentMonth?'':'、隣の月'}"><div class="date">${d.getDate()}</div>${found.length?`<div class="shift">${found.map((x,i)=>`<div class="shift-entry ${statuses[i]}">${calendarTimeHTML(x)}</div>`).join('')}</div><div class="yen">${money(total)}</div>`:''}</button>`;
+    html+=`<button type="button" class="day ${state} ${weekdayTone} ${isCurrentMonth?'':'other-month'} ${found.some(x=>x.status==='worked')?'worked':''}" data-date="${date}" ${isCurrentMonth?'':'data-adjacent-month="true"'} aria-label="${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日${isCurrentMonth?'':'、隣の月'}"><div class="date">${d.getDate()}</div>${found.length?`<div class="shift">${found.map((x,i)=>`<div class="shift-entry ${statuses[i]}">${calendarTimeHTML(x)}</div>`).join('')}</div><div class="yen">${money(total)}</div>`:''}</button>`;
   }
   $('cal').innerHTML=html;
   $('cal').querySelectorAll('[data-date]').forEach(el=>el.onclick=()=>{
@@ -2750,7 +2856,7 @@ receiveShortcutCalendar();
 // GPU-composited tab indicator: no forced reflow, keyframe restart, or bouncing pseudo-element.
 (function initSubtleMotion(){
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
-  document.querySelectorAll('.tabbar,.unified-switch,.modal-tabs').forEach(group=>{
+  document.querySelectorAll('.tabbar,.unified-switch').forEach(group=>{
     const buttons=Array.from(group.querySelectorAll(':scope > button'));
     if(!buttons.length)return;
     const indicator=document.createElement('span');
@@ -3115,6 +3221,9 @@ receiveShortcutCalendar();
    document.getElementById('setup-progress').innerHTML=stepLabels.map((name,index)=>`<span class="${index<=step?'on':''}" aria-label="${name}"></span>`).join('');
    if(setupMotion){setupMotion.cancel();setupMotion=null;}
    field.innerHTML=stepHtml();
+   const fixedHeading=document.getElementById('setup-fixed-heading');
+   const stepIntro=field.querySelector(':scope > .setup-intro');
+   fixedHeading.replaceChildren(...(stepIntro?[stepIntro]:[]));
    if(direction!==0&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&field.animate){
      setupMotion=field.animate([
        {opacity:0,transform:`translate3d(${direction*14}px,0,0)`},
@@ -3127,7 +3236,7 @@ receiveShortcutCalendar();
    document.getElementById('setup-back').hidden=step===0;
    document.getElementById('setup-skip').hidden=step===0||step===8;
    document.getElementById('setup-next').textContent=step===8?'設定を完了':'次へ';
-   wizard.querySelector('.setup-panel')?.scrollTo({top:0,behavior:'instant'});
+   document.getElementById('setup-scroll-region')?.scrollTo({top:0,behavior:'instant'});
    field.querySelectorAll('input,select').forEach(el=>{
      const update=()=>{
        // The two goal fields show thousands separators without storing ¥ or commas.
@@ -3156,7 +3265,7 @@ receiveShortcutCalendar();
      el.addEventListener('input',update);
      el.addEventListener('change',update);
    });
-   const add=field.querySelector('#setup-add-rate');if(add)add.onclick=()=>{readFields();const conflict=rateOverlapError(draft.rates);if(conflict){showError(conflict);return;}const slot=freeRateSlot(draft.rates,draft.baseRate);if(!slot){showError('追加できる時間帯がありません。重複しない時間帯を設定してください。');return;}draft.rates.push(slot);persistDraft();render();};
+   const add=field.querySelector('#setup-add-rate');if(add)add.onclick=()=>{readFields();const conflict=rateOverlapError(draft.rates);if(conflict){showError(conflict);return;}const slot=freeRateSlot(draft.rates,draft.baseRate);if(!slot){showError('追加できる時間帯がありません。重複しない時間帯を設定してください。');return;}draft.rates.push(slot);persistDraft();render();document.getElementById('setup-scroll-region')?.scrollTo({top:document.getElementById('setup-scroll-region').scrollHeight,behavior:'instant'});};
    field.querySelectorAll('[data-setup-remove]').forEach(btn=>btn.onclick=()=>{readFields();draft.rates.splice(Number(btn.dataset.setupRemove),1);persistDraft();render();});
  }
  function openSetup(isRevisit=false,forceFresh=false){
@@ -3315,6 +3424,38 @@ receiveShortcutCalendar();
    if(now-locked<430)return;
    if(Math.abs(wheelX)>=68){locked=now;$(wheelX>0?'pay-next':'pay-prev').click();wheelX=0}
  },{passive:false});
+})();
+
+
+/* A dedicated, two-position glider. No squashing, fading, bouncing or WAAPI replay. */
+(function initModalPlainSlider(){
+ const group=document.querySelector('#modal-wrap .modal-tabs');
+ if(!group)return;
+ const buttons=Array.from(group.querySelectorAll(':scope > button'));
+ const glider=document.createElement('span');
+ glider.className='selection-glider';
+ glider.setAttribute('aria-hidden','true');
+ group.prepend(glider);
+ let initialized=false;
+ function paint(instant=false){
+   const selected=buttons.find(button=>button.classList.contains('active'))||buttons[0];
+   if(!selected||!selected.offsetWidth)return;
+   if(instant || !initialized) glider.style.setProperty('transition','none','important');
+   glider.style.left='0px';
+   glider.style.top=selected.offsetTop+'px';
+   glider.style.width=selected.offsetWidth+'px';
+   glider.style.height=selected.offsetHeight+'px';
+   glider.style.transform=`translate3d(${selected.offsetLeft}px,0,0)`;
+   if(instant || !initialized){
+     glider.getBoundingClientRect(); // Commit the stationary initial position before enabling movement.
+     requestAnimationFrame(()=>glider.style.removeProperty('transition'));
+   }
+   initialized=true;
+ }
+ const observer=new MutationObserver(()=>paint());
+ buttons.forEach(button=>observer.observe(button,{attributes:true,attributeFilter:['class']}));
+ if(window.ResizeObserver){const resize=new ResizeObserver(()=>paint(true));resize.observe(group);}
+ paint(true);
 })();
 
 </script></body></html>
