@@ -2359,6 +2359,49 @@ html[data-theme="dark"] {
  #pay .unified-toolbar .pay-period-stack{grid-row:2!important;height:48px!important;min-height:48px!important;}
  #pay .unified-toolbar>.pay-date-line{grid-row:3!important;}
 }
+
+/* Unified list date chips: identical dimensions in both period modes. */
+#calendar #list-card .date-row .date-number {
+ position:relative;box-sizing:border-box;
+ width:54px!important;min-width:54px!important;max-width:54px!important;
+ height:62px!important;min-height:62px!important;max-height:62px!important;
+ display:flex;align-items:center;justify-content:center;flex-direction:column;
+ padding:0!important;gap:1px;flex:0 0 54px!important;
+ font-size:21px;line-height:1.08;
+}
+#calendar #list-card .date-number .list-day{font-size:inherit;line-height:1.08;display:block;}
+#calendar #list-card .date-number .list-month {
+ position:absolute;left:5px;top:4px;line-height:1;font-size:9px;font-weight:650;
+ opacity:.9;letter-spacing:-.2px;pointer-events:none;
+}
+#calendar #list-card .date-number .weekday {font-size:.69rem;line-height:1.12;}
+@media(max-width:650px){
+ #calendar #list-card .date-row .date-number {
+  width:45px!important;min-width:45px!important;max-width:45px!important;
+  height:59px!important;min-height:59px!important;max-height:59px!important;flex-basis:45px!important;
+ }
+ #calendar #list-card .date-number .list-month{left:4px;top:3px;font-size:8.5px;}
+}
+/* Calendar rows fit the exact number of weeks required; no gratuitous sixth week. */
+#calendar #cal.calendar.month-period-grid{grid-template-rows:22px repeat(var(--closing-weeks,5),96px)!important;}
+@media(max-width:650px){#calendar #cal.calendar.month-period-grid{grid-template-rows:21px repeat(var(--closing-weeks,5),79px)!important;}}
+/* A readable month marker on the first date and whenever the salary period crosses a month. */
+#calendar #cal .day .date.month-transition {width:auto;min-width:26px;max-width:100%;padding:0 4px;border-radius:13px;white-space:nowrap;font-size:12px;letter-spacing:-.4px;}
+@media(max-width:650px){#calendar #cal .day .date.month-transition {font-size:10px;min-width:23px;padding:0 2px;letter-spacing:-.5px;}}
+/* Compact single-row period tabs on the left, matching period text on the right. */
+#calendar .calendar-period-selector{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:nowrap;min-width:0;}
+#calendar .calendar-period-segments{flex:0 0 auto;width:min(225px,49%);min-width:0;}
+#calendar .calendar-period-segments>button{min-width:0;padding-left:5px;padding-right:5px;}
+#calendar .calendar-period-hint{min-width:0;flex:1 1 auto;text-align:right;font-size:11px;overflow-wrap:anywhere;}
+@media(max-width:650px){
+ #calendar .calendar-period-selector{gap:5px;}
+ #calendar .calendar-period-segments{width:min(174px,51%);padding:3px;}
+ #calendar .calendar-period-segments>button{font-size:10px;min-height:34px;padding:6px 1px;}
+ #calendar .calendar-period-hint{font-size:clamp(9px,2.6vw,10.5px);line-height:1.25;}
+}
+/* Match the payroll '今月' control exactly to its calendar counterpart. */
+#pay .unified-toolbar #pay-today,
+#calendar .unified-toolbar #cal-today{border-radius:999px!important;}
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -2558,7 +2601,7 @@ function calendarTimeHTML(shift){
 function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport:0,minutes:0,days:0};for(let item of list){let p=comp(item,false),a=comp(item,true),done=item.status==='worked';sum.planned+=p.total;sum.forecast+=(done?a:p).total;if(done){sum.actual+=a.total;sum.wage+=a.wage;sum.transport+=a.transport;sum.minutes+=a.mins;sum.days++}}return sum}function shiftsForMonth(y,m){let [start,end]=datesInPay(y,m);return data.shifts.filter(x=>{let d=parseDate(x.date);return d>=start&&d<=end}).sort((a,b)=>a.date.localeCompare(b.date))}function shiftsForYear(y){return Array.from({length:12},(_,m)=>shiftsForMonth(y,m)).flat()}function renderCal(){
   const closing=calPeriodMode==='closing';
   const [rangeStart,rangeEnd]=calendarDateRange();
-  $('cal-title').textContent=`${cy}年${cm+1}月分`;
+  $('cal-title').textContent=closing?`${cy}年${cm+1}月分`:`${cy}年${cm+1}月`;
   $('cal-today').textContent=closing?'今期':'今月';
   $('calendar-period-hint').textContent=closing?`期間：${rangeStart.getFullYear()}/${calendarShortDate(rangeStart)} ～ ${rangeEnd.getFullYear()}/${calendarShortDate(rangeEnd)}`:'';
   $('period-calendar-month').classList.toggle('active',!closing);
@@ -2569,9 +2612,11 @@ function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport
   const startKey=daystr(rangeStart.getFullYear(),rangeStart.getMonth(),rangeStart.getDate());
   const endKey=daystr(rangeEnd.getFullYear(),rangeEnd.getMonth(),rangeEnd.getDate());
   const daysInRange=Math.round((Date.UTC(rangeEnd.getFullYear(),rangeEnd.getMonth(),rangeEnd.getDate())-Date.UTC(rangeStart.getFullYear(),rangeStart.getMonth(),rangeStart.getDate()))/86400000)+1;
-  const numCells=closing?Math.ceil((rangeStart.getDay()+daysInRange)/7)*7:42;
+  // Show only the weeks containing dates in the current month or salary period.
+  const numCells=Math.ceil((rangeStart.getDay()+daysInRange)/7)*7;
   const numWeeks=numCells/7;
   $('cal').classList.toggle('closing-period-grid',closing);
+  $('cal').classList.toggle('month-period-grid',!closing);
   $('cal').style.setProperty('--closing-weeks',numWeeks);
   const now=new Date();
   const todayKey=daystr(now.getFullYear(),now.getMonth(),now.getDate());
@@ -2595,7 +2640,10 @@ function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport
     if(!holidaySets.has(year))holidaySets.set(year,japaneseHolidays(year));
     const weekdayTone=d.getDay()===0||holidaySets.get(year).has(date)?'cal-holiday':d.getDay()===6?'cal-saturday':'cal-weekday';
     const statuses=found.map(x=>x.status==='worked'?'done':isRecordPending(x)?'wait':'');
-    html+=`<button type="button" class="day ${state} ${weekdayTone} ${isAdjacent?'other-month':''} ${found.some(x=>x.status==='worked')?'worked':''}" data-date="${date}" aria-label="${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日${isAdjacent?'、隣の月':''}"><div class="date">${d.getDate()}</div>${found.length?`<div class="shift">${found.map((x,i)=>`<div class="shift-entry ${statuses[i]}">${calendarTimeHTML(x)}</div>`).join('')}</div><div class="yen">${money(total)}</div>`:''}</button>`;
+    // In the closing-period view, print the month at the first date and on the first of a new month.
+    const showMonth=closing&&!isAdjacent&&(date===startKey||d.getDate()===1);
+    const dateLabel=showMonth?`${d.getMonth()+1}/${d.getDate()}`:String(d.getDate());
+    html+=`<button type="button" class="day ${state} ${weekdayTone} ${isAdjacent?'other-month':''} ${found.some(x=>x.status==='worked')?'worked':''}" data-date="${date}" aria-label="${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日${isAdjacent?'、隣の月':''}"><div class="date ${showMonth?'month-transition':''}">${dateLabel}</div>${found.length?`<div class="shift">${found.map((x,i)=>`<div class="shift-entry ${statuses[i]}">${calendarTimeHTML(x)}</div>`).join('')}</div><div class="yen">${money(total)}</div>`:''}</button>`;
   }
   $('cal').innerHTML=html;
   $('cal').querySelectorAll('[data-date]').forEach(el=>el.onclick=()=>{
@@ -2846,8 +2894,9 @@ function updateCalendarPresentation(){
   let time=found.map(x=>`${escapeHtml(x.status==='worked'?(x.actualStart||x.start):x.start)}～${escapeHtml(x.status==='worked'?(x.actualEnd||x.end):x.end)}`).join(' ／ ');
   let amount=found.reduce((v,x)=>v+comp(x,x.status==='worked').total,0),weekday=['日','月','火','水','木','金','土'][calendarDay.getDay()];
   let status=waiting?'記録待ち':done?'勤務確定':anyDone?'一部確定':'勤務予定',statusClass=waiting?'wait':done?'done':'';
-  const label=calPeriodMode==='closing'?`${calendarDay.getMonth()+1}/${d}`:String(d);
-  html+=`<button type="button" class="date-row ${found.length?'':'empty'} ${date<todayKey?'past-list':date===todayKey?'present-list':'future-list'} ${done?'done':''} ${waiting?'missing':''} ${date===todayKey?'today-list':''}" data-list-date="${date}"><span class="date-lead"><span class="date-number ${weekday==='日'||japaneseHolidays(calendarDay.getFullYear()).has(date)?'holiday':weekday==='土'?'saturday':'weekday-regular'}">${label}<span class="weekday">${weekday}</span></span><span class="date-main"><strong class="list-time">${found.length?time:'勤務予定なし'}</strong>${found.length?`<span class="list-status ${statusClass}">${status}</span>`:''}</span></span><span class="list-pay">${found.length?money(amount):''}</span></button>`;
+  const label=String(d);
+  const listMonth=calPeriodMode==='closing'?`<span class="list-month" aria-hidden="true">${calendarDay.getMonth()+1}/</span>`:'';
+  html+=`<button type="button" class="date-row ${found.length?'':'empty'} ${date<todayKey?'past-list':date===todayKey?'present-list':'future-list'} ${done?'done':''} ${waiting?'missing':''} ${date===todayKey?'today-list':''}" data-list-date="${date}"><span class="date-lead"><span class="date-number ${weekday==='日'||japaneseHolidays(calendarDay.getFullYear()).has(date)?'holiday':weekday==='土'?'saturday':'weekday-regular'}">${listMonth}<span class="list-day">${label}</span><span class="weekday">${weekday}</span></span><span class="date-main"><strong class="list-time">${found.length?time:'勤務予定なし'}</strong>${found.length?`<span class="list-status ${statusClass}">${status}</span>`:''}</span></span><span class="list-pay">${found.length?money(amount):''}</span></button>`;
  }
  $('shift-list').innerHTML=html||`<div class="empty-list-message" role="status">${calPeriodMode==='closing'?'この給与期間':'この月'}の勤務予定はありません。<small>左右にスワイプすると${calPeriodMode==='closing'?'期間':'月'}を移動できます。</small></div>`;
  $('list-card').classList.toggle('has-no-shifts',!html);
@@ -2858,9 +2907,17 @@ $('mode-list').onclick=()=>{calMode='list';try{localStorage.setItem('shiftpay-di
 $('show-empty').onclick=()=>{showEmptyDays=!showEmptyDays;try{localStorage.setItem('shiftpay-show-empty',String(showEmptyDays))}catch(e){}updateCalendarPresentation()};
 function changeCalendarPeriod(mode){
  if(mode===calPeriodMode)return;
+ const now=new Date();
+ const originalBase=calPeriodMode==='closing'?closingMonthForDate(now):new Date(now.getFullYear(),now.getMonth(),1);
+ const offset=(cy-originalBase.getFullYear())*12+cm-originalBase.getMonth();
+ const targetBase=mode==='closing'?closingMonthForDate(now):new Date(now.getFullYear(),now.getMonth(),1);
+ const target=new Date(targetBase.getFullYear(),targetBase.getMonth()+offset,1);
  calPeriodMode=mode;
+ cy=target.getFullYear();cm=target.getMonth();
+ // Keep the payroll page in sync with the selected calendar period.
+ py=cy;pm=cm;
  try{localStorage.setItem('shiftpay-calendar-period',mode)}catch(e){}
- renderCal();
+ renderCal();renderPay();
 }
 $('period-calendar-month').onclick=()=>changeCalendarPeriod('month');
 $('period-calendar-closing').onclick=()=>changeCalendarPeriod('closing');
