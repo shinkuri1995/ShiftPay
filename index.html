@@ -2455,6 +2455,51 @@ html[data-theme="dark"] {
   #calendar #cal.calendar[data-weeks="6"] .day .shift-entry {padding-top:2px;padding-bottom:2px;}
   #calendar #cal.calendar[data-weeks="6"] .day .yen{margin-top:2px;}
 }
+
+/* Oct 23 refinement: only translate the selection chip on its X-axis. */
+.tabbar::before,.unified-switch::before,.modal-tabs::before{content:none!important;animation:none!important;transition:none!important;}
+.tabbar>.selection-glider,.unified-switch>.selection-glider,
+#calendar .calendar-period-segments>.selection-glider,
+#modal-wrap .modal-tabs>.selection-glider{
+  animation:none!important;
+  transform-origin:center center!important;
+  transition:transform 200ms ease-out!important;
+  scale:1!important;
+  opacity:1!important;
+}
+@media(prefers-reduced-motion:reduce){
+ .tabbar>.selection-glider,.unified-switch>.selection-glider,
+ #calendar .calendar-period-segments>.selection-glider,
+ #modal-wrap .modal-tabs>.selection-glider{transition:none!important;}
+}
+/* All old appearance/bounce effects are disabled; the selection background alone moves. */
+.content-arriving,.modal-pane.active{animation:none!important;}
+/* Payment-date text directly below the payroll period title. */
+#pay .unified-toolbar .pay-period-stack{
+  display:flex!important;flex-direction:column!important;
+  align-items:center!important;justify-content:center!important;
+  gap:3px!important;padding:0!important;
+  height:54px!important;min-height:54px!important;max-height:54px!important;
+  grid-row:1!important;white-space:nowrap!important;
+}
+#pay .unified-toolbar .pay-period-stack>#pay-period{display:block;line-height:1.25;}
+#pay .unified-toolbar .pay-period-stack{overflow:visible!important;}
+#pay .unified-toolbar .pay-period-stack>#pay-date-line{
+  position:static!important;display:flex;align-items:center;justify-content:center;
+  width:max-content!important;max-width:none!important;flex:0 0 auto;gap:2px;
+  font-size:11px!important;line-height:1.2!important;
+  margin:0!important;padding:0!important;white-space:nowrap;
+  color:var(--muted);pointer-events:none;
+}
+#pay .unified-toolbar .pay-period-stack>#pay-date-line[style*="none"]{display:none!important;}
+#pay .unified-toolbar{grid-template-rows:54px!important;min-height:54px!important;}
+@media(max-width:650px){
+ #pay .unified-toolbar .pay-period-stack>#pay-date-line{font-size:9.5px!important;letter-spacing:-.2px;}
+}
+@media(max-width:355px){
+ #pay .unified-toolbar{grid-template-rows:54px 54px!important;min-height:108px!important;}
+ #pay .unified-toolbar .pay-period-stack{grid-row:2!important;}
+}
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -2493,11 +2538,10 @@ html[data-theme="dark"] {
   </div>
   <div class="pay-period-controls toolbar-period">
     <button class="secondary" id="pay-prev" type="button" aria-label="前の給与期間">‹</button>
-    <span class="pay-period-stack"><strong id="pay-period"></strong></span>
+    <span class="pay-period-stack"><strong id="pay-period"></strong><span class="pay-date-line" id="pay-date-line" aria-live="polite"><span class="payday-prefix">振込予定日：</span><span id="payday-under-gauge"></span></span></span>
     <button class="secondary" id="pay-next" type="button" aria-label="次の給与期間">›</button>
     <button class="secondary" id="pay-today" type="button">今期</button>
   </div>
-  <div class="pay-date-line" id="pay-date-line" aria-live="polite"><span class="payday-prefix">振込予定日：</span><span id="payday-under-gauge"></span></div>
 </div>
 <div id="pay-stage" class="pay-stage"><div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標</label><span class="goal-currency-field"><span class="goal-yen" aria-hidden="true">¥</span><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></span></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></div></section>
 <section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div>
@@ -2597,11 +2641,23 @@ function closingMonthForDate(d){
  return asDay>end?new Date(y,m+1,1):new Date(y,m,1);
 }
 function calendarShortDate(d){return `${d.getMonth()+1}/${d.getDate()}`;}
-// On a restored closing-date view, start at the salary period containing today.
+// Salary always opens at the period containing today, independent of the calendar mode.
+// Both modes share a month *offset*, never a displayed month label.
+function currentPeriodAnchor(mode,reference=new Date()){
+ return mode==='closing' ? closingMonthForDate(reference) : new Date(reference.getFullYear(),reference.getMonth(),1);
+}
+function periodOffset(y,m,mode){
+ const a=currentPeriodAnchor(mode);
+ return (y-a.getFullYear())*12 + (m-a.getMonth());
+}
+function periodAtOffset(mode,offset){
+ const a=currentPeriodAnchor(mode);
+ return new Date(a.getFullYear(),a.getMonth()+offset,1);
+}
+const salaryAnchor=currentPeriodAnchor('closing');
+py=salaryAnchor.getFullYear();pm=salaryAnchor.getMonth();
 if(calPeriodMode==='closing'){
- const selected=closingMonthForDate(today);
- cy=selected.getFullYear();cm=selected.getMonth();
- py=cy;pm=cm;
+ cy=salaryAnchor.getFullYear();cm=salaryAnchor.getMonth();
 }
 // Public-holiday calculator: recurring Japanese national holidays and bank closures.
 function japaneseHolidays(year){
@@ -2961,15 +3017,13 @@ $('mode-list').onclick=()=>{calMode='list';try{localStorage.setItem('shiftpay-di
 $('show-empty').onclick=()=>{showEmptyDays=!showEmptyDays;try{localStorage.setItem('shiftpay-show-empty',String(showEmptyDays))}catch(e){}updateCalendarPresentation()};
 function changeCalendarPeriod(mode){
  if(mode===calPeriodMode)return;
- const now=new Date();
- const originalBase=calPeriodMode==='closing'?closingMonthForDate(now):new Date(now.getFullYear(),now.getMonth(),1);
- const offset=(cy-originalBase.getFullYear())*12+cm-originalBase.getMonth();
- const targetBase=mode==='closing'?closingMonthForDate(now):new Date(now.getFullYear(),now.getMonth(),1);
- const target=new Date(targetBase.getFullYear(),targetBase.getMonth()+offset,1);
+ const offset=periodOffset(cy,cm,calPeriodMode);
+ const target=periodAtOffset(mode,offset);
  calPeriodMode=mode;
  cy=target.getFullYear();cm=target.getMonth();
- // Keep the payroll page in sync with the selected calendar period.
- py=cy;pm=cm;
+ // Preserve the offset while keeping the salary target anchored at the closing period.
+ const payTarget=periodAtOffset('closing',offset);
+ py=payTarget.getFullYear();pm=payTarget.getMonth();
  try{localStorage.setItem('shiftpay-calendar-period',mode)}catch(e){}
  renderCal();renderPay();
 }
@@ -3178,62 +3232,40 @@ receiveShortcutCalendar();
 // GPU-composited tab indicator: no forced reflow, keyframe restart, or bouncing pseudo-element.
 (function initSubtleMotion(){
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
-  document.querySelectorAll('.tabbar,.unified-switch,.calendar-period-segments').forEach(group=>{
-    const buttons=Array.from(group.querySelectorAll(':scope > button'));
+  // Fresh two-position slider. No keyframes, WAAPI or scaling: only left/right translation.
+  document.querySelectorAll('.tabbar,.unified-switch,.calendar-period-segments,#modal-wrap .modal-tabs').forEach(group=>{
+    const buttons=[...group.querySelectorAll(':scope > button')];
     if(!buttons.length)return;
-    const indicator=document.createElement('span');
-    indicator.className='selection-glider';
-    indicator.setAttribute('aria-hidden','true');
-    group.prepend(indicator);
-    let lastIndex=-1;
-    let lastX=0;
-    let running=null;
-    const paint=(allowMotion=true)=>{
-      const index=Math.max(0,buttons.findIndex(button=>button.classList.contains('active')));
-      const selected=buttons[index];
-      // The group can be display:none in another page. ResizeObserver will measure it when opened.
-      if(!selected || !selected.offsetWidth)return;
-      const destX=selected.offsetLeft;
-      const destY=selected.offsetTop;
-      const destW=selected.offsetWidth;
-      const destH=selected.offsetHeight;
-      if(lastIndex===index && lastX===destX && indicator.offsetWidth===destW && indicator.offsetHeight===destH)return;
-      const moved=lastIndex!==-1 && lastIndex!==index;
-      let fromX=lastX;
-      if(running){
-        // Continue from the live position if the user taps again before the prior motion ends.
-        const live=getComputedStyle(indicator).transform;
-        if(live && live!=='none'){
-          const parts=new DOMMatrixReadOnly(live);
-          fromX=parts.m41;
-        }
-        running.cancel();running=null;
+    // Other tab animations are disabled; this is the only selection indicator.
+    group.querySelectorAll(':scope > .selection-glider').forEach(old=>old.remove());
+    const slider=document.createElement('span');
+    slider.className='selection-glider';
+    slider.setAttribute('aria-hidden','true');
+    group.prepend(slider);
+    let initialized=false;
+    let previousGeometry='';
+    const paint=()=>{
+      const active=buttons.find(button=>button.classList.contains('active'))||buttons[0];
+      if(!active || !active.offsetWidth)return;
+      const x=active.offsetLeft,y=active.offsetTop,w=active.offsetWidth,h=active.offsetHeight;
+      const geometry=[y,w,h].join(':');
+      // Resizing is instantaneous: the sliding effect only moves in the X direction.
+      if(!initialized || previousGeometry!==geometry || reduceMotion.matches){
+        slider.style.setProperty('transition','none','important');
+      }else{
+        slider.style.setProperty('transition','transform 200ms ease-out','important');
       }
-      indicator.style.left='0px';
-      indicator.style.top=destY+'px';
-      indicator.style.width=destW+'px';
-      indicator.style.height=destH+'px';
-      const target=`translate3d(${destX}px,0,0)`;
-      indicator.style.transform=target;
-      if(allowMotion && moved && !reduceMotion.matches && indicator.animate){
-        const travel=Math.abs(destX-fromX);
-        if(travel>0.5){
-          running=indicator.animate([
-            {transform:`translate3d(${fromX}px,0,0)`,offset:0},
-            {transform:target,offset:1}
-          ],{duration:250,easing:'cubic-bezier(.22,.72,.22,1)',fill:'none'});
-          running.addEventListener('finish',()=>{running=null},{once:true});
-        }
-      }
-      lastX=destX;
-      lastIndex=index;
+      slider.style.left='0px';slider.style.top=y+'px';
+      slider.style.width=w+'px';slider.style.height=h+'px';
+      slider.style.transform=`translate3d(${x}px,0,0)`;
+      previousGeometry=geometry;
+      if(!initialized){initialized=true;requestAnimationFrame(()=>{slider.style.setProperty('transition',reduceMotion.matches?'none':'transform 200ms ease-out','important')});}
     };
-    const observer=new MutationObserver(()=>paint(true));
+    const observer=new MutationObserver(paint);
     buttons.forEach(button=>observer.observe(button,{attributes:true,attributeFilter:['class']}));
-    const resizeObserver=new ResizeObserver(()=>paint(false));
-    resizeObserver.observe(group);
-    buttons.forEach(button=>resizeObserver.observe(button));
-    paint(false);
+    if(window.ResizeObserver){const observer=new ResizeObserver(paint);observer.observe(group);}
+    paint();
+    group.__paintSelection=paint;
   });
   const animateArea=(element)=>{
     if(!element||reduceMotion.matches)return;
@@ -3315,8 +3347,14 @@ receiveShortcutCalendar();
       currentSlide=[];
     },{once:true});
   }
-  function copyCalendarToPay(){py=cy;pm=cm;renderPay();}
-  function copyPayToCalendar(){cy=py;cm=pm;renderCal();}
+  function copyCalendarToPay(){
+    const next=periodAtOffset('closing',periodOffset(cy,cm,calPeriodMode));
+    py=next.getFullYear();pm=next.getMonth();renderPay();
+  }
+  function copyPayToCalendar(){
+    const next=periodAtOffset(calPeriodMode,periodOffset(py,pm,'closing'));
+    cy=next.getFullYear();cm=next.getMonth();renderCal();
+  }
   const calPrev=$('prev').onclick,calNext=$('next').onclick,calToday=$('cal-today').onclick;
   $('prev').onclick=()=>calendarSlide(-1,()=>{calPrev();copyCalendarToPay()});
   $('next').onclick=()=>calendarSlide(1,()=>{calNext();copyCalendarToPay()});
@@ -3749,36 +3787,5 @@ receiveShortcutCalendar();
  },{passive:false});
 })();
 
-
-/* A dedicated, two-position glider. No squashing, fading, bouncing or WAAPI replay. */
-(function initModalPlainSlider(){
- const group=document.querySelector('#modal-wrap .modal-tabs');
- if(!group)return;
- const buttons=Array.from(group.querySelectorAll(':scope > button'));
- const glider=document.createElement('span');
- glider.className='selection-glider';
- glider.setAttribute('aria-hidden','true');
- group.prepend(glider);
- let initialized=false;
- function paint(instant=false){
-   const selected=buttons.find(button=>button.classList.contains('active'))||buttons[0];
-   if(!selected||!selected.offsetWidth)return;
-   if(instant || !initialized) glider.style.setProperty('transition','none','important');
-   glider.style.left='0px';
-   glider.style.top=selected.offsetTop+'px';
-   glider.style.width=selected.offsetWidth+'px';
-   glider.style.height=selected.offsetHeight+'px';
-   glider.style.transform=`translate3d(${selected.offsetLeft}px,0,0)`;
-   if(instant || !initialized){
-     glider.getBoundingClientRect(); // Commit the stationary initial position before enabling movement.
-     requestAnimationFrame(()=>glider.style.removeProperty('transition'));
-   }
-   initialized=true;
- }
- const observer=new MutationObserver(()=>paint());
- buttons.forEach(button=>observer.observe(button,{attributes:true,attributeFilter:['class']}));
- if(window.ResizeObserver){const resize=new ResizeObserver(()=>paint(true));resize.observe(group);}
- paint(true);
-})();
 
 </script></body></html>
