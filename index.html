@@ -2657,6 +2657,42 @@ button.primary,button.secondary,button.textbtn,
  #modal-wrap .actions #save-shift,
  #modal-wrap .actions #confirm-worked{font-size:clamp(10px,2.6vw,12px)!important;}
 }
+
+/* Final usability refinements: fixed editor header, central scroll pane, fixed actions. */
+html{scrollbar-gutter:stable}
+#modal-wrap .modal{display:flex!important;flex-direction:column!important;overflow:hidden!important;height:min(810px,calc(100dvh - 16px))!important;max-height:calc(100dvh - 16px)!important;min-height:0!important}
+#modal-wrap .modal>.row:first-child,#modal-wrap .modal>.modal-tabs{flex:0 0 auto!important}
+#modal-wrap .modal-pane{flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
+#modal-wrap .modal-pane.active{display:flex!important;flex-direction:column!important}
+#modal-wrap .modal-pane .editor-scroll{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding:2px 3px 12px;touch-action:pan-y}
+#modal-wrap .modal-pane>.actions{flex:0 0 auto!important;min-height:0;align-items:stretch;background:var(--panel);position:relative;padding:9px 0 0!important;margin:0!important;z-index:2}
+#modal-wrap .modal-pane .editor-scroll #plan-breakdown,#modal-wrap .modal-pane .editor-scroll #record-breakdown{min-height:0!important}
+#modal-wrap .modal-pane>.actions button{margin:0;box-sizing:border-box}
+#modal-wrap .shift-validation{color:var(--negative,#d04b55);font-size:12px;font-weight:700;line-height:1.5;margin:10px 0;padding:10px 12px;border-radius:11px;background:color-mix(in srgb,#ec6767 12%,var(--panel))}
+#modal-wrap .shift-validation[hidden]{display:none!important}
+#modal-wrap .shift-difference{margin:12px 0 8px;border-radius:14px;background:color-mix(in srgb,var(--blue) 7%,var(--panel));padding:12px;font-size:12px}
+.shift-difference[hidden]{display:none!important}
+.shift-difference h3{font-size:13px;margin:0 0 9px}
+.shift-difference .variance-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr)}
+.shift-difference strong{overflow-wrap:anywhere}
+.variance-grid{display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center}
+.variance-grid strong{text-align:right;font-variant-numeric:tabular-nums}
+.variance-positive{color:var(--positive)}.variance-negative{color:var(--negative,#cf4b56)}
+.variance-item{padding:11px 0;border-bottom:1px solid var(--line)}.variance-item:last-child{border-bottom:0}
+.variance-item .variance-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font-size:12px;font-weight:700}
+.variance-item .variance-detail{color:var(--muted);font-size:11px;line-height:1.6;margin-top:4px}
+.variance-card[hidden]{display:none!important}
+.export-csv-button{font-size:12px!important;padding:9px 14px!important;border-radius:999px!important;min-height:38px;white-space:nowrap;flex:0 0 auto}
+#pay>.unified-topline{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.action-toast{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:50%;transform:translate3d(-50%,12px,0);opacity:0;pointer-events:none;z-index:2100;background:color-mix(in srgb,var(--panel) 94%,var(--blue) 6%);color:var(--text);border:1px solid var(--nav-glass-edge,var(--line));box-shadow:0 8px 32px rgba(0,0,0,.14);border-radius:999px;padding:12px 17px;max-width:min(90vw,440px);width:max-content;text-align:center;font-size:13px;font-weight:700;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:opacity .18s ease,transform .18s ease}
+.action-toast.show{opacity:1;transform:translate3d(-50%,0,0)}
+.setup-unbroken{white-space:nowrap;display:inline}
+#setup-wizard .setup-intro p{overflow-wrap:break-word;word-break:normal;line-break:strict;text-wrap:pretty}
+#calendar-stage,#pay-stage{backface-visibility:hidden;transform:translateZ(0)}
+#calendar-stage .calendar-motion-ghost,#pay-stage .pay-motion-ghost{display:none!important}
+@media(max-width:650px){#modal-wrap .modal{height:calc(100dvh - 16px)!important}#modal-wrap .modal-pane .editor-scroll{scrollbar-gutter:auto}}
+@media(prefers-reduced-motion:reduce){.action-toast{transition:none!important}}
+
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -2687,7 +2723,7 @@ button.primary,button.secondary,button.textbtn,
 </div>
 <div class="calendar-stage" id="calendar-stage"><div class="card" id="calendar-card"><div class="calendar" id="cal"></div><div class="calendar-legend"><span>● 予定</span><span>● 勤務確定</span><span class="legend-wait">● 記録待ち</span></div></div><div id="list-card" style="display:none"><div id="shift-list"></div></div></div></section>
 <section id="pay" class="page">
-<div class="unified-topline"><h2>給与計算</h2></div>
+<div class="unified-topline"><h2>給与計算</h2><button id="export-csv" class="secondary export-csv-button" type="button" title="表示中の給与期間の勤務データをCSVで保存">CSVを出力 <span aria-hidden="true">↓</span></button></div>
 <div class="unified-toolbar">
   <div class="view-switch unified-switch" role="group" aria-label="給与表示の切り替え">
     <button type="button" id="monthly" class="active">月別</button>
@@ -2700,7 +2736,7 @@ button.primary,button.secondary,button.textbtn,
     <button class="secondary" id="pay-today" type="button">今期</button>
   </div>
 </div>
-<div id="pay-stage" class="pay-stage"><div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標</label><span class="goal-currency-field"><span class="goal-yen" aria-hidden="true">¥</span><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></span></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></div></section>
+<div id="pay-stage" class="pay-stage"><div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標</label><span class="goal-currency-field"><span class="goal-yen" aria-hidden="true">¥</span><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></span></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card variance-card" id="work-variance-card" hidden><h2>予定と実績の比較</h2><div id="work-variance-content"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></div></section>
 <section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div>
 <div class="adjacent-display-settings" role="group" aria-label="前後の日付の表示設定">
   <div class="adjacent-display-row"><div class="adjacent-display-copy"><strong>暦月基準</strong><small>前月・翌月の日付を表示</small></div><label class="premium-toggle" aria-label="暦月基準で前月・翌月の日付を表示"><input type="checkbox" id="show-adjacent-month"><span class="toggle-track" aria-hidden="true"></span></label></div>
@@ -2743,7 +2779,7 @@ button.primary,button.secondary,button.textbtn,
 <button data-page="pay" type="button"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="m8 6 4 6 4-6M8 12h8M8 15h8M12 12v6"/></svg><span>給与計算</span></button>
 <button data-page="settings" type="button"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.7 3.1 10 5.3a7 7 0 0 1 4 0l.3-2.2 2.1 1.2-1 2a7 7 0 0 1 2.1 2l2.1-1 1.2 2.1-1.9 1.3a7 7 0 0 1 0 3l1.9 1.3-1.2 2.1-2.1-1a7 7 0 0 1-2.1 2l1 2-2.1 1.2-.3-2.2a7 7 0 0 1-4 0l-.3 2.2-2.1-1.2 1-2a7 7 0 0 1-2.1-2l-2.1 1-1.2-2.1 1.9-1.3a7 7 0 0 1 0-3L3.1 9.4l1.2-2.1 2.1 1a7 7 0 0 1 2.1-2l-1-2z"/><circle cx="12" cy="12" r="3"/></svg><span>設定</span></button>
 </nav>
-<div class="modal-wrap" id="modal-wrap"><div class="modal"><div class="row"><h2 id="modal-title">勤務を登録</h2><button class="secondary" id="close-modal">✕</button></div><div class="modal-tabs" role="tablist"><button id="tab-planned" class="active" type="button" role="tab" aria-selected="true">勤務予定</button><button id="tab-record" type="button" role="tab" aria-selected="false">勤務記録</button></div><div class="modal-pane active" id="pane-planned"><div class="fields"><label>日付<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-date" type="date"></span></label><label>予定開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-start" type="time"></span></label><label>予定終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-plan-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span><span class="auto-placeholder" aria-hidden="true">自動</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-plan-break-start" type="time"></span></label></div><div id="plan-breakdown"></div><div class="actions copy-actions"><button id="copy-shift" class="secondary" type="button">予定をコピー</button><button id="delete-shift" class="textbtn danger" type="button">この勤務を削除</button><button class="primary" id="save-shift" type="button">予定を保存</button></div></div><div class="modal-pane" id="pane-record"><div class="record-state" id="record-state">勤務予定を登録すると記録できます。</div><div class="fields"><label>勤務開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-start" type="time"></span></label><label>勤務終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-break-start" type="time"></span></label></div><div id="record-breakdown"></div><div class="actions record-actions"><button id="copy-record" class="secondary" type="button">勤務記録をコピー</button><button class="secondary danger" id="undo-worked" type="button">勤務記録を削除</button><button class="primary" id="confirm-worked" type="button">勤務記録を確定</button></div></div><select id="m-status" hidden><option value="planned">予定</option><option value="worked">勤務済み</option></select><div id="modal-pay" hidden></div><button id="cancel-modal" hidden></button></div></div>
+<div class="modal-wrap" id="modal-wrap"><div class="modal"><div class="row"><h2 id="modal-title">勤務を登録</h2><button class="secondary" id="close-modal">✕</button></div><div class="modal-tabs" role="tablist"><button id="tab-planned" class="active" type="button" role="tab" aria-selected="true">勤務予定</button><button id="tab-record" type="button" role="tab" aria-selected="false">勤務記録</button></div><div class="modal-pane active" id="pane-planned"><div class="editor-scroll"><div class="fields"><label>日付<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-date" type="date"></span></label><label>予定開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-start" type="time"></span></label><label>予定終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-plan-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span><span class="auto-placeholder" aria-hidden="true">自動</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-plan-break-start" type="time"></span></label></div><div id="plan-breakdown"></div><div class="shift-validation" data-validation="planned" role="alert" hidden></div></div><div class="actions copy-actions"><button id="copy-shift" class="secondary" type="button">予定をコピー</button><button id="delete-shift" class="textbtn danger" type="button">この勤務を削除</button><button class="primary" id="save-shift" type="button">予定を保存</button></div></div><div class="modal-pane" id="pane-record"><div class="editor-scroll"><div class="record-state" id="record-state">勤務予定を登録すると記録できます。</div><div class="fields"><label>勤務開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-start" type="time"></span></label><label>勤務終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-break-start" type="time"></span></label></div><div id="record-breakdown"></div><section id="record-diff" class="shift-difference" hidden aria-live="polite"></section><div class="shift-validation" data-validation="record" role="alert" hidden></div></div><div class="actions record-actions"><button id="copy-record" class="secondary" type="button">勤務記録をコピー</button><button class="secondary danger" id="undo-worked" type="button">勤務記録を削除</button><button class="primary" id="confirm-worked" type="button">勤務記録を確定</button></div></div><select id="m-status" hidden><option value="planned">予定</option><option value="worked">勤務済み</option></select><div id="modal-pay" hidden></div><button id="cancel-modal" hidden></button></div></div>
 <div id="sync-feedback" class="sync-modal-wrap" aria-hidden="true"><section class="sync-modal" role="dialog" aria-modal="true" aria-labelledby="sync-modal-title" aria-describedby="sync-modal-message" tabindex="-1"><div class="sync-modal-heading"><h2 id="sync-modal-title">iCloudからの取得結果</h2></div><p id="sync-modal-message" role="status" aria-live="polite"></p><button type="button" class="primary sync-modal-close" id="sync-modal-close">閉じる</button></section></div><div class="copy-wrap" id="copy-wrap"><div class="copy-panel"><div class="row"><div><h2 style="margin:0" id="copy-title">勤務予定をコピー</h2><small class="muted" id="copy-source"></small></div><button class="secondary" id="copy-close" type="button">✕</button></div><p class="hint" id="copy-hint">コピー先の日付を選択してください。登録済みの日付も選択でき、コピー元の内容で上書きできます。</p><div class="copy-toolbar"><div class="controls"><button class="secondary" id="copy-prev" type="button">‹</button><strong id="copy-month"></strong><button class="secondary" id="copy-next" type="button">›</button></div><small class="muted" id="copy-count">0日選択中</small></div><div id="copy-grid" class="copy-grid"></div><div class="copy-footer"><button class="secondary" id="copy-cancel" type="button">キャンセル</button><button class="primary" id="copy-apply" type="button">✓ 選択した日にコピー</button></div></div></div><script>
 const key='shiftpay-prototype-v1';window.__shiftpayInitialSetupRequired=(()=>{
  const statusKey='shiftpay-setup-status-v1';
@@ -3121,14 +3157,14 @@ function isRecordPending(shift,now=new Date()){if(!shift||shift.status==='worked
 function preview(){updateEditorNativeValues();let x=candidate(),valid=x.start&&x.end;$('plan-breakdown').innerHTML=valid?dayBreakdown(x,false,'予定給与の内訳'):'';$('record-breakdown').innerHTML=valid?dayBreakdown(x,true,'勤務記録の給与内訳'):'';const pending=isRecordPending(x);$('record-state').textContent=x.status==='worked'?'勤務確定':pending?'記録待ち':'予定';$('record-state').classList.toggle('confirmed',x.status==='worked');$('record-state').classList.toggle('pending',pending);$('record-state').classList.toggle('scheduled',x.status!=='worked'&&!pending);const saved=editing?data.shifts.find(item=>item.id===editing):null;const isSavedConfirmed=Boolean(saved&&saved.status==='worked');$('copy-record').hidden=!isSavedConfirmed;$('copy-record').style.display=isSavedConfirmed?'':'none';$('undo-worked').style.display=x.status==='worked'?'':'none';$('pane-record').querySelector('.record-actions').classList.toggle('has-copy',isSavedConfirmed)}
 function closeModal(){$('modal-wrap').classList.remove('open')}
 function persistShift(status){let x=candidate();if(status)x.status=status;if(!x.date||!x.start||!x.end){alert('日付と勤務予定の開始・終了時刻を入力してください。');return false}if(editing)data.shifts=data.shifts.map(o=>o.id===editing?x:o);else data.shifts.push(x);editing=x.id;$('m-status').value=x.status;store();renderCal();renderPay();preview();return true}
-document.querySelectorAll('#modal-wrap input').forEach(el=>el.addEventListener('input',preview));$('save-shift').onclick=()=>{if(persistShift())closeModal()};$('confirm-worked').onclick=()=>{if(!$('m-actual-start').value)$('m-actual-start').value=$('m-start').value;if(!$('m-actual-end').value)$('m-actual-end').value=$('m-end').value;if(persistShift('worked')){preview();closeModal()}};$('undo-worked').onclick=()=>{if(confirm('勤務の確定を取り消しますか？')){persistShift('planned')}};$('delete-shift').onclick=()=>{if(editing&&confirm('この勤務予定を削除しますか？')){data.shifts=data.shifts.filter(x=>x.id!==editing);store();closeModal();renderCal();renderPay()}};$('close-modal').onclick=$('cancel-modal').onclick=closeModal;$('modal-wrap').addEventListener('click',e=>{if(e.target===$('modal-wrap'))closeModal()});
+document.querySelectorAll('#modal-wrap input').forEach(el=>el.addEventListener('input',preview));$('save-shift').onclick=()=>{if(persistShift())closeModal()};$('confirm-worked').onclick=()=>{if(!$('m-actual-start').value)$('m-actual-start').value=$('m-start').value;if(!$('m-actual-end').value)$('m-actual-end').value=$('m-end').value;if(persistShift('worked')){preview();closeModal()}};$('undo-worked').onclick=()=>{if(confirm('勤務の確定を取り消しますか？')){persistShift('planned')}};$('delete-shift').onclick=()=>{if(editing&&confirm('この勤務予定を削除しますか？')){data.shifts=data.shifts.filter(x=>x.id!==editing);store();closeModal();renderCal();renderPay();showActionToast('勤務予定を削除しました')}};$('close-modal').onclick=$('cancel-modal').onclick=closeModal;$('modal-wrap').addEventListener('click',e=>{if(e.target===$('modal-wrap'))closeModal()});
 $('prev').onclick=()=>{cm--;if(cm<0){cm=11;cy--}renderCal()};$('next').onclick=()=>{cm++;if(cm>11){cm=0;cy++}renderCal()};$('monthly').onclick=()=>{annual=false;renderPay()};$('yearly').onclick=()=>{annual=true;renderPay()};$('pay-prev').onclick=()=>{if(annual)py--;else if(--pm<0){pm=11;py--}renderPay()};$('pay-next').onclick=()=>{if(annual)py++;else if(++pm>11){pm=0;py++}renderPay()};$('add-rate').onclick=()=>{if(![...pendingRateTimeEdits.keys()].every(finishRateTimeEdit))return;const slot=freeRateSlot(data.settings.rates,data.settings.baseRate);if(!slot){alert('追加できる時間帯がありません。重複しない時間帯を設定してください。');return;}data.settings.rates.push(slot);store();renderRates()};document.querySelectorAll('[data-page]').forEach(btn=>btn.onclick=()=>{if(![...pendingRateTimeEdits.keys()].every(finishRateTimeEdit))return;document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===btn.dataset.page));if(btn.dataset.page==='pay')renderPay();if(btn.dataset.page==='settings')renderSettings();if(btn.dataset.page==='calendar')renderCal()});for(let id of ['closing-day','payday']){$(id).innerHTML=Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}日</option>`).join('')+'<option value="32">月末</option>'} // 月末(32)は実日付に丸める
-$('export').onclick=()=>{let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='shiftpay-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};$('import-btn').onclick=()=>$('import-file').click();$('import-file').onchange=async e=>{try{let d=JSON.parse(await e.target.files[0].text());if(!d.settings||!Array.isArray(d.shifts))throw Error();if(!confirm('現在のデータを読み込んだデータで置き換えますか？\nこの操作は取り消せません。'))return;data={settings:{...defaults,...d.settings},shifts:d.shifts};store();theme();renderSettings();renderCal();renderPay()}catch{alert('正しいバックアップファイルを選択してください。')}};const resetDisplay=()=>{theme();renderSettings();renderCal();renderPay();};
+$('export').onclick=()=>{let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='shiftpay-backup.json';a.click();showActionToast('JSONバックアップを保存しました');setTimeout(()=>URL.revokeObjectURL(u),1000)};$('import-btn').onclick=()=>$('import-file').click();$('import-file').onchange=async e=>{try{let d=JSON.parse(await e.target.files[0].text());if(!d.settings||!Array.isArray(d.shifts))throw Error();if(!confirm('現在のデータを読み込んだデータで置き換えますか？\nこの操作は取り消せません。'))return;data={settings:{...defaults,...d.settings},shifts:d.shifts};store();theme();renderSettings();renderCal();renderPay();showActionToast('JSONバックアップを読み込みました')}catch{alert('正しいバックアップファイルを選択してください。')}};const resetDisplay=()=>{theme();renderSettings();renderCal();renderPay();};
 const clearShiftView=()=>{try{localStorage.removeItem('shiftpay-last-planned-times')}catch(e){}lastPlannedTimes=null;};
 const clearGoals=()=>{for(const k of ['shiftpay-monthly-goals-v5','shiftpay-yearly-goals-v6']){try{localStorage.removeItem(k)}catch(e){}}goals={};yearlyGoals={};};
 $('reset-shifts').onclick=()=>{
  if(!confirm('勤務データを初期化しますか？\n登録された勤務予定と勤務記録をすべて削除します。各種設定や給与目標は残ります。\nこの操作は取り消せません。'))return;
- data.shifts=[];clearShiftView();store();resetDisplay();alert('勤務データを初期化しました。');
+ data.shifts=[];clearShiftView();store();resetDisplay();showActionToast('勤務データを初期化しました');
 };
 $('reset-settings').onclick=()=>{
  if(!confirm('設定を初期化しますか？\n各種設定を初期状態に戻して、初期設定画面を開きます。勤務予定・勤務記録と給与目標は残ります。\nこの操作は取り消せません。'))return;
@@ -3222,7 +3258,7 @@ $('undo-worked').onclick=()=>{
  data.shifts[index]={...data.shifts[index],actualStart:'',actualEnd:'',breakStart:'',breakMin:'',status:'planned'};
  $('m-actual-start').value=$('m-start').value;$('m-actual-end').value=$('m-end').value;
  $('m-break-start').value='';$('m-break-min').value='';$('m-status').value='planned';
- store();renderCal();renderPay();preview();
+ store();renderCal();renderPay();preview();showActionToast('勤務記録を削除しました');
 };
 // Planned shifts and confirmed records can be copied across months.
 // On conflicts, the copied shift replaces the target date exactly once.
@@ -3293,7 +3329,7 @@ $('copy-apply').onclick=()=>{
   if(old.length)replaced++;else inserted++;
  }
  store();renderCal();renderPay();closeCopy();
- alert(`${copyKind==='worked'?'勤務記録':'勤務予定'}を${inserted+replaced}日分コピーしました。${replaced?`（${replaced}日分は上書き）`:''}`);
+ showActionToast(`${copyKind==='worked'?'勤務記録':'勤務予定'}を${inserted+replaced}日分コピーしました${replaced?`（${replaced}日分上書き）`:''}`);
 };
 // Monthly salary goal, saved independently by salary period.
 const goalKey='shiftpay-monthly-goals-v5';let goals={};try{goals=JSON.parse(localStorage.getItem(goalKey)||'{}')||{}}catch(e){}
@@ -3492,48 +3528,21 @@ receiveShortcutCalendar();
     calendarStage.classList.remove('is-changing-month');
   }
   function calendarSlide(direction,go){
-    const visible=$(calMode==='calendar'?'calendar-card':'list-card');
-    if(reduceMotion.matches || !$('calendar').classList.contains('active')){go();return;}
+    // A single composited layer, with no ghost DOM and no animated height.
+    // Finish a previous gesture before starting a new one.
     cleanSlide();
-    const before=visible.cloneNode(true);
-    before.removeAttribute('id');
-    before.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
-    before.classList.add('calendar-motion-ghost');
-    before.setAttribute('aria-hidden','true');
-    before.style.display='';
-    // If the selected period does not change, avoid a gratuitous slide.
     const y=cy,m=cm;
-    const fromHeight=calendarStage.getBoundingClientRect().height;
     go();
     if(y===cy&&m===cm)return;
-    const toHeight=calendarStage.getBoundingClientRect().height;
     const incoming=$(calMode==='calendar'?'calendar-card':'list-card');
-    calendarStage.classList.add('is-changing-month');
-    calendarStage.appendChild(before);ghost=before;
-    const distance=Math.min(44,Math.max(18,calendarStage.clientWidth*.085));
-    // The previous month clears quickly; the incoming month finishes its gentle glide.
-    // Keeping two distinct durations avoids a lingering ghost overlay.
-    const oldAnim=before.animate([
-      {transform:'translateX(0)',opacity:1},
-      {transform:`translateX(${-direction*distance*.8}px)`,opacity:0}
-    ],{duration:155,easing:'cubic-bezier(.25,.55,.35,1)',fill:'both'});
-    const nextAnim=incoming.animate([
-      {transform:`translateX(${direction*distance}px)`,opacity:.78},
-      {transform:'translateX(0)',opacity:1}
-    ],{duration:230,easing:'cubic-bezier(.2,.78,.28,1)',fill:'both'});
-    const sizeAnim=Math.abs(fromHeight-toHeight)>1?calendarStage.animate([
-      {height:`${fromHeight}px`},{height:`${toHeight}px`}
-    ],{duration:230,easing:'cubic-bezier(.2,.78,.28,1)',fill:'both'}):null;
-    currentSlide=[oldAnim,nextAnim,...(sizeAnim?[sizeAnim]:[])];
-    oldAnim.addEventListener('finish',()=>{
-      if(ghost===before){before.remove();ghost=null;}
-    },{once:true});
-    nextAnim.addEventListener('finish',()=>{
-      if(ghost===before){before.remove();ghost=null;}
-      sizeAnim?.cancel();
-      calendarStage.classList.remove('is-changing-month');
-      currentSlide=[];
-    },{once:true});
+    if(reduceMotion.matches || !$('calendar').classList.contains('active') || !incoming)return;
+    const offset=Math.min(24,Math.max(12,calendarStage.clientWidth*.04));
+    const a=incoming.animate([
+      {transform:`translate3d(${direction*offset}px,0,0)`,opacity:.94},
+      {transform:'translate3d(0,0,0)',opacity:1}
+    ],{duration:190,easing:'cubic-bezier(.22,.61,.36,1)'});
+    currentSlide=[a];
+    a.addEventListener('finish',()=>{if(currentSlide.includes(a))currentSlide=[];},{once:true});
   }
   function copyCalendarToPay(){
     const next=periodAtOffset('closing',periodOffset(cy,cm,calPeriodMode));
@@ -3559,20 +3568,12 @@ receiveShortcutCalendar();
   const radius=98,circ=2*Math.PI*radius;
   let gaugeFrame=0;
   function animateSalaryGraph(){
-    if(reduceMotion.matches || !$('pay').classList.contains('active'))return;
+    // Gauge and bars already have final values supplied by renderPay().
+    // A second zero-to-value animation caused layout and compositing stalls on Safari.
     cancelAnimationFrame(gaugeFrame);
-    const rings=['gauge-plan','gauge-done'].map(id=>$(id));
-    const targets=rings.map(el=>({el, dash:el.style.strokeDasharray, opacity:el.style.opacity}));
-    const bars=[...document.querySelectorAll('#pay-shifts .bar .bar-done,#pay-shifts .bar .bar-planned')];
-    const widths=bars.map(el=>el.style.width);
-    // Interrupt any previous chart transition and measure a real zero starting frame.
-    rings.forEach(el=>{el.style.transition='none';el.style.strokeDasharray=`0 ${circ}`});
-    bars.forEach(el=>{el.style.transition='none';el.style.width='0%'});
-    void $('pay').offsetWidth;
-    gaugeFrame=requestAnimationFrame(()=>{
-      rings.forEach((el,i)=>{el.style.transition='stroke-dasharray 620ms cubic-bezier(.21,.78,.25,1), opacity 200ms ease';el.style.strokeDasharray=targets[i].dash});
-      bars.forEach((el,i)=>{el.style.transition='width 610ms cubic-bezier(.21,.78,.25,1)';el.style.width=widths[i]});
-    });
+    for(const el of document.querySelectorAll('#gauge-plan,#gauge-done,#pay-shifts .bar .bar-done,#pay-shifts .bar .bar-planned')){
+      el.style.transition='none';
+    }
   }
   // Page button callback already renders the final salary values before our animation runs.
   const payTab=document.querySelector('.tabbar [data-page="pay"]');
@@ -3585,23 +3586,13 @@ receiveShortcutCalendar();
 
 
 // Independent scroll positions for the three main pages.
-(function preservePageScroll(){
- const pages=['calendar','pay','settings'];
- const positions=Object.fromEntries(pages.map(p=>[p,0]));
- let leaving=null;
- document.querySelectorAll('.tabbar [data-page]').forEach(button=>{
-  button.addEventListener('click',()=>{
-   const current=document.querySelector('.page.active')?.id;
-   leaving=current;
-   if(current&&current!==button.dataset.page)positions[current]=window.scrollY;
-  },true);
-  button.addEventListener('click',()=>{
-   const destination=button.dataset.page;
-   if(destination===leaving){positions[destination]=0;const activePage=document.getElementById(destination);activePage?.querySelectorAll('[data-page-scroll]')?.forEach(el=>el.scrollTo({top:0,behavior:'smooth'}));window.scrollTo({left:0,top:0,behavior:'smooth'});return;}    const saved=positions[destination]||0;
-   window.scrollTo({left:0,top:saved,behavior:'instant'});
-   requestAnimationFrame(()=>window.scrollTo({left:0,top:saved,behavior:'instant'}));
+(function stabilizePageSwitchScroll(){
+  document.querySelectorAll('.tabbar [data-page]').forEach(button=>{
+    button.addEventListener('click',()=>{
+      // The active page re-tap behavior is implemented by the navigation handler.
+      // For real page changes retain the current scroll offset without a second scroll jump.
+    });
   });
- });
 })();
 // Native vertical scrolling + deliberate horizontal swipe to change calendar/list months.
 (function enableCalendarSwipe(){
@@ -3771,6 +3762,19 @@ receiveShortcutCalendar();
    const fixedHeading=document.getElementById('setup-fixed-heading');
    const stepIntro=field.querySelector(':scope > .setup-intro');
    fixedHeading.replaceChildren(...(stepIntro?[stepIntro]:[]));
+   // Keep short Japanese semantic units together without disabling normal wrapping.
+   const phrasePattern=/(設定してください。|登録してください。|変更できます。|適用基準|勤務用カレンダー|給与計算ページ|休憩時間|設定方法|開始・終了時刻|ショートカット)/g;
+   fixedHeading.querySelectorAll('.setup-intro p').forEach(paragraph=>{
+     const original=paragraph.textContent;
+     const pieces=original.split(phrasePattern);
+     paragraph.replaceChildren(...pieces.map(piece=>{
+       if(!piece)return document.createTextNode('');
+       const span=document.createElement('span');
+       span.textContent=piece;
+       if(/^(設定してください。|登録してください。|変更できます。|適用基準|勤務用カレンダー|給与計算ページ|休憩時間|設定方法|開始・終了時刻|ショートカット)$/.test(piece))span.className='setup-unbroken';
+       return span;
+     }));
+   });
    if(direction!==0&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&field.animate){
      setupMotion=field.animate([
        {opacity:0,transform:`translate3d(${direction*14}px,0,0)`},
@@ -3906,40 +3910,19 @@ receiveShortcutCalendar();
    panel.classList.remove('is-changing-period');
  };
  function slidePeriod(direction,update){
-   if(reduce.matches || !page.classList.contains('active')){update();return;}
+   // Avoid duplicating the salary chart or animating the height of the stage.
    stop();
-   const prior=panel.cloneNode(true);
-   prior.id='';prior.classList.add('pay-motion-ghost');
-   prior.removeAttribute('style');
-   prior.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
-   prior.setAttribute('aria-hidden','true');
    const year=py,month=pm,isAnnual=annual;
-   const fromHeight=panel.getBoundingClientRect().height;
    update();
    if(year===py&&month===pm&&isAnnual===annual)return;
-   const toHeight=panel.getBoundingClientRect().height;
-   // Only after the data update do we introduce the inert outgoing layer.
-   panel.classList.add('is-changing-period');
-   panel.appendChild(prior);ghost=prior;
-   const offset=Math.min(46,Math.max(22,panel.clientWidth*.09));
-   const old=prior.animate([
-     {opacity:1,transform:'translate3d(0,0,0)'},
-     {opacity:0,transform:`translate3d(${-direction*offset}px,0,0)`}
-   ],{duration:175,easing:'cubic-bezier(.25,.55,.35,1)',fill:'both'});
-   // Animate the actual contents, but not the overlay itself.
-   const children=[...panel.children].filter(el=>el!==prior);
-   const arriving=children.map(el=>el.animate([
-     {opacity:.72,transform:`translate3d(${direction*offset}px,0,0)`},
-     {opacity:1,transform:'translate3d(0,0,0)'}
-   ],{duration:235,easing:'cubic-bezier(.2,.78,.28,1)',fill:'both'}));
-   const sizeAnim=Math.abs(fromHeight-toHeight)>1?panel.animate([
-     {height:`${fromHeight}px`},{height:`${toHeight}px`}
-   ],{duration:235,easing:'cubic-bezier(.2,.78,.28,1)',fill:'both'}):null;
-   motion=[old,...arriving,...(sizeAnim?[sizeAnim]:[])];
-   let remaining=arriving.length;
-   const done=()=>{if(--remaining<=0){stop()}};
-   arriving.forEach(a=>a.addEventListener('finish',done,{once:true}));
-   old.addEventListener('finish',()=>{if(ghost===prior){prior.remove();ghost=null;}},{once:true});
+   if(reduce.matches || !page.classList.contains('active'))return;
+   const offset=Math.min(24,Math.max(12,panel.clientWidth*.04));
+   const a=panel.animate([
+     {transform:`translate3d(${direction*offset}px,0,0)`,opacity:.94},
+     {transform:'translate3d(0,0,0)',opacity:1}
+   ],{duration:190,easing:'cubic-bezier(.22,.61,.36,1)'});
+   motion=[a];
+   a.addEventListener('finish',()=>{if(motion.includes(a))motion=[];},{once:true});
  }
  for(const [id,dir] of [['pay-prev',-1],['pay-next',1]]){
    const b=$(id),original=b.onclick;
@@ -3980,4 +3963,154 @@ receiveShortcutCalendar();
 })();
 
 
-</script></body></html>
+
+
+// Added quality-of-life features: validation, differences, CSV and unobtrusive confirmations.
+let actionToastTimer=0;
+function showActionToast(message){
+  const toast=document.getElementById('action-toast');if(!toast)return;
+  clearTimeout(actionToastTimer);
+  toast.textContent=message;
+  toast.classList.add('show');
+  actionToastTimer=setTimeout(()=>toast.classList.remove('show'),3200);
+}
+function signedWorkMinutes(m){
+  const abs=Math.abs(Math.round(m));return (m>0?'+':m<0?'−':'±')+Math.floor(abs/60)+'時間'+String(abs%60)+'分';
+}
+function signedYen(value){return (value>0?'+':value<0?'−':'±')+money(Math.abs(value));}
+function comparePlanActual(x){
+  const p=comp(x,false),a=comp(x,true);
+  return {p,a,minutes:a.mins-p.mins,amount:a.total-p.total};
+}
+function renderEditorDifference(){
+  const panel=document.getElementById('record-diff');if(!panel)return;
+  const x=candidate();
+  const saved=editing?data.shifts.find(s=>s.id===editing):null;
+  const confirmed=x.status==='worked'||saved?.status==='worked';
+  const valid=/^\d{2}:\d{2}$/.test(x.start||'')&&/^\d{2}:\d{2}$/.test(x.end||'');
+  if(!confirmed||!valid){panel.hidden=true;panel.innerHTML='';return;}
+  const d=comparePlanActual(x);
+  const actStart=x.actualStart||x.start,actEnd=x.actualEnd||x.end;
+  panel.hidden=false;
+  panel.innerHTML=`<h3>予定と勤務記録の差分</h3><div class="variance-grid"><span>勤務時間</span><strong>${escapeHtml(x.start)}〜${escapeHtml(x.end)} → ${escapeHtml(actStart)}〜${escapeHtml(actEnd)}</strong><span>実働時間の差</span><strong class="${d.minutes>0?'variance-positive':d.minutes<0?'variance-negative':''}">${signedWorkMinutes(d.minutes)}</strong><span>給与額の差（交通費込み）</span><strong class="${d.amount>0?'variance-positive':d.amount<0?'variance-negative':''}">${signedYen(d.amount)}</strong></div>`;
+}
+function validationError(x,worked=false){
+  const timeOK=t=>/^([01]\d|2[0-3]):[0-5]\d$/.test(t||'');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(x.date||'')||Number.isNaN(parseDate(x.date).getTime()))return '日付を正しく入力してください。';
+  const start=worked?(x.actualStart||x.start):x.start,end=worked?(x.actualEnd||x.end):x.end;
+  if(!timeOK(start)||!timeOK(end))return `${worked?'勤務記録':'勤務予定'}の開始・終了時刻を入力してください。`;
+  if(start===end)return '開始時刻と終了時刻が同じです。勤務時間を確認してください。';
+  const span=duration(start,end);
+  const breakValue=worked?x.breakMin:x.planBreakMin;
+  if(breakValue!==''&&breakValue!==undefined&&breakValue!==null){
+    if(!/^\d+$/.test(String(breakValue))||!Number.isSafeInteger(Number(breakValue)))return '休憩時間は0以上の整数（分）で入力してください。';
+    if(Number(breakValue)>=span)return '休憩時間が勤務時間以上です。設定を確認してください。';
+  }
+  const bMinutes=breakValue===''||breakValue===null||breakValue===undefined
+    ?(data.settings.breakMode==='auto'?(span>Number(data.settings.break60)?60:span>Number(data.settings.break45)?45:0):0)
+    :Number(breakValue);
+  const breakStart=worked?x.breakStart:x.planBreakStart;
+  if(breakStart){
+    if(!timeOK(breakStart))return '休憩開始時刻が正しくありません。';
+    if(bMinutes>0){
+      let offset=minutes(breakStart)-minutes(start);
+      if(offset<0)offset+=1440;
+      if(offset>=span||offset+bMinutes>span)return '休憩が勤務時間の範囲外です。休憩開始時刻・時間を確認してください。';
+    }
+  }
+  if(x.status==='worked'&&!worked){
+    // The planned tab checks planned values, the record tab checks actual values.
+  }
+  return null;
+}
+function updateShiftValidation(){
+  const x=candidate();
+  for(const [key,worked] of [['planned',false],['record',true]]){
+    const panel=document.querySelector(`.shift-validation[data-validation="${key}"]`);
+    if(!panel)continue;
+    // Don't obscure a fresh form with an error before a save is attempted.
+    const err=validationError(x,worked);
+    panel.hidden=!err;panel.textContent=err||'';
+  }
+}
+const payrollPreviousPreview=preview;
+preview=function(){payrollPreviousPreview();renderEditorDifference();updateShiftValidation();};
+const payrollPreviousOpenModal=openModal;
+openModal=function(item,date){
+  document.querySelectorAll('.shift-validation').forEach(el=>{el.dataset.attempted='';el.hidden=true;});
+  payrollPreviousOpenModal(item,date);
+  document.querySelectorAll('#modal-wrap .editor-scroll').forEach(el=>el.scrollTop=0);
+};
+const payrollPreviousSetTab=setModalTab;
+setModalTab=function(tab){payrollPreviousSetTab(tab);document.querySelector(`#pane-${tab} .editor-scroll`)?.scrollTo({top:0});};
+const payrollPreviousPersist=persistShift;
+persistShift=function(status){
+  const x=candidate(),checkRecord=status==='worked'||(!status&&x.status==='worked');
+  const err=validationError(x,false)||(checkRecord?validationError(x,true):null);
+  if(err){
+    const key=checkRecord?'record':'planned';
+    const warning=document.querySelector(`.shift-validation[data-validation="${key}"]`);
+    if(warning){warning.dataset.attempted='1';warning.hidden=false;warning.textContent=err;}
+    setModalTab(key);
+    document.querySelector(`#pane-${key} .editor-scroll`)?.scrollTo({top:9999,behavior:'smooth'});
+    showActionToast('入力内容を確認してください');
+    return false;
+  }
+  const success=payrollPreviousPersist(status);
+  if(success){
+    document.querySelectorAll('.shift-validation').forEach(el=>{el.dataset.attempted='';el.hidden=true;});
+    showActionToast(status==='worked'?'勤務記録を確定しました':x.status==='worked'?'勤務記録を保存しました':'勤務予定を保存しました');
+  }
+  return success;
+};
+// Input changes clear errors as soon as the values are corrected.
+document.querySelectorAll('#modal-wrap input').forEach(input=>input.addEventListener('change',updateShiftValidation));
+// Show the planned/actual differences in the monthly/annual salary page as well.
+const payrollPreviousRenderPay=renderPay;
+renderPay=function(){
+  payrollPreviousRenderPay();
+  const records=(annual?shiftsForYear(py):shiftsForMonth(py,pm)).filter(x=>x.status==='worked');
+  const card=document.getElementById('work-variance-card');
+  if(!card)return;
+  card.hidden=records.length===0;
+  if(!records.length){document.getElementById('work-variance-content').innerHTML='';return;}
+  const comparisons=records.map(x=>({x,d:comparePlanActual(x)}));
+  const totalMinutes=comparisons.reduce((sum,c)=>sum+c.d.minutes,0);
+  const totalMoney=comparisons.reduce((sum,c)=>sum+c.d.amount,0);
+  const summary=`<div class="variance-grid"><span>実働時間の差（記録確定分）</span><strong>${signedWorkMinutes(totalMinutes)}</strong><span>給与の差（交通費込み）</span><strong>${signedYen(totalMoney)}</strong></div>`;
+  document.getElementById('work-variance-content').innerHTML=summary+comparisons.map(({x,d})=>`<div class="variance-item"><div class="variance-top"><span>${escapeHtml(x.date.replaceAll('-','/'))}</span><span>${signedWorkMinutes(d.minutes)}　${signedYen(d.amount)}</span></div><div class="variance-detail">予定 ${escapeHtml(x.start)}〜${escapeHtml(x.end)} ／ 実績 ${escapeHtml(x.actualStart||x.start)}〜${escapeHtml(x.actualEnd||x.end)}</div></div>`).join('');
+};
+function exportShiftCsv(){
+  const entries=annual?shiftsForYear(py):shiftsForMonth(py,pm);
+  const [from,to]=annual?[datesInPay(py,0)[0],datesInPay(py,11)[1]]:datesInPay(py,pm);
+  const asDate=d=>daystr(d.getFullYear(),d.getMonth(),d.getDate());
+  const csvRows=[
+    ['対象期間',asDate(from)+'〜'+asDate(to)],
+    ['日付','ステータス','予定開始','予定終了','予定休憩（分）','勤務開始','勤務終了','実績休憩（分）','予定実働（分）','実績実働（分）','実働差（分）','予定給与（円・交通費除く）','実績給与（円・交通費除く）','深夜割増（円・実績）','残業割増（円・実績）','交通費（円・実績）','予定合計（円）','実績合計（円）','給与差（円）']
+  ];
+  for(const x of entries){
+    const p=comp(x,false),worked=x.status==='worked',a=worked?comp(x,true):null;
+    csvRows.push([x.date,worked?'勤務確定':'予定',x.start,x.end,p.breakMin,worked?(x.actualStart||x.start):'',worked?(x.actualEnd||x.end):'',worked?a.breakMin:'',p.mins,worked?a.mins:'',worked?a.mins-p.mins:'',Math.round(p.wage),worked?Math.round(a.wage):'',worked?Math.round(a.nightPremium):'',worked?Math.round(a.overtimePremium):'',worked?Math.round(a.transport):'',Math.round(p.total),worked?Math.round(a.total):'',worked?Math.round(a.total-p.total):'']);
+  }
+  const csvEscape=value=>{
+    // Treat CSV text as text when opened by Excel; prevent spreadsheet formulas.
+    let str=String(value??'');
+    if(/^[=+@\t\r]/.test(str))str="'"+str;
+    return '"'+str.replaceAll('"','""')+'"';
+  };
+  const blob=new Blob(['\ufeff'+csvRows.map(row=>row.map(csvEscape).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=annual?`勤務給与_${py}年.csv`:`勤務給与_${py}年${pad(pm+1)}月分.csv`;
+  document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  showActionToast(`${entries.length}件の勤務データをCSVに出力しました`);
+}
+document.getElementById('export-csv').addEventListener('click',exportShiftCsv);
+// Explicit success feedback for actions not routed through persistShift.
+document.getElementById('delete-shift').addEventListener('click',()=>{
+  // The confirmed deletion handler itself displays its success notification.
+});
+// Keep the salary comparison fresh after all edits, including import or period changes.
+renderPay();
+
+</script><div id="action-toast" class="action-toast" role="status" aria-live="polite" aria-atomic="true"></div>
+</body></html>
