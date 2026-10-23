@@ -2209,13 +2209,60 @@ html[data-theme="dark"] {
  #modal-wrap .modal-tabs > .selection-glider {transition:none!important;}
 }
 
+
+/* 2026-10-23: payroll closing-date period for both calendar and list. */
+#calendar .calendar-period-selector {
+ display:flex; align-items:center; justify-content:space-between; gap:9px;
+ margin:-4px 0 12px; min-width:0; flex-wrap:wrap;
+}
+#calendar .calendar-period-segments {
+ display:inline-flex; align-items:center; flex-shrink:0; padding:3px; gap:3px;
+ background:var(--soft); border-radius:999px;
+}
+#calendar .calendar-period-segments button {
+ border:0; background:transparent; color:var(--muted); border-radius:999px;
+ min-height:32px; padding:6px 12px; font-size:12px; font-weight:700; white-space:nowrap;
+}
+#calendar .calendar-period-segments button.active {
+ background:var(--panel); color:var(--blue); box-shadow:0 1px 5px #0001;
+}
+#calendar .calendar-period-hint {
+ font-size:11px; color:var(--muted); line-height:1.35; white-space:normal; font-variant-numeric:tabular-nums;
+}
+#calendar .calendar-period-hint:empty{display:none}
+#calendar #cal.calendar.closing-period-grid {grid-template-rows:22px repeat(var(--closing-weeks,5),96px)!important;}
+#calendar #cal .period-blank {display:block;min-height:0;background:transparent;border:0;pointer-events:none;}
+#calendar #cal .period-blank::before,#calendar #cal .period-blank::after {content:none;}
+#calendar #cal .day.closing-period-grid {opacity:1;}
+#calendar #icloud-sync.empty-toggle-button {
+ border-radius:999px!important;
+ background:var(--panel); color:var(--text);
+ border:1px solid var(--line); box-shadow:none;
+ display:inline-flex;align-items:center;justify-content:center;
+}
+#pay .pay-date-line {
+ display:flex;gap:3px;align-items:center;justify-content:flex-end;
+ margin:-7px 0 12px;font-size:12px;line-height:1.4;
+ color:var(--muted); font-variant-numeric:tabular-nums;
+}
+#pay .pay-date-line .payday-prefix {display:inline!important;flex:none;}
+#pay .pay-date-line #payday-under-gauge {white-space:nowrap;}
+#list-card .date-number {font-variant-numeric:tabular-nums;}
+@media(max-width:650px){
+ #calendar .calendar-period-selector {margin-top:-4px;gap:5px;}
+ #calendar .calendar-period-segments button {font-size:11px;min-height:30px;padding:5px 9px;}
+ #calendar .calendar-period-hint {font-size:10px;}
+ #calendar #cal.calendar.closing-period-grid {grid-template-rows:21px repeat(var(--closing-weeks,5),79px)!important;}
+ #pay .pay-date-line {font-size:11px;margin-top:-7px;margin-bottom:12px;}
+}
+
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
   <h2>カレンダー</h2>
   <div class="calendar-top-actions">
     <button id="show-empty" class="secondary empty-toggle-button" type="button" aria-pressed="false" title="予定なしの日も表示" style="visibility:hidden"><span class="empty-toggle-long">予定なしの日も表示</span><span class="empty-toggle-short">予定なし</span></button>
-    <button id="icloud-sync" class="secondary sync-trigger" type="button" title="iPhoneのショートカットから勤務予定を取り込む">↻ iCloudから取得</button>
+    <button id="icloud-sync" class="secondary sync-trigger empty-toggle-button" type="button" title="iPhoneのショートカットから勤務予定を取り込む">↻ iCloudから取得</button>
   </div>
 </div>
 <div class="unified-toolbar">
@@ -2230,6 +2277,13 @@ html[data-theme="dark"] {
     <button class="secondary" id="cal-today" type="button">今月</button>
   </div>
 </div>
+<div class="calendar-period-selector" role="group" aria-label="日付の表示期間">
+  <div class="calendar-period-segments">
+    <button type="button" id="period-calendar-month" aria-pressed="true">暦月基準</button>
+    <button type="button" id="period-calendar-closing" aria-pressed="false">締め日基準</button>
+  </div>
+  <span class="calendar-period-hint" id="calendar-period-hint" aria-live="polite"></span>
+</div>
 <div class="calendar-stage" id="calendar-stage"><div class="card" id="calendar-card"><div class="calendar" id="cal"></div><div class="calendar-legend"><span>● 予定</span><span>● 勤務確定</span><span class="legend-wait">● 記録待ち</span></div></div><div id="list-card" style="display:none"><div id="shift-list"></div></div></div></section>
 <section id="pay" class="page">
 <div class="unified-topline"><h2>給与計算</h2></div>
@@ -2240,11 +2294,12 @@ html[data-theme="dark"] {
   </div>
   <div class="pay-period-controls toolbar-period">
     <button class="secondary" id="pay-prev" type="button" aria-label="前の給与期間">‹</button>
-    <span class="pay-period-stack"><strong id="pay-period"></strong><small class="pay-period-date" id="payday-under-gauge" aria-live="polite"></small></span>
+    <span class="pay-period-stack"><strong id="pay-period"></strong></span>
     <button class="secondary" id="pay-next" type="button" aria-label="次の給与期間">›</button>
     <button class="secondary" id="pay-today" type="button">今月</button>
   </div>
 </div>
+<div class="pay-date-line" id="pay-date-line" aria-live="polite"><span class="payday-prefix">振込予定日：</span><span id="payday-under-gauge"></span></div>
 <div id="pay-stage" class="pay-stage"><div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標</label><span class="goal-currency-field"><span class="goal-yen" aria-hidden="true">¥</span><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></span></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></div></section>
 <section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>基準実働時間</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">1出勤あたり</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">1給与期間あたり</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card break-settings-card" id="break-settings-card">
 <h2>休憩</h2>
@@ -2299,7 +2354,7 @@ const key='shiftpay-prototype-v1';window.__shiftpayInitialSetupRequired=(()=>{
   localStorage.setItem(statusKey,'in-progress');return true;
  }catch(e){return true}
 })();
-const defaults={theme:'auto',workplace:'ウエルシア',baseRate:1326,rates:[{from:'17:00',to:'20:00',rate:1346},{from:'20:00',to:'05:00',rate:1376}],nightStart:'22:00',nightEnd:'05:00',nightBonus:25,nightEnabled:true,overtimeEnabled:true,overtimeHours:8,overtimeBonus:25,defaultPlanStart:'15:00',defaultPlanEnd:'22:00',defaultPlanBreakStart:'18:00',defaultPlanBreakMin:0,breakMode:'auto',breakOffset:180,break45:360,break60:480,closingDay:32,payday:15,payMonth:1,holidayPolicy:'before',transport:500,tax:0,fontSize:'standard',ver8FontConverted:true,monthlyGoalDefault:100000,yearlyGoalDefault:1200000};let data;try{data=JSON.parse(localStorage.getItem(key))}catch{}if(!data||!data.settings||!Array.isArray(data.shifts))data={settings:structuredClone(defaults),shifts:[]};data.settings={...defaults,...data.settings};if(!data.settings.ver8FontConverted){const old=data.settings.fontSize;data.settings.fontSize=old==='standard'?'small':old==='large'?'standard':old==='extra'?'large':'standard';data.settings.ver8FontConverted=true;try{localStorage.setItem(key,JSON.stringify(data))}catch(e){}}let today=new Date(),cy=today.getFullYear(),cm=today.getMonth(),py=cy,pm=cm,annual=false,editing=null;const $=id=>document.getElementById(id),money=x=>'¥'+Math.round(x).toLocaleString('ja-JP'),pad=x=>String(x).padStart(2,'0'),daystr=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`,parseDate=s=>new Date(s+'T00:00:00'),minutes=t=>{let [h,m]=(t||'00:00').split(':').map(Number);return h*60+m},duration=(a,b)=>{let n=minutes(b)-minutes(a);return n<=0?n+1440:n},inSlot=(m,a,b)=>{a=minutes(a);b=minutes(b);return a===b?true:a<b?m>=a&&m<b:m>=a||m<b};const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function store(){localStorage.setItem(key,JSON.stringify(data))}function theme(){let t=data.settings.theme;document.documentElement.dataset.theme=t==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.dataset.fontSize=data.settings.fontSize||'standard';const meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#f5f6fa'}theme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
+const defaults={theme:'auto',workplace:'ウエルシア',baseRate:1326,rates:[{from:'17:00',to:'20:00',rate:1346},{from:'20:00',to:'05:00',rate:1376}],nightStart:'22:00',nightEnd:'05:00',nightBonus:25,nightEnabled:true,overtimeEnabled:true,overtimeHours:8,overtimeBonus:25,defaultPlanStart:'15:00',defaultPlanEnd:'22:00',defaultPlanBreakStart:'18:00',defaultPlanBreakMin:0,breakMode:'auto',breakOffset:180,break45:360,break60:480,closingDay:32,payday:15,payMonth:1,holidayPolicy:'before',transport:500,tax:0,fontSize:'standard',ver8FontConverted:true,monthlyGoalDefault:100000,yearlyGoalDefault:1200000};let data;try{data=JSON.parse(localStorage.getItem(key))}catch{}if(!data||!data.settings||!Array.isArray(data.shifts))data={settings:structuredClone(defaults),shifts:[]};data.settings={...defaults,...data.settings};if(!data.settings.ver8FontConverted){const old=data.settings.fontSize;data.settings.fontSize=old==='standard'?'small':old==='large'?'standard':old==='extra'?'large':'standard';data.settings.ver8FontConverted=true;try{localStorage.setItem(key,JSON.stringify(data))}catch(e){}}let today=new Date(),cy=today.getFullYear(),cm=today.getMonth(),py=cy,pm=cm,annual=false,editing=null;let calPeriodMode='month';try{calPeriodMode=localStorage.getItem('shiftpay-calendar-period')==='closing'?'closing':'month'}catch(e){}const $=id=>document.getElementById(id),money=x=>'¥'+Math.round(x).toLocaleString('ja-JP'),pad=x=>String(x).padStart(2,'0'),daystr=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`,parseDate=s=>new Date(s+'T00:00:00'),minutes=t=>{let [h,m]=(t||'00:00').split(':').map(Number);return h*60+m},duration=(a,b)=>{let n=minutes(b)-minutes(a);return n<=0?n+1440:n},inSlot=(m,a,b)=>{a=minutes(a);b=minutes(b);return a===b?true:a<b?m>=a&&m<b:m>=a||m<b};const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function store(){localStorage.setItem(key,JSON.stringify(data))}function theme(){let t=data.settings.theme;document.documentElement.dataset.theme=t==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.dataset.fontSize=data.settings.fontSize||'standard';const meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#f5f6fa'}theme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
 function ratePartsAt(min){let s=data.settings,base=Number(s.baseRate)||0;for(const r of s.rates)if(inSlot(min,r.from,r.to))base=Number(r.rate)||0;let premium=s.nightEnabled!==false&&inSlot(min,s.nightStart,s.nightEnd)?base*(Number(s.nightBonus)||0)/100:0;return {base,premium}}function rateAt(min){let r=ratePartsAt(min);return r.base+r.premium}
 function comp(shift,useActual){
  const s=data.settings,start=useActual&&(shift.actualStart||shift.start)||shift.start,end=useActual&&(shift.actualEnd||shift.end)||shift.end;
@@ -2324,7 +2379,28 @@ function comp(shift,useActual){
  const raw=baseWage+nightPremium+overtimePremium,transport=Number(s.transport)||0;
  return {wage:raw,baseWage,nightPremium,overtimePremium,transport,total:raw+transport,mins:workedMinutes,breakMin:bmin};
 }
-function datesInPay(y,m){let s=data.settings,close=+s.closingDay;const at=(yy,mm)=>new Date(yy,mm,Math.min(close,new Date(yy,mm+1,0).getDate()));return [new Date(at(y,m-1).getTime()+86400000),new Date(at(y,m).getTime()+86399999)]}// Public-holiday calculator: recurring Japanese national holidays and bank closures.
+function datesInPay(y,m){let s=data.settings,close=+s.closingDay;const at=(yy,mm)=>new Date(yy,mm,Math.min(close,new Date(yy,mm+1,0).getDate()));return [new Date(at(y,m-1).getTime()+86400000),new Date(at(y,m).getTime()+86399999)]}// Date-only period helpers. The salary 'closingDay' setting is authoritative in both views.
+function calendarDateRange(){
+ if(calPeriodMode==='closing'){
+  const [s,e]=datesInPay(cy,cm);
+  return [new Date(s.getFullYear(),s.getMonth(),s.getDate()),new Date(e.getFullYear(),e.getMonth(),e.getDate())];
+ }
+ return [new Date(cy,cm,1),new Date(cy,cm+1,0)];
+}
+function closingMonthForDate(d){
+ const y=d.getFullYear(),m=d.getMonth();
+ const [,end]=datesInPay(y,m);
+ const asDay=new Date(y,m,d.getDate());
+ return asDay>end?new Date(y,m+1,1):new Date(y,m,1);
+}
+function calendarShortDate(d){return `${d.getMonth()+1}/${d.getDate()}`;}
+// On a restored closing-date view, start at the salary period containing today.
+if(calPeriodMode==='closing'){
+ const selected=closingMonthForDate(today);
+ cy=selected.getFullYear();cm=selected.getMonth();
+ py=cy;pm=cm;
+}
+// Public-holiday calculator: recurring Japanese national holidays and bank closures.
 function japaneseHolidays(year){
  let days=new Set(),add=(m,d)=>days.add(daystr(year,m-1,d));
  const nth=(m,weekday,n)=>{let first=new Date(year,m-1,1).getDay();return 1+(weekday-first+7)%7+7*(n-1)};
@@ -2373,39 +2449,53 @@ function calendarTimeHTML(shift){
 }
 
 function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport:0,minutes:0,days:0};for(let item of list){let p=comp(item,false),a=comp(item,true),done=item.status==='worked';sum.planned+=p.total;sum.forecast+=(done?a:p).total;if(done){sum.actual+=a.total;sum.wage+=a.wage;sum.transport+=a.transport;sum.minutes+=a.mins;sum.days++}}return sum}function shiftsForMonth(y,m){let [start,end]=datesInPay(y,m);return data.shifts.filter(x=>{let d=parseDate(x.date);return d>=start&&d<=end}).sort((a,b)=>a.date.localeCompare(b.date))}function shiftsForYear(y){return Array.from({length:12},(_,m)=>shiftsForMonth(y,m)).flat()}function renderCal(){
-  const firstDate=new Date(cy,cm,1);
-  $('cal-title').textContent=firstDate.toLocaleDateString('ja-JP',{year:'numeric',month:'long'});
-  const beginning=firstDate.getDay();
-  const firstCell=new Date(cy,cm,1-beginning);
+  const closing=calPeriodMode==='closing';
+  const [rangeStart,rangeEnd]=calendarDateRange();
+  $('cal-title').textContent=closing?`${cy}年${cm+1}月締め`:`${cy}年${cm+1}月`;
+  $('cal-today').textContent=closing?'今期':'今月';
+  $('calendar-period-hint').textContent=closing?`対象：${rangeStart.getFullYear()}/${calendarShortDate(rangeStart)} ～ ${rangeEnd.getFullYear()}/${calendarShortDate(rangeEnd)}`:'';
+  $('period-calendar-month').classList.toggle('active',!closing);
+  $('period-calendar-closing').classList.toggle('active',closing);
+  $('period-calendar-month').setAttribute('aria-pressed',String(!closing));
+  $('period-calendar-closing').setAttribute('aria-pressed',String(closing));
+  const firstCell=new Date(rangeStart.getFullYear(),rangeStart.getMonth(),rangeStart.getDate()-rangeStart.getDay());
+  const startKey=daystr(rangeStart.getFullYear(),rangeStart.getMonth(),rangeStart.getDate());
+  const endKey=daystr(rangeEnd.getFullYear(),rangeEnd.getMonth(),rangeEnd.getDate());
+  const daysInRange=Math.round((Date.UTC(rangeEnd.getFullYear(),rangeEnd.getMonth(),rangeEnd.getDate())-Date.UTC(rangeStart.getFullYear(),rangeStart.getMonth(),rangeStart.getDate()))/86400000)+1;
+  const numCells=closing?Math.ceil((rangeStart.getDay()+daysInRange)/7)*7:42;
+  const numWeeks=numCells/7;
+  $('cal').classList.toggle('closing-period-grid',closing);
+  $('cal').style.setProperty('--closing-weeks',numWeeks);
   const now=new Date();
   const todayKey=daystr(now.getFullYear(),now.getMonth(),now.getDate());
   const holidaySets=new Map();
   let html=['日','月','火','水','木','金','土'].map((w,i)=>`<div class="dow ${i===0?'sunday':i===6?'saturday':''}">${w}</div>`).join('');
-  for(let slot=0;slot<42;slot++){
+  for(let slot=0;slot<numCells;slot++){
     const d=new Date(firstCell.getFullYear(),firstCell.getMonth(),firstCell.getDate()+slot);
     const date=daystr(d.getFullYear(),d.getMonth(),d.getDate());
+    if(closing&&(date<startKey||date>endKey)){
+      html+='<span class="period-blank" aria-hidden="true"></span>';
+      continue;
+    }
     const isCurrentMonth=d.getFullYear()===cy&&d.getMonth()===cm;
-    const found=isCurrentMonth?data.shifts.filter(x=>x.date===date):[];
+    const isAdjacent=!closing&&!isCurrentMonth;
+    // In a closing-date view all dates inside the pay period are regular selectable dates.
+    const found=data.shifts.filter(x=>x.date===date);
     const total=found.reduce((sum,x)=>sum+comp(x,x.status==='worked').total,0);
     const state=date===todayKey?'today':date<todayKey?'past':'future';
     const year=d.getFullYear();
     if(!holidaySets.has(year))holidaySets.set(year,japaneseHolidays(year));
     const weekdayTone=d.getDay()===0||holidaySets.get(year).has(date)?'cal-holiday':d.getDay()===6?'cal-saturday':'cal-weekday';
     const statuses=found.map(x=>x.status==='worked'?'done':isRecordPending(x)?'wait':'');
-    html+=`<button type="button" class="day ${state} ${weekdayTone} ${isCurrentMonth?'':'other-month'} ${found.some(x=>x.status==='worked')?'worked':''}" data-date="${date}" ${isCurrentMonth?'':'data-adjacent-month="true"'} aria-label="${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日${isCurrentMonth?'':'、隣の月'}"><div class="date">${d.getDate()}</div>${found.length?`<div class="shift">${found.map((x,i)=>`<div class="shift-entry ${statuses[i]}">${calendarTimeHTML(x)}</div>`).join('')}</div><div class="yen">${money(total)}</div>`:''}</button>`;
+    html+=`<button type="button" class="day ${state} ${weekdayTone} ${isAdjacent?'other-month':''} ${found.some(x=>x.status==='worked')?'worked':''}" data-date="${date}" aria-label="${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日${isAdjacent?'、隣の月':''}"><div class="date">${d.getDate()}</div>${found.length?`<div class="shift">${found.map((x,i)=>`<div class="shift-entry ${statuses[i]}">${calendarTimeHTML(x)}</div>`).join('')}</div><div class="yen">${money(total)}</div>`:''}</button>`;
   }
   $('cal').innerHTML=html;
   $('cal').querySelectorAll('[data-date]').forEach(el=>el.onclick=()=>{
-    if(el.dataset.adjacentMonth==='true'){
-      const [y,m]=el.dataset.date.split('-').map(Number);
-      if(y*12+m<cy*12+cm+1)$('prev').click();else $('next').click();
-      return;
-    }
     const item=data.shifts.find(v=>v.date===el.dataset.date);
     openModal(item||null,el.dataset.date);
   });
 }
-function renderPay(){let entries=annual?shiftsForYear(py):shiftsForMonth(py,pm),sum=aggregate(entries);let circ=2*Math.PI*98,maxGauge=Math.max(1,sum.planned,sum.forecast,sum.actual);for(let [id,value] of [['gauge-plan',sum.planned],['gauge-done',sum.actual]]){let c=$(id);c.style.strokeDasharray=`${circ*Math.min(1,value/maxGauge)} ${circ}`;c.style.strokeDashoffset='0'}$('gauge-earned').textContent=money(sum.actual);$('gauge-forecast').textContent=money(sum.forecast);$('gauge-caption').textContent=`予定どおり働いた場合 ${money(sum.planned)} ・ 勤務確定 ${sum.days}回`;$('pay-period').textContent=annual?`${py}年`:`${py}年${pm+1}月分`; $('pay-today').textContent=annual?'今年':'今月';$('payday-under-gauge').innerHTML=annual?'':`<span class="payday-prefix">振込予定日 </span>${payDate(py,pm)}`;$('monthly').classList.toggle('active',!annual);$('yearly').classList.toggle('active',annual);let tax=Number(data.settings.tax)||0;let taxTotal=annual?12*tax:tax;let detail=[['記録分の給与（交通費除く）',money(sum.wage)],['記録分の交通費',money(sum.transport)],['記録した勤務時間',formatWorkTime(sum.minutes)],['記録した出勤回数',sum.days+'回'],['手入力の所得税（参考）','−'+money(taxTotal)],['記録分の暫定手取り',money(sum.actual-taxTotal)]];if(!annual)detail.push(['振込予定日',payDate(py,pm)]);$('breakdown').innerHTML=detail.map(([a,b])=>`<div class="detail"><span class="muted">${a}</span><strong>${b}</strong></div>`).join('');if(annual){let sums=Array.from({length:12},(_,m)=>aggregate(shiftsForMonth(py,m)));let max=Math.max(1,...sums.map(x=>x.forecast));$('period-list-title').textContent='月別推移';$('pay-shifts').innerHTML='<div class="months">'+sums.map((x,i)=>`<div class="month-cell"><small class="muted">${i+1}月</small><br><strong>${money(x.forecast)}</strong><div class="bar"><span class="bar-done" style="width:${100*x.actual/max}%"></span><span class="bar-planned" style="width:${100*Math.max(0,x.forecast-x.actual)/max}%"></span></div></div>`).join('')+'</div>'}else{$('period-list-title').textContent='勤務別の計算';$('pay-shifts').innerHTML=entries.length?entries.map(x=>{let p=comp(x,false),a=comp(x,true);return `<div class="list-item row"><div><strong>${escapeHtml(x.date.slice(5))}　${escapeHtml(x.start)}～${escapeHtml(x.end)}</strong><br><small class="muted">${x.status==='worked'?'勤務済み':'予定'}</small></div><div style="text-align:right"><small class="muted">予定 ${money(p.total)}</small><br><strong>${x.status==='worked'?'実績 '+money(a.total):'未確定'}</strong></div></div>`}).join(''):'<p class="muted">この給与期間に勤務予定はありません。</p>'}}
+function renderPay(){let entries=annual?shiftsForYear(py):shiftsForMonth(py,pm),sum=aggregate(entries);let circ=2*Math.PI*98,maxGauge=Math.max(1,sum.planned,sum.forecast,sum.actual);for(let [id,value] of [['gauge-plan',sum.planned],['gauge-done',sum.actual]]){let c=$(id);c.style.strokeDasharray=`${circ*Math.min(1,value/maxGauge)} ${circ}`;c.style.strokeDashoffset='0'}$('gauge-earned').textContent=money(sum.actual);$('gauge-forecast').textContent=money(sum.forecast);$('gauge-caption').textContent=`予定どおり働いた場合 ${money(sum.planned)} ・ 勤務確定 ${sum.days}回`;$('pay-period').textContent=annual?`${py}年`:`${py}年${pm+1}月分`; $('pay-today').textContent=annual?'今年':'今月';$('pay-date-line').style.display=annual?'none':'';$('payday-under-gauge').textContent=annual?'':payDate(py,pm);$('monthly').classList.toggle('active',!annual);$('yearly').classList.toggle('active',annual);let tax=Number(data.settings.tax)||0;let taxTotal=annual?12*tax:tax;let detail=[['記録分の給与（交通費除く）',money(sum.wage)],['記録分の交通費',money(sum.transport)],['記録した勤務時間',formatWorkTime(sum.minutes)],['記録した出勤回数',sum.days+'回'],['手入力の所得税（参考）','−'+money(taxTotal)],['記録分の暫定手取り',money(sum.actual-taxTotal)]];if(!annual)detail.push(['振込予定日',payDate(py,pm)]);$('breakdown').innerHTML=detail.map(([a,b])=>`<div class="detail"><span class="muted">${a}</span><strong>${b}</strong></div>`).join('');if(annual){let sums=Array.from({length:12},(_,m)=>aggregate(shiftsForMonth(py,m)));let max=Math.max(1,...sums.map(x=>x.forecast));$('period-list-title').textContent='月別推移';$('pay-shifts').innerHTML='<div class="months">'+sums.map((x,i)=>`<div class="month-cell"><small class="muted">${i+1}月</small><br><strong>${money(x.forecast)}</strong><div class="bar"><span class="bar-done" style="width:${100*x.actual/max}%"></span><span class="bar-planned" style="width:${100*Math.max(0,x.forecast-x.actual)/max}%"></span></div></div>`).join('')+'</div>'}else{$('period-list-title').textContent='勤務別の計算';$('pay-shifts').innerHTML=entries.length?entries.map(x=>{let p=comp(x,false),a=comp(x,true);return `<div class="list-item row"><div><strong>${escapeHtml(x.date.slice(5))}　${escapeHtml(x.start)}～${escapeHtml(x.end)}</strong><br><small class="muted">${x.status==='worked'?'勤務済み':'予定'}</small></div><div style="text-align:right"><small class="muted">予定 ${money(p.total)}</small><br><strong>${x.status==='worked'?'実績 '+money(a.total):'未確定'}</strong></div></div>`}).join(''):'<p class="muted">この給与期間に勤務予定はありません。</p>'}}
 const settingNumberUnits={
  'base-rate':['¥','prefix'],'default-monthly-goal':['¥','prefix'],'default-yearly-goal':['¥','prefix'],'night-bonus':['%','suffix'],'overtime-hours':['時間','suffix'],
  'overtime-bonus':['%','suffix'],'transport':['¥','prefix'],'tax':['¥','prefix'],
@@ -2621,8 +2711,8 @@ $('reset').onclick=()=>{
  if(!confirm('すべてのデータを初期化しますか？\n勤務予定・勤務記録・給与目標・各種設定を削除し、初期設定画面に戻ります。\nこの操作は取り消せません。'))return;
  data={settings:structuredClone(defaults),shifts:[]};data.settings.ver8FontConverted=true;
  clearGoals();clearShiftView();
- for(const k of ['shiftpay-display-mode','shiftpay-show-empty']){try{localStorage.removeItem(k)}catch(e){}}
- calMode='calendar';showEmptyDays=false;store();resetDisplay();
+ for(const k of ['shiftpay-display-mode','shiftpay-show-empty','shiftpay-calendar-period']){try{localStorage.removeItem(k)}catch(e){}}
+ calMode='calendar';showEmptyDays=false;calPeriodMode='month';store();resetDisplay();
  window.shiftpayOpenFreshSetup?.();
 };
 // Independent calendar/list presentation state. No shift records are changed by filtering.
@@ -2633,26 +2723,34 @@ function updateCalendarPresentation(){
  $('calendar-card').style.display=calMode==='calendar'?'':'none';$('list-card').style.display=calMode==='list'?'':'none';
  $('show-empty').style.visibility=calMode==='list'?'visible':'hidden';$('show-empty').setAttribute('aria-pressed',String(showEmptyDays));$('show-empty').classList.toggle('active',showEmptyDays);
  let html='',now=new Date(),todayKey=daystr(now.getFullYear(),now.getMonth(),now.getDate());
- const first=new Date(cy,cm,1),firstCell=new Date(cy,cm,1-first.getDay());
- const listDates=
- Array.from({length:new Date(cy,cm+1,0).getDate()},(_,i)=>new Date(cy,cm,i+1));
+ const [rangeStart,rangeEnd]=calendarDateRange();
+ const listDates=[];
+ for(let dt=new Date(rangeStart);dt<=rangeEnd;dt.setDate(dt.getDate()+1))listDates.push(new Date(dt));
  for(const calendarDay of listDates){
-  const isCurrentMonth=calendarDay.getFullYear()===cy&&calendarDay.getMonth()===cm;
-  let d=calendarDay.getDate(),date=daystr(calendarDay.getFullYear(),calendarDay.getMonth(),d),found=isCurrentMonth?data.shifts.filter(x=>x.date===date):[];
+  const d=calendarDay.getDate(),date=daystr(calendarDay.getFullYear(),calendarDay.getMonth(),d),found=data.shifts.filter(x=>x.date===date);
   if(!showEmptyDays&&!found.length)continue;
   let done=found.length&&found.every(x=>x.status==='worked'),anyDone=found.some(x=>x.status==='worked'),waiting=found.some(x=>isRecordPending(x));
   let time=found.map(x=>`${escapeHtml(x.status==='worked'?(x.actualStart||x.start):x.start)}～${escapeHtml(x.status==='worked'?(x.actualEnd||x.end):x.end)}`).join(' ／ ');
   let amount=found.reduce((v,x)=>v+comp(x,x.status==='worked').total,0),weekday=['日','月','火','水','木','金','土'][calendarDay.getDay()];
   let status=waiting?'記録待ち':done?'勤務確定':anyDone?'一部確定':'勤務予定',statusClass=waiting?'wait':done?'done':'';
-  html+=`<button type="button" class="date-row ${found.length?'':'empty'} ${!isCurrentMonth?'other-month-list':date<todayKey?'past-list':date===todayKey?'present-list':'future-list'} ${done?'done':''} ${waiting?'missing':''} ${date===todayKey?'today-list':''}" data-list-date="${date}"><span class="date-lead"><span class="date-number ${weekday==='日'||japaneseHolidays(calendarDay.getFullYear()).has(date)?'holiday':weekday==='土'?'saturday':'weekday-regular'}">${d}<span class="weekday">${weekday}</span></span><span class="date-main"><strong class="list-time">${found.length?time:'勤務予定なし'}</strong>${found.length?`<span class="list-status ${statusClass}">${status}</span>`:''}</span></span><span class="list-pay">${found.length?money(amount):''}</span></button>`;
+  const label=calPeriodMode==='closing'?`${calendarDay.getMonth()+1}/${d}`:String(d);
+  html+=`<button type="button" class="date-row ${found.length?'':'empty'} ${date<todayKey?'past-list':date===todayKey?'present-list':'future-list'} ${done?'done':''} ${waiting?'missing':''} ${date===todayKey?'today-list':''}" data-list-date="${date}"><span class="date-lead"><span class="date-number ${weekday==='日'||japaneseHolidays(calendarDay.getFullYear()).has(date)?'holiday':weekday==='土'?'saturday':'weekday-regular'}">${label}<span class="weekday">${weekday}</span></span><span class="date-main"><strong class="list-time">${found.length?time:'勤務予定なし'}</strong>${found.length?`<span class="list-status ${statusClass}">${status}</span>`:''}</span></span><span class="list-pay">${found.length?money(amount):''}</span></button>`;
  }
- $('shift-list').innerHTML=html||'<div class="empty-list-message" role="status">この月の勤務予定はありません。<small>左右にスワイプすると月を移動できます。</small></div>';
+ $('shift-list').innerHTML=html||`<div class="empty-list-message" role="status">${calPeriodMode==='closing'?'この給与期間':'この月'}の勤務予定はありません。<small>左右にスワイプすると${calPeriodMode==='closing'?'期間':'月'}を移動できます。</small></div>`;
  $('list-card').classList.toggle('has-no-shifts',!html);
- $('shift-list').querySelectorAll('[data-list-date]').forEach(el=>el.onclick=()=>{const date=el.dataset.listDate;let x=data.shifts.find(v=>v.date===date);if(el.classList.contains('other-month-list')){let [y,m]=date.split('-').map(Number);$(y*12+m<cy*12+cm+1?'prev':'next').click();return;}openModal(x||null,date)});
+ $('shift-list').querySelectorAll('[data-list-date]').forEach(el=>el.onclick=()=>{const date=el.dataset.listDate;let x=data.shifts.find(v=>v.date===date);openModal(x||null,date)});
 }
 $('mode-cal').onclick=()=>{calMode='calendar';try{localStorage.setItem('shiftpay-display-mode',calMode)}catch(e){}updateCalendarPresentation()};
 $('mode-list').onclick=()=>{calMode='list';try{localStorage.setItem('shiftpay-display-mode',calMode)}catch(e){}updateCalendarPresentation()};
 $('show-empty').onclick=()=>{showEmptyDays=!showEmptyDays;try{localStorage.setItem('shiftpay-show-empty',String(showEmptyDays))}catch(e){}updateCalendarPresentation()};
+function changeCalendarPeriod(mode){
+ if(mode===calPeriodMode)return;
+ calPeriodMode=mode;
+ try{localStorage.setItem('shiftpay-calendar-period',mode)}catch(e){}
+ renderCal();
+}
+$('period-calendar-month').onclick=()=>changeCalendarPeriod('month');
+$('period-calendar-closing').onclick=()=>changeCalendarPeriod('closing');
 const originalRenderCal=renderCal;
 renderCal=function(){originalRenderCal();updateCalendarPresentation()};
 
@@ -2765,7 +2863,7 @@ renderPay=function(){renderPayV4();let entries=annual?shiftsForYear(py):shiftsFo
  $('forecast-work-time').textContent=formatWorkTime(forecastMins);
 };
 // Return-to-current-month and missing-record indicators.
-$('cal-today').onclick=()=>{let d=new Date();cy=d.getFullYear();cm=d.getMonth();renderCal()};
+$('cal-today').onclick=()=>{let d=new Date();if(calPeriodMode==='closing')d=closingMonthForDate(d);cy=d.getFullYear();cm=d.getMonth();renderCal()};
 $('pay-today').onclick=()=>{let d=new Date();py=d.getFullYear();pm=d.getMonth();renderPay()};
 const renderCalV5=renderCal;
 renderCal=function(){renderCalV5();
