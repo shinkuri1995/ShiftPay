@@ -1879,6 +1879,77 @@ html[data-theme=dark]{
   #settings #restart-setup,#settings a.shortcut-link{transition:none!important}
 }
 
+
+/* 2026-10-23: plain sliding tab, no squash/stretch after movement. */
+.tabbar>.selection-glider,.unified-switch>.selection-glider,.modal-tabs>.selection-glider {
+  transform-origin:center center!important;
+  backface-visibility:hidden;
+}
+/* Colored background cards are separated by surface, not a stroke. Retain the
+   today marker and selected semantic cues. Dividers inside cards are unaffected. */
+#calendar .card,#pay .card,
+#calendar .stat,#pay .stat,
+#calendar #calendar-card,#calendar #list-card,
+#calendar .day:not(.today),#pay .month-cell,
+#calendar #list-card .date-row,
+#calendar #list-card .date-row.today-list {
+  border:0!important;
+  box-shadow:none!important;
+}
+/* Glass styling for actions across the edit/copy workflow. */
+#modal-wrap #close-modal,
+#modal-wrap .actions button,
+#copy-wrap #copy-close,
+#copy-wrap .copy-toolbar button,
+#copy-wrap .copy-footer button,
+#modal-wrap button.secondary:not(.modal-tabs button),
+#modal-wrap button.textbtn:not(.modal-tabs button),
+#modal-wrap button.primary:not(.modal-tabs button),
+#copy-wrap button.secondary:not(.copy-day),
+#copy-wrap button.primary:not(.copy-day){
+  background:var(--ios-button)!important;
+  color:var(--text)!important;
+  border:1px solid var(--ios-button-stroke)!important;
+  border-radius:14px!important;
+  box-shadow:inset 0 1px 0 var(--ios-glass-highlight),0 2px 7px var(--ios-shadow)!important;
+  -webkit-backdrop-filter:blur(10px) saturate(120%);
+  backdrop-filter:blur(10px) saturate(120%);
+  transition:background-color .18s ease,transform .16s ease,color .18s ease;
+}
+#modal-wrap .actions button.primary,#copy-wrap .copy-footer button.primary {
+  color:var(--blue)!important;
+  background:color-mix(in srgb,var(--ios-button) 82%,var(--soft) 18%)!important;
+  font-weight:750;
+}
+#modal-wrap .actions button.danger {color:#cf4b56!important}
+#modal-wrap .actions button:active,#modal-wrap #close-modal:active,
+#copy-wrap .copy-footer button:active,#copy-wrap #copy-close:active{transform:scale(.98)}
+/* Settings destructive controls and rate trash are flat, like the time editors. */
+#settings .rate-delete,#setup-wizard .setup-remove-rate,
+#settings .json-actions>button,#settings .reset-actions>button,
+#settings #restart-setup {
+  background:var(--input-fill)!important;
+  border:0!important;
+  border-radius:12px!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+#settings .rate-delete,#setup-wizard .setup-remove-rate{
+  width:36px;height:36px;min-height:36px;display:inline-grid;place-items:center;
+  color:#d95760!important;padding:0;
+}
+#settings .json-actions>button,#settings .reset-actions>button,
+#settings #restart-setup {min-height:48px!important;}
+@media(hover:hover){
+  #settings .rate-delete:hover,#setup-wizard .setup-remove-rate:hover,
+  #settings .json-actions>button:hover,#settings .reset-actions>button:hover,
+  #settings #restart-setup:hover {background:color-mix(in srgb,var(--input-fill) 82%,var(--text) 18%)!important;}
+}
+@media(prefers-reduced-motion:reduce){
+ #modal-wrap .actions button,#modal-wrap #close-modal,
+ #copy-wrap .copy-footer button,#copy-wrap #copy-close{transition:none!important;}
+}
+
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -1940,7 +2011,7 @@ html[data-theme=dark]{
 <label class="default-plan-item"><span class="default-plan-caption">休憩開始</span><span class="default-plan-time"><span class="default-plan-clock" aria-hidden="true">18:00</span><input type="time" id="default-plan-break-start" aria-label="予定の休憩開始時刻"></span></label>
 </div></fieldset>
 <p class="hint" id="default-plan-break-hint">休憩が自動の場合は、休憩時間と休憩開始時刻を設定できません。</p>
-</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクからショートカットを追加します。</li><li>追加したショートカットを編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls json-actions"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"></div><div class="reset-actions" aria-label="データの初期化"><button class="secondary danger" id="reset-shifts" type="button">勤務データの初期化</button><button class="secondary danger" id="reset-settings" type="button">設定の初期化</button><button class="secondary danger" id="reset" type="button">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月23日 12:06</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
+</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクからショートカットを追加します。</li><li>追加したショートカットを編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls json-actions"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"></div><div class="reset-actions" aria-label="データの初期化"><button class="secondary danger" id="reset-shifts" type="button">勤務データの初期化</button><button class="secondary danger" id="reset-settings" type="button">設定の初期化</button><button class="secondary danger" id="reset" type="button">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月23日 12:37</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
  <div class="setup-container">
   <div class="setup-topbar"><strong>給与計算 · 初期設定</strong><span id="setup-number">1 / 8</span></div>
   <div class="setup-progress" id="setup-progress" aria-label="設定の進行状況"></div>
@@ -2121,7 +2192,26 @@ function freeRateSlot(rates,base){
  }
  return null;
 }
+// Staged clock editing prevents a transient overlap while selecting two endpoints.
+const pendingRateTimeEdits=new Map();
+function showRateEditError(message=''){
+ const error=$('rate-error');if(!error)return;
+ error.textContent=message;error.hidden=!message;
+}
+function finishRateTimeEdit(index){
+ const pending=pendingRateTimeEdits.get(index);
+ if(!pending)return true;
+ const rates=data.settings.rates;
+ if(!rates[index]){pendingRateTimeEdits.delete(index);return true;}
+ const candidate=rates.map((rate,i)=>i===index?{...rate,...pending.values}:rate);
+ const message=rateOverlapError(candidate);
+ if(message){showRateEditError(message);return false;}
+ rates[index]={...rates[index],...pending.values};
+ pendingRateTimeEdits.delete(index);showRateEditError();
+ store();renderCal();renderPay();return true;
+}
 function renderRates(){
+ pendingRateTimeEdits.clear();
  document.getElementById('rate-error')?.remove();
  $('rates').innerHTML=data.settings.rates.map((r,i)=>`<div class="rate-card" data-rate-card="${i}">
    <div class="rate-card-head"><strong>時間帯 ${i+1}</strong><button class="rate-delete" type="button" data-remove="${i}" aria-label="時間帯 ${i+1} を削除" title="削除"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v7m4-7v7"/></svg></button></div>
@@ -2135,21 +2225,31 @@ function renderRates(){
  $('rates').querySelectorAll('[data-rate]').forEach(el=>{
   el.onchange=()=>{
    const i=Number(el.dataset.rate),field=el.dataset.key,rate=data.settings.rates[i];
-   const before=rate[field];
-   const next=field==='rate'?Number(el.value):el.value;
-   rate[field]=next;
-   const message=rateOverlapError(data.settings.rates);
-   if(message||(field==='rate'&&(!Number.isFinite(next)||next<0))){
-    rate[field]=before;el.value=before;
-    updateTimeDisplay(el);
-    const error=$('rate-error');if(error){error.textContent=message||'時給を確認してください。';error.hidden=false;}
-    return;
+   if(!rate)return;
+   if(field==='rate'){
+    const next=Number(el.value);
+    if(!el.value.trim()||!Number.isFinite(next)||next<0){el.value=rate.rate;showRateEditError('時給は0円以上で入力してください。');return;}
+    rate.rate=next;store();renderCal();renderPay();showRateEditError();return;
    }
-   const error=$('rate-error');if(error){error.hidden=true;error.textContent='';}
-   store();renderCal();renderPay();updateTimeDisplay(el);
+   let pending=pendingRateTimeEdits.get(i);
+   if(!pending){pending={values:{},touched:new Set()};pendingRateTimeEdits.set(i,pending);}
+   pending.values[field]=el.value;
+   pending.touched.add(field);
+   updateTimeDisplay(el);
+   // A change to the first endpoint is not a completed time band yet.
+   if(pending.touched.has('from')&&pending.touched.has('to'))finishRateTimeEdit(i);
+   else showRateEditError();
   };
  });
- $('rates').querySelectorAll('[data-remove]').forEach(el=>el.onclick=()=>{data.settings.rates.splice(+el.dataset.remove,1);store();renderSettings();renderCal();renderPay()})
+ // Do not validate on blur: iOS time pickers can blur the first field before
+ // the user has selected the second endpoint. Commit on the second change or
+ // when the user finishes this settings page.
+ $('rates').querySelectorAll('[data-remove]').forEach(el=>el.onclick=()=>{
+   const index=Number(el.dataset.remove);
+   // Keep other staged edits correctly associated with their rows.
+   for(const i of [...pendingRateTimeEdits.keys()])if(i!==index&&!finishRateTimeEdit(i))return;
+   data.settings.rates.splice(index,1);store();renderSettings();renderCal();renderPay();
+ });
 }
 function updateTimeDisplay(input){const display=input.closest('.time-field')?.querySelector('.time-value');if(display)display.textContent=input.value||'--:--'}
 function updateTimeDisplays(){document.querySelectorAll('.time-field input[type=time]').forEach(updateTimeDisplay)}
@@ -2232,16 +2332,16 @@ function renderSettings(){
 let modalTab='planned';function setModalTab(tab){modalTab=tab;let modal=$('modal-wrap').querySelector('.modal');for(let [name,btn,pane] of [['planned','tab-planned','pane-planned'],['record','tab-record','pane-record']]){$(btn).classList.toggle('active',tab===name);$(btn).setAttribute('aria-selected',String(tab===name));$(pane).classList.toggle('active',tab===name)}}$('tab-planned').onclick=()=>setModalTab('planned');$('tab-record').onclick=()=>setModalTab('record');
 function openModal(item,date){editing=item?item.id:null;let x=item||{date:date||daystr(cy,cm,today.getDate()),start:'15:00',end:'22:00',actualStart:'',actualEnd:'',breakStart:'',breakMin:'',status:'planned'};$('modal-title').textContent=item?'勤務を編集':'勤務を追加';for(let [id,value] of [['m-date',x.date],['m-start',x.start],['m-end',x.end],['m-actual-start',x.actualStart||''],['m-actual-end',x.actualEnd||''],['m-plan-break-start',x.planBreakStart||''],['m-plan-break-min',x.planBreakMin??''],['m-break-start',x.breakStart||''],['m-break-min',x.breakMin??''],['m-status',x.status]])$(id).value=value;$('delete-shift').style.visibility=item?'visible':'hidden';$('modal-wrap').classList.add('open');setModalTab('planned');$('modal-wrap').querySelector('.modal').scrollTop=0;preview()}
 function candidate(){let saved=editing?data.shifts.find(o=>o.id===editing):null;let syncFields=saved&&saved.icloudSource==='shortcut'&&saved.date===$('m-date').value?{icloudSource:'shortcut',icloudKey:saved.icloudKey}:{};return {...syncFields,id:editing||String(Date.now())+'-'+Math.random().toString(36).slice(2,7),date:$('m-date').value,start:$('m-start').value,end:$('m-end').value,actualStart:$('m-actual-start').value,actualEnd:$('m-actual-end').value,planBreakStart:$('m-plan-break-start').value,planBreakMin:$('m-plan-break-min').value,breakStart:$('m-break-start').value,breakMin:$('m-break-min').value,status:$('m-status').value}}
-function dayBreakdown(shift,useActual,title){let p=comp(shift,useActual);return `<section class="day-breakdown"><h3>${title}</h3><div class="detail"><span class="muted">時間給（割増前）</span><strong>${money(p.baseWage)}</strong></div><div class="detail"><span class="muted">深夜割増</span><strong>＋ ${money(p.nightPremium)}</strong></div><div class="detail"><span class="muted">残業割増</span><strong>＋ ${money(p.overtimePremium)}</strong></div><div class="detail"><span class="muted">交通費</span><strong>＋ ${money(p.transport)}</strong></div><div class="detail total"><span>合計</span><strong>${money(p.total)}</strong></div><div class="muted" style="font-size:11px;margin-top:5px">実働 ${Math.floor(p.mins/60)}時間${p.mins%60}分 · 休憩 ${p.breakMin}分</div></section>`}
+function dayBreakdown(shift,useActual,title){let p=comp(shift,useActual);return `<section class="day-breakdown"><h3>${title}</h3><div class="detail"><span class="muted">時間給</span><strong>${money(p.baseWage)}</strong></div><div class="detail"><span class="muted">深夜割増</span><strong>＋ ${money(p.nightPremium)}</strong></div><div class="detail"><span class="muted">残業割増</span><strong>＋ ${money(p.overtimePremium)}</strong></div><div class="detail"><span class="muted">交通費</span><strong>＋ ${money(p.transport)}</strong></div><div class="detail total"><span>合計</span><strong>${money(p.total)}</strong></div><div class="muted" style="font-size:11px;margin-top:5px">実働 ${Math.floor(p.mins/60)}時間${p.mins%60}分 · 休憩 ${p.breakMin}分</div></section>`}
 function updateEditorNativeValues(){document.querySelectorAll('.modal-native-field').forEach(field=>{const input=field.querySelector('input');field.querySelector('.modal-native-value').textContent=input.type==='date'?(input.value?input.value.replaceAll('-','/'):'日付を選択'):(input.value||'--:--');});}
 document.querySelectorAll('.modal-native-field input').forEach(el=>{el.addEventListener('input',updateEditorNativeValues);el.addEventListener('change',updateEditorNativeValues)});
 function plannedEndAt(shift){if(!shift||!/^\d{4}-\d{2}-\d{2}$/.test(shift.date||'')||!/^\d{2}:\d{2}$/.test(shift.start||'')||!/^\d{2}:\d{2}$/.test(shift.end||''))return null;const start=minutes(shift.start),end=minutes(shift.end);const d=parseDate(shift.date);if(Number.isNaN(d.getTime()))return null;d.setMinutes(end+(end<=start?1440:0));return d;}
 function isRecordPending(shift,now=new Date()){if(!shift||shift.status==='worked')return false;const end=plannedEndAt(shift);return Boolean(end&&now.getTime()>=end.getTime());}
-function preview(){updateEditorNativeValues();let x=candidate(),valid=x.start&&x.end;$('plan-breakdown').innerHTML=valid?dayBreakdown(x,false,'予定給与の内訳'):'';$('record-breakdown').innerHTML=valid?dayBreakdown(x,true,'勤務記録の給与内訳（確認前）'):'';const pending=isRecordPending(x);$('record-state').textContent=x.status==='worked'?'✓ 勤務確定':pending?'記録待ち':'予定';$('record-state').classList.toggle('confirmed',x.status==='worked');$('record-state').classList.toggle('pending',pending);$('record-state').classList.toggle('scheduled',x.status!=='worked'&&!pending);$('undo-worked').style.visibility=x.status==='worked'?'visible':'hidden';$('undo-worked').style.display='block'}
+function preview(){updateEditorNativeValues();let x=candidate(),valid=x.start&&x.end;$('plan-breakdown').innerHTML=valid?dayBreakdown(x,false,'予定給与の内訳'):'';$('record-breakdown').innerHTML=valid?dayBreakdown(x,true,'勤務記録の給与内訳'):'';const pending=isRecordPending(x);$('record-state').textContent=x.status==='worked'?'✓ 勤務確定':pending?'記録待ち':'予定';$('record-state').classList.toggle('confirmed',x.status==='worked');$('record-state').classList.toggle('pending',pending);$('record-state').classList.toggle('scheduled',x.status!=='worked'&&!pending);$('undo-worked').style.visibility=x.status==='worked'?'visible':'hidden';$('undo-worked').style.display='block'}
 function closeModal(){$('modal-wrap').classList.remove('open')}
 function persistShift(status){let x=candidate();if(status)x.status=status;if(!x.date||!x.start||!x.end){alert('日付と勤務予定の開始・終了時刻を入力してください。');return false}if(editing)data.shifts=data.shifts.map(o=>o.id===editing?x:o);else data.shifts.push(x);editing=x.id;$('m-status').value=x.status;store();renderCal();renderPay();preview();return true}
 document.querySelectorAll('#modal-wrap input').forEach(el=>el.addEventListener('input',preview));$('save-shift').onclick=()=>{if(persistShift())closeModal()};$('confirm-worked').onclick=()=>{if(!$('m-actual-start').value)$('m-actual-start').value=$('m-start').value;if(!$('m-actual-end').value)$('m-actual-end').value=$('m-end').value;if(persistShift('worked')){preview();closeModal()}};$('undo-worked').onclick=()=>{if(confirm('勤務の確定を取り消しますか？')){persistShift('planned')}};$('delete-shift').onclick=()=>{if(editing&&confirm('この勤務予定を削除しますか？')){data.shifts=data.shifts.filter(x=>x.id!==editing);store();closeModal();renderCal();renderPay()}};$('close-modal').onclick=$('cancel-modal').onclick=closeModal;$('modal-wrap').addEventListener('click',e=>{if(e.target===$('modal-wrap'))closeModal()});
-$('prev').onclick=()=>{cm--;if(cm<0){cm=11;cy--}renderCal()};$('next').onclick=()=>{cm++;if(cm>11){cm=0;cy++}renderCal()};$('monthly').onclick=()=>{annual=false;renderPay()};$('yearly').onclick=()=>{annual=true;renderPay()};$('pay-prev').onclick=()=>{if(annual)py--;else if(--pm<0){pm=11;py--}renderPay()};$('pay-next').onclick=()=>{if(annual)py++;else if(++pm>11){pm=0;py++}renderPay()};$('add-rate').onclick=()=>{const slot=freeRateSlot(data.settings.rates,data.settings.baseRate);if(!slot){alert('追加できる時間帯がありません。重複しない時間帯を設定してください。');return;}data.settings.rates.push(slot);store();renderRates()};document.querySelectorAll('[data-page]').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===btn.dataset.page));if(btn.dataset.page==='pay')renderPay();if(btn.dataset.page==='settings')renderSettings()});for(let id of ['closing-day','payday']){$(id).innerHTML=Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}日</option>`).join('')+'<option value="32">月末</option>'} // 月末(32)は実日付に丸める
+$('prev').onclick=()=>{cm--;if(cm<0){cm=11;cy--}renderCal()};$('next').onclick=()=>{cm++;if(cm>11){cm=0;cy++}renderCal()};$('monthly').onclick=()=>{annual=false;renderPay()};$('yearly').onclick=()=>{annual=true;renderPay()};$('pay-prev').onclick=()=>{if(annual)py--;else if(--pm<0){pm=11;py--}renderPay()};$('pay-next').onclick=()=>{if(annual)py++;else if(++pm>11){pm=0;py++}renderPay()};$('add-rate').onclick=()=>{if(![...pendingRateTimeEdits.keys()].every(finishRateTimeEdit))return;const slot=freeRateSlot(data.settings.rates,data.settings.baseRate);if(!slot){alert('追加できる時間帯がありません。重複しない時間帯を設定してください。');return;}data.settings.rates.push(slot);store();renderRates()};document.querySelectorAll('[data-page]').forEach(btn=>btn.onclick=()=>{if(![...pendingRateTimeEdits.keys()].every(finishRateTimeEdit))return;document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===btn.dataset.page));if(btn.dataset.page==='pay')renderPay();if(btn.dataset.page==='settings')renderSettings()});for(let id of ['closing-day','payday']){$(id).innerHTML=Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}日</option>`).join('')+'<option value="32">月末</option>'} // 月末(32)は実日付に丸める
 $('export').onclick=()=>{let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='shiftpay-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};$('import-btn').onclick=()=>$('import-file').click();$('import-file').onchange=async e=>{try{let d=JSON.parse(await e.target.files[0].text());if(!d.settings||!Array.isArray(d.shifts))throw Error();if(!confirm('現在のデータを読み込んだデータで置き換えますか？\nこの操作は取り消せません。'))return;data={settings:{...defaults,...d.settings},shifts:d.shifts};store();theme();renderSettings();renderCal();renderPay()}catch{alert('正しいバックアップファイルを選択してください。')}};const resetDisplay=()=>{theme();renderSettings();renderCal();renderPay();};
 const clearShiftView=()=>{try{localStorage.removeItem('shiftpay-last-planned-times')}catch(e){}lastPlannedTimes=null;};
 const clearGoals=()=>{for(const k of ['shiftpay-monthly-goals-v5','shiftpay-yearly-goals-v6']){try{localStorage.removeItem(k)}catch(e){}}goals={};yearlyGoals={};};
@@ -2514,14 +2614,13 @@ receiveShortcutCalendar();
       const destH=selected.offsetHeight;
       if(lastIndex===index && lastX===destX && indicator.offsetWidth===destW && indicator.offsetHeight===destH)return;
       const moved=lastIndex!==-1 && lastIndex!==index;
-      let fromX=lastX, fromScale=1;
+      let fromX=lastX;
       if(running){
         // Continue from the live position if the user taps again before the prior motion ends.
         const live=getComputedStyle(indicator).transform;
         if(live && live!=='none'){
           const parts=new DOMMatrixReadOnly(live);
           fromX=parts.m41;
-          fromScale=parts.a||1;
         }
         running.cancel();running=null;
       }
@@ -2529,17 +2628,15 @@ receiveShortcutCalendar();
       indicator.style.top=destY+'px';
       indicator.style.width=destW+'px';
       indicator.style.height=destH+'px';
-      const target=`translate3d(${destX}px,0,0) scaleX(1)`;
+      const target=`translate3d(${destX}px,0,0)`;
       indicator.style.transform=target;
       if(allowMotion && moved && !reduceMotion.matches && indicator.animate){
         const travel=Math.abs(destX-fromX);
         if(travel>0.5){
-          const halfway=fromX+(destX-fromX)*.55;
           running=indicator.animate([
-            {transform:`translate3d(${fromX}px,0,0) scaleX(${fromScale})`,offset:0},
-            {transform:`translate3d(${halfway}px,0,0) scaleX(.975)`,offset:.55},
+            {transform:`translate3d(${fromX}px,0,0)`,offset:0},
             {transform:target,offset:1}
-          ],{duration:260,easing:'cubic-bezier(.22,.74,.25,1)',fill:'none'});
+          ],{duration:250,easing:'cubic-bezier(.22,.72,.22,1)',fill:'none'});
           running.addEventListener('finish',()=>{running=null},{once:true});
         }
       }
