@@ -2256,6 +2256,109 @@ html[data-theme="dark"] {
  #pay .pay-date-line {font-size:11px;margin-top:-7px;margin-bottom:12px;}
 }
 
+
+/* Oct 23: responsive, matching controls and independent visible-adjacent dates. */
+#calendar .unified-toolbar>.unified-switch,
+#pay .unified-toolbar>.unified-switch {border-radius:999px!important;}
+#calendar .unified-toolbar>.unified-switch>button,
+#pay .unified-toolbar>.unified-switch>button,
+#calendar .unified-toolbar>.unified-switch>.selection-glider,
+#pay .unified-toolbar>.unified-switch>.selection-glider {border-radius:999px!important;}
+#calendar .unified-toolbar #cal-today {border-radius:999px!important;}
+#calendar .calendar-period-segments {
+ position:relative;isolation:isolate;display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));width:min(270px,100%);
+ padding:4px;gap:2px;align-items:stretch;overflow:hidden;
+ border:1px solid var(--ios-glass-stroke)!important;border-radius:999px!important;
+ background:var(--ios-glass)!important;
+ box-shadow:0 3px 12px var(--ios-shadow),inset 0 1px 0 var(--ios-glass-highlight)!important;
+ -webkit-backdrop-filter:blur(14px) saturate(125%);backdrop-filter:blur(14px) saturate(125%);
+}
+#calendar .calendar-period-segments>.selection-glider {
+ position:absolute;z-index:0;pointer-events:none;
+ background:var(--ios-selected)!important;box-shadow:none!important;
+ border-radius:999px!important;transform:translate3d(0,0,0);will-change:transform;
+}
+#calendar .calendar-period-segments>button {
+ position:relative;z-index:1;min-height:39px;padding:8px 9px;
+ border-radius:999px!important;background:transparent!important;
+ font-size:12px;font-weight:700;color:var(--text);box-shadow:none!important;
+}
+#calendar .calendar-period-segments>button.active {color:var(--blue)!important;}
+#calendar .calendar-period-segments>button:focus-visible {outline:2px solid var(--blue);outline-offset:-3px;}
+#calendar .calendar-top-actions {
+ flex:0 1 272px;max-width:calc(100% - 79px);min-width:0;
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;
+}
+#calendar .calendar-top-actions>#show-empty,
+#calendar .calendar-top-actions>#icloud-sync {
+ box-sizing:border-box;display:flex;align-items:center;justify-content:center;
+ width:100%!important;min-width:0!important;max-width:100%!important;
+ flex:1 1 0!important;height:40px!important;min-height:40px!important;
+ padding:6px 4px!important;margin:0!important;white-space:nowrap;
+ font-size:clamp(10px,1.25vw,12px)!important;line-height:1.1;
+ border-radius:999px!important;text-overflow:clip;
+}
+/* The pay date belongs to its month label, never right-aligned beside it. */
+#pay .unified-toolbar {grid-template-rows:54px 20px;row-gap:0;min-height:74px;margin-bottom:12px;}
+#pay .unified-toolbar .pay-period-stack {
+ display:flex;align-items:center;justify-content:flex-start;
+ grid-row:1 / 3;height:74px;min-height:74px;
+ padding-top:15px;gap:8px;overflow:visible!important;align-self:stretch;
+ position:relative;white-space:nowrap;
+}
+#pay .pay-period-stack .pay-date-line {
+ display:flex;align-items:center;justify-content:center;gap:2px;
+ flex:0 0 auto;max-width:none;width:max-content;
+ margin:0!important;font-size:11px;line-height:1.2;
+ color:var(--muted);font-variant-numeric:tabular-nums;
+ white-space:nowrap;pointer-events:none;
+}
+#pay .pay-period-stack .pay-date-line .payday-prefix {display:inline!important;}
+#pay .pay-period-stack .pay-date-line #payday-under-gauge {white-space:nowrap;}
+#pay .pay-period-stack .pay-date-line[style*="none"] {display:none!important;}
+#settings .adjacent-display-settings{margin-top:18px;border-top:1px solid var(--line);padding-top:6px;}
+#settings .adjacent-display-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:67px;padding:12px 1px;border-bottom:1px solid var(--line);}
+#settings .adjacent-display-row:last-child{border-bottom:0;padding-bottom:4px;}
+#settings .adjacent-display-copy{display:flex;flex-direction:column;gap:5px;min-width:0;}
+#settings .adjacent-display-copy strong{font-size:14px;font-weight:700;color:var(--text);}
+#settings .adjacent-display-copy small{font-size:12px;color:var(--muted);font-weight:400;}
+#settings .adjacent-display-row>.premium-toggle{flex:0 0 auto;padding:7px 2px;}
+@media(max-width:650px){
+ #calendar .calendar-top-actions {flex:0 1 250px;max-width:calc(100% - 78px);gap:4px;}
+ #calendar .calendar-top-actions>#show-empty,
+ #calendar .calendar-top-actions>#icloud-sync {font-size:clamp(9px,2.65vw,11px)!important;padding:5px 3px!important;height:39px!important;min-height:39px!important;}
+ #calendar .calendar-period-segments>button {font-size:11px;min-height:35px;padding:7px 6px;}
+ #pay .unified-toolbar .pay-period-stack {padding-top:13px;gap:6px;}
+ #pay .pay-period-stack .pay-date-line {font-size:clamp(9px,2.6vw,10.5px);}
+}
+@media(max-width:355px){
+ #pay .unified-toolbar {grid-template-rows:54px 48px 18px;min-height:120px;}
+ #pay .unified-toolbar .pay-period-stack {grid-row:2 / 4;height:66px;min-height:66px;padding-top:10px;gap:7px;}
+ #calendar .calendar-top-actions {max-width:calc(100% - 76px);}
+ #calendar .calendar-top-actions>#show-empty,
+ #calendar .calendar-top-actions>#icloud-sync {font-size:9px!important;}
+}
+@media(prefers-reduced-motion:reduce){#calendar .calendar-period-segments>.selection-glider{transition:none!important;animation:none!important;}}
+
+/* Date label occupies its own aligned second row, never under or behind arrows. */
+#pay .unified-toolbar{grid-template-rows:54px 22px!important;min-height:76px!important;row-gap:0!important;}
+#pay .unified-toolbar .pay-period-stack{grid-row:1!important;height:54px!important;min-height:54px!important;display:flex;align-items:center;justify-content:center;padding:0!important;gap:0!important;}
+#pay .unified-toolbar>.pay-date-line{
+ grid-column:2 / 5;grid-row:2;justify-self:center;align-self:center;
+ display:flex;gap:3px;align-items:center;justify-content:center;
+ margin:0!important;width:max-content;max-width:none;
+ font-size:11px;line-height:1.2;color:var(--muted);white-space:nowrap;
+ font-variant-numeric:tabular-nums;pointer-events:none;
+}
+#pay .unified-toolbar>.pay-date-line .payday-prefix{display:inline!important;}
+#pay .unified-toolbar>.pay-date-line[style*="none"]{display:none!important;}
+@media(max-width:650px){#pay .unified-toolbar>.pay-date-line{font-size:10.5px;}}
+@media(max-width:355px){
+ #pay .unified-toolbar{grid-template-rows:54px 48px 20px!important;min-height:122px!important;}
+ #pay .unified-toolbar .pay-period-stack{grid-row:2!important;height:48px!important;min-height:48px!important;}
+ #pay .unified-toolbar>.pay-date-line{grid-row:3!important;}
+}
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -2298,10 +2401,14 @@ html[data-theme="dark"] {
     <button class="secondary" id="pay-next" type="button" aria-label="次の給与期間">›</button>
     <button class="secondary" id="pay-today" type="button">今月</button>
   </div>
+  <div class="pay-date-line" id="pay-date-line" aria-live="polite"><span class="payday-prefix">振込予定日：</span><span id="payday-under-gauge"></span></div>
 </div>
-<div class="pay-date-line" id="pay-date-line" aria-live="polite"><span class="payday-prefix">振込予定日：</span><span id="payday-under-gauge"></span></div>
 <div id="pay-stage" class="pay-stage"><div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標</label><span class="goal-currency-field"><span class="goal-yen" aria-hidden="true">¥</span><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></span></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></div></section>
-<section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>基準実働時間</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">1出勤あたり</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">1給与期間あたり</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card break-settings-card" id="break-settings-card">
+<section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div>
+<div class="adjacent-display-settings" role="group" aria-label="前後の日付の表示設定">
+  <div class="adjacent-display-row"><div class="adjacent-display-copy"><strong>暦月基準</strong><small>前月・翌月の日付を表示</small></div><label class="premium-toggle" aria-label="暦月基準で前月・翌月の日付を表示"><input type="checkbox" id="show-adjacent-month"><span class="toggle-track" aria-hidden="true"></span></label></div>
+  <div class="adjacent-display-row"><div class="adjacent-display-copy"><strong>締め日基準</strong><small>対象期間外の前後の日付を表示</small></div><label class="premium-toggle" aria-label="締め日基準で対象期間外の前後の日付を表示"><input type="checkbox" id="show-adjacent-closing"><span class="toggle-track" aria-hidden="true"></span></label></div>
+</div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>基準実働時間</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">1出勤あたり</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">1給与期間あたり</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card break-settings-card" id="break-settings-card">
 <h2>休憩</h2>
 <label class="break-mode-label">休憩の設定方法<select id="break-mode"><option value="auto">自動</option><option value="manual">手動</option></select></label>
 <fieldset class="break-rule-fields" id="break-rule-fields">
@@ -2354,7 +2461,7 @@ const key='shiftpay-prototype-v1';window.__shiftpayInitialSetupRequired=(()=>{
   localStorage.setItem(statusKey,'in-progress');return true;
  }catch(e){return true}
 })();
-const defaults={theme:'auto',workplace:'ウエルシア',baseRate:1326,rates:[{from:'17:00',to:'20:00',rate:1346},{from:'20:00',to:'05:00',rate:1376}],nightStart:'22:00',nightEnd:'05:00',nightBonus:25,nightEnabled:true,overtimeEnabled:true,overtimeHours:8,overtimeBonus:25,defaultPlanStart:'15:00',defaultPlanEnd:'22:00',defaultPlanBreakStart:'18:00',defaultPlanBreakMin:0,breakMode:'auto',breakOffset:180,break45:360,break60:480,closingDay:32,payday:15,payMonth:1,holidayPolicy:'before',transport:500,tax:0,fontSize:'standard',ver8FontConverted:true,monthlyGoalDefault:100000,yearlyGoalDefault:1200000};let data;try{data=JSON.parse(localStorage.getItem(key))}catch{}if(!data||!data.settings||!Array.isArray(data.shifts))data={settings:structuredClone(defaults),shifts:[]};data.settings={...defaults,...data.settings};if(!data.settings.ver8FontConverted){const old=data.settings.fontSize;data.settings.fontSize=old==='standard'?'small':old==='large'?'standard':old==='extra'?'large':'standard';data.settings.ver8FontConverted=true;try{localStorage.setItem(key,JSON.stringify(data))}catch(e){}}let today=new Date(),cy=today.getFullYear(),cm=today.getMonth(),py=cy,pm=cm,annual=false,editing=null;let calPeriodMode='month';try{calPeriodMode=localStorage.getItem('shiftpay-calendar-period')==='closing'?'closing':'month'}catch(e){}const $=id=>document.getElementById(id),money=x=>'¥'+Math.round(x).toLocaleString('ja-JP'),pad=x=>String(x).padStart(2,'0'),daystr=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`,parseDate=s=>new Date(s+'T00:00:00'),minutes=t=>{let [h,m]=(t||'00:00').split(':').map(Number);return h*60+m},duration=(a,b)=>{let n=minutes(b)-minutes(a);return n<=0?n+1440:n},inSlot=(m,a,b)=>{a=minutes(a);b=minutes(b);return a===b?true:a<b?m>=a&&m<b:m>=a||m<b};const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function store(){localStorage.setItem(key,JSON.stringify(data))}function theme(){let t=data.settings.theme;document.documentElement.dataset.theme=t==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.dataset.fontSize=data.settings.fontSize||'standard';const meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#f5f6fa'}theme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
+const defaults={theme:'auto',workplace:'ウエルシア',baseRate:1326,rates:[{from:'17:00',to:'20:00',rate:1346},{from:'20:00',to:'05:00',rate:1376}],nightStart:'22:00',nightEnd:'05:00',nightBonus:25,nightEnabled:true,overtimeEnabled:true,overtimeHours:8,overtimeBonus:25,defaultPlanStart:'15:00',defaultPlanEnd:'22:00',defaultPlanBreakStart:'18:00',defaultPlanBreakMin:0,breakMode:'auto',breakOffset:180,break45:360,break60:480,closingDay:32,payday:15,payMonth:1,holidayPolicy:'before',transport:500,tax:0,fontSize:'standard',ver8FontConverted:true,monthlyGoalDefault:100000,yearlyGoalDefault:1200000,showAdjacentMonth:true,showAdjacentClosing:false};let data;try{data=JSON.parse(localStorage.getItem(key))}catch{}if(!data||!data.settings||!Array.isArray(data.shifts))data={settings:structuredClone(defaults),shifts:[]};data.settings={...defaults,...data.settings};if(!data.settings.ver8FontConverted){const old=data.settings.fontSize;data.settings.fontSize=old==='standard'?'small':old==='large'?'standard':old==='extra'?'large':'standard';data.settings.ver8FontConverted=true;try{localStorage.setItem(key,JSON.stringify(data))}catch(e){}}let today=new Date(),cy=today.getFullYear(),cm=today.getMonth(),py=cy,pm=cm,annual=false,editing=null;let calPeriodMode='month';try{calPeriodMode=localStorage.getItem('shiftpay-calendar-period')==='closing'?'closing':'month'}catch(e){}const $=id=>document.getElementById(id),money=x=>'¥'+Math.round(x).toLocaleString('ja-JP'),pad=x=>String(x).padStart(2,'0'),daystr=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`,parseDate=s=>new Date(s+'T00:00:00'),minutes=t=>{let [h,m]=(t||'00:00').split(':').map(Number);return h*60+m},duration=(a,b)=>{let n=minutes(b)-minutes(a);return n<=0?n+1440:n},inSlot=(m,a,b)=>{a=minutes(a);b=minutes(b);return a===b?true:a<b?m>=a&&m<b:m>=a||m<b};const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function store(){localStorage.setItem(key,JSON.stringify(data))}function theme(){let t=data.settings.theme;document.documentElement.dataset.theme=t==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.dataset.fontSize=data.settings.fontSize||'standard';const meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#f5f6fa'}theme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
 function ratePartsAt(min){let s=data.settings,base=Number(s.baseRate)||0;for(const r of s.rates)if(inSlot(min,r.from,r.to))base=Number(r.rate)||0;let premium=s.nightEnabled!==false&&inSlot(min,s.nightStart,s.nightEnd)?base*(Number(s.nightBonus)||0)/100:0;return {base,premium}}function rateAt(min){let r=ratePartsAt(min);return r.base+r.premium}
 function comp(shift,useActual){
  const s=data.settings,start=useActual&&(shift.actualStart||shift.start)||shift.start,end=useActual&&(shift.actualEnd||shift.end)||shift.end;
@@ -2451,9 +2558,9 @@ function calendarTimeHTML(shift){
 function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport:0,minutes:0,days:0};for(let item of list){let p=comp(item,false),a=comp(item,true),done=item.status==='worked';sum.planned+=p.total;sum.forecast+=(done?a:p).total;if(done){sum.actual+=a.total;sum.wage+=a.wage;sum.transport+=a.transport;sum.minutes+=a.mins;sum.days++}}return sum}function shiftsForMonth(y,m){let [start,end]=datesInPay(y,m);return data.shifts.filter(x=>{let d=parseDate(x.date);return d>=start&&d<=end}).sort((a,b)=>a.date.localeCompare(b.date))}function shiftsForYear(y){return Array.from({length:12},(_,m)=>shiftsForMonth(y,m)).flat()}function renderCal(){
   const closing=calPeriodMode==='closing';
   const [rangeStart,rangeEnd]=calendarDateRange();
-  $('cal-title').textContent=closing?`${cy}年${cm+1}月締め`:`${cy}年${cm+1}月`;
+  $('cal-title').textContent=`${cy}年${cm+1}月分`;
   $('cal-today').textContent=closing?'今期':'今月';
-  $('calendar-period-hint').textContent=closing?`対象：${rangeStart.getFullYear()}/${calendarShortDate(rangeStart)} ～ ${rangeEnd.getFullYear()}/${calendarShortDate(rangeEnd)}`:'';
+  $('calendar-period-hint').textContent=closing?`期間：${rangeStart.getFullYear()}/${calendarShortDate(rangeStart)} ～ ${rangeEnd.getFullYear()}/${calendarShortDate(rangeEnd)}`:'';
   $('period-calendar-month').classList.toggle('active',!closing);
   $('period-calendar-closing').classList.toggle('active',closing);
   $('period-calendar-month').setAttribute('aria-pressed',String(!closing));
@@ -2473,12 +2580,13 @@ function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport
   for(let slot=0;slot<numCells;slot++){
     const d=new Date(firstCell.getFullYear(),firstCell.getMonth(),firstCell.getDate()+slot);
     const date=daystr(d.getFullYear(),d.getMonth(),d.getDate());
-    if(closing&&(date<startKey||date>endKey)){
+    const outsideRange=closing?(date<startKey||date>endKey):(d.getFullYear()!==cy||d.getMonth()!==cm);
+    const showAdjacent=closing?Boolean(data.settings.showAdjacentClosing):Boolean(data.settings.showAdjacentMonth);
+    if(outsideRange&&!showAdjacent){
       html+='<span class="period-blank" aria-hidden="true"></span>';
       continue;
     }
-    const isCurrentMonth=d.getFullYear()===cy&&d.getMonth()===cm;
-    const isAdjacent=!closing&&!isCurrentMonth;
+    const isAdjacent=outsideRange;
     // In a closing-date view all dates inside the pay period are regular selectable dates.
     const found=data.shifts.filter(x=>x.date===date);
     const total=found.reduce((sum,x)=>sum+comp(x,x.status==='worked').total,0);
@@ -2657,6 +2765,11 @@ function syncSettingBreak(){
 }
 function renderSettings(){
  let s=data.settings;
+ for(const [id,field] of [['show-adjacent-month','showAdjacentMonth'],['show-adjacent-closing','showAdjacentClosing']]){
+  const toggle=$(id);
+  toggle.checked=Boolean(s[field]);
+  toggle.onchange=()=>{s[field]=toggle.checked;store();renderCal();};
+ }
  const fields={'theme':'theme','font-size':'fontSize','base-rate':'baseRate',
  'default-plan-start':'defaultPlanStart','default-plan-end':'defaultPlanEnd',
  'default-plan-break-start':'defaultPlanBreakStart','default-plan-break-min':'defaultPlanBreakMin',
@@ -2694,7 +2807,7 @@ function preview(){updateEditorNativeValues();let x=candidate(),valid=x.start&&x
 function closeModal(){$('modal-wrap').classList.remove('open')}
 function persistShift(status){let x=candidate();if(status)x.status=status;if(!x.date||!x.start||!x.end){alert('日付と勤務予定の開始・終了時刻を入力してください。');return false}if(editing)data.shifts=data.shifts.map(o=>o.id===editing?x:o);else data.shifts.push(x);editing=x.id;$('m-status').value=x.status;store();renderCal();renderPay();preview();return true}
 document.querySelectorAll('#modal-wrap input').forEach(el=>el.addEventListener('input',preview));$('save-shift').onclick=()=>{if(persistShift())closeModal()};$('confirm-worked').onclick=()=>{if(!$('m-actual-start').value)$('m-actual-start').value=$('m-start').value;if(!$('m-actual-end').value)$('m-actual-end').value=$('m-end').value;if(persistShift('worked')){preview();closeModal()}};$('undo-worked').onclick=()=>{if(confirm('勤務の確定を取り消しますか？')){persistShift('planned')}};$('delete-shift').onclick=()=>{if(editing&&confirm('この勤務予定を削除しますか？')){data.shifts=data.shifts.filter(x=>x.id!==editing);store();closeModal();renderCal();renderPay()}};$('close-modal').onclick=$('cancel-modal').onclick=closeModal;$('modal-wrap').addEventListener('click',e=>{if(e.target===$('modal-wrap'))closeModal()});
-$('prev').onclick=()=>{cm--;if(cm<0){cm=11;cy--}renderCal()};$('next').onclick=()=>{cm++;if(cm>11){cm=0;cy++}renderCal()};$('monthly').onclick=()=>{annual=false;renderPay()};$('yearly').onclick=()=>{annual=true;renderPay()};$('pay-prev').onclick=()=>{if(annual)py--;else if(--pm<0){pm=11;py--}renderPay()};$('pay-next').onclick=()=>{if(annual)py++;else if(++pm>11){pm=0;py++}renderPay()};$('add-rate').onclick=()=>{if(![...pendingRateTimeEdits.keys()].every(finishRateTimeEdit))return;const slot=freeRateSlot(data.settings.rates,data.settings.baseRate);if(!slot){alert('追加できる時間帯がありません。重複しない時間帯を設定してください。');return;}data.settings.rates.push(slot);store();renderRates()};document.querySelectorAll('[data-page]').forEach(btn=>btn.onclick=()=>{if(![...pendingRateTimeEdits.keys()].every(finishRateTimeEdit))return;document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===btn.dataset.page));if(btn.dataset.page==='pay')renderPay();if(btn.dataset.page==='settings')renderSettings()});for(let id of ['closing-day','payday']){$(id).innerHTML=Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}日</option>`).join('')+'<option value="32">月末</option>'} // 月末(32)は実日付に丸める
+$('prev').onclick=()=>{cm--;if(cm<0){cm=11;cy--}renderCal()};$('next').onclick=()=>{cm++;if(cm>11){cm=0;cy++}renderCal()};$('monthly').onclick=()=>{annual=false;renderPay()};$('yearly').onclick=()=>{annual=true;renderPay()};$('pay-prev').onclick=()=>{if(annual)py--;else if(--pm<0){pm=11;py--}renderPay()};$('pay-next').onclick=()=>{if(annual)py++;else if(++pm>11){pm=0;py++}renderPay()};$('add-rate').onclick=()=>{if(![...pendingRateTimeEdits.keys()].every(finishRateTimeEdit))return;const slot=freeRateSlot(data.settings.rates,data.settings.baseRate);if(!slot){alert('追加できる時間帯がありません。重複しない時間帯を設定してください。');return;}data.settings.rates.push(slot);store();renderRates()};document.querySelectorAll('[data-page]').forEach(btn=>btn.onclick=()=>{if(![...pendingRateTimeEdits.keys()].every(finishRateTimeEdit))return;document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===btn.dataset.page));if(btn.dataset.page==='pay')renderPay();if(btn.dataset.page==='settings')renderSettings();if(btn.dataset.page==='calendar')renderCal()});for(let id of ['closing-day','payday']){$(id).innerHTML=Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}日</option>`).join('')+'<option value="32">月末</option>'} // 月末(32)は実日付に丸める
 $('export').onclick=()=>{let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='shiftpay-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};$('import-btn').onclick=()=>$('import-file').click();$('import-file').onchange=async e=>{try{let d=JSON.parse(await e.target.files[0].text());if(!d.settings||!Array.isArray(d.shifts))throw Error();if(!confirm('現在のデータを読み込んだデータで置き換えますか？\nこの操作は取り消せません。'))return;data={settings:{...defaults,...d.settings},shifts:d.shifts};store();theme();renderSettings();renderCal();renderPay()}catch{alert('正しいバックアップファイルを選択してください。')}};const resetDisplay=()=>{theme();renderSettings();renderCal();renderPay();};
 const clearShiftView=()=>{try{localStorage.removeItem('shiftpay-last-planned-times')}catch(e){}lastPlannedTimes=null;};
 const clearGoals=()=>{for(const k of ['shiftpay-monthly-goals-v5','shiftpay-yearly-goals-v6']){try{localStorage.removeItem(k)}catch(e){}}goals={};yearlyGoals={};};
@@ -2954,7 +3067,7 @@ receiveShortcutCalendar();
 // GPU-composited tab indicator: no forced reflow, keyframe restart, or bouncing pseudo-element.
 (function initSubtleMotion(){
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
-  document.querySelectorAll('.tabbar,.unified-switch').forEach(group=>{
+  document.querySelectorAll('.tabbar,.unified-switch,.calendar-period-segments').forEach(group=>{
     const buttons=Array.from(group.querySelectorAll(':scope > button'));
     if(!buttons.length)return;
     const indicator=document.createElement('span');
