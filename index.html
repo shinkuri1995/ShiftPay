@@ -2545,6 +2545,60 @@ button.primary,button.secondary,button.textbtn,
 @media(prefers-reduced-motion:reduce){
  #calendar-stage,#pay-stage{animation:none!important;}
 }
+
+
+/* 2026-10-23 follow-up: clean, borderless initial setup surfaces. */
+#setup-wizard .setup-panel,
+#setup-wizard .setup-section,
+#setup-wizard .setup-rate-card,
+#setup-wizard .setup-summary {
+  border:0!important;
+  outline:0;
+}
+#setup-wizard .setup-section{
+  background:color-mix(in srgb,var(--bg) 70%,var(--panel) 30%);
+}
+#setup-wizard .setup-rate-card{
+  background:color-mix(in srgb,var(--panel) 58%,var(--bg) 42%);
+}
+#setup-wizard .setup-remove-rate{
+  border:0!important;
+  background:var(--ios-button)!important;
+  border-radius:999px!important;
+  box-shadow:inset 0 1px 0 var(--ios-glass-highlight),0 2px 6px var(--ios-shadow);
+}
+#setup-wizard .setup-add-rate{
+  border:0!important;
+  border-radius:999px!important;
+  background:var(--ios-button)!important;
+  box-shadow:inset 0 1px 0 var(--ios-glass-highlight),0 2px 6px var(--ios-shadow);
+}
+#setup-wizard .setup-summary>div{border-bottom-color:color-mix(in srgb,var(--line) 35%,transparent);}
+/* Back action matches the existing Liquid Glass pill buttons. */
+#setup-wizard #setup-back{
+  color:var(--text)!important;
+  background:var(--ios-button)!important;
+  border:1px solid var(--ios-button-stroke)!important;
+  border-radius:999px!important;
+  box-shadow:inset 0 1px 0 var(--ios-glass-highlight),0 2px 8px var(--ios-shadow)!important;
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
+  font-weight:700;
+  padding:10px 22px;
+}
+#setup-wizard #setup-back:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+/* No empty slot when a saved/confirmed record is unavailable to copy. */
+#modal-wrap .record-actions:not(.has-copy){grid-template-columns:minmax(0,1fr)!important;}
+#modal-wrap .record-actions:not(.has-copy) #confirm-worked{grid-column:1!important;}
+#modal-wrap .record-actions.has-copy{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+#modal-wrap #copy-record[hidden]{display:none!important;}
+#modal-wrap #undo-worked{font-weight:800!important;}
+/* A planned shift has a filled status badge, like the confirmed state. */
+#pane-record #record-state.scheduled{
+  background:var(--soft)!important;
+  color:var(--blue)!important;
+  border-radius:14px;
+}
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -3006,7 +3060,7 @@ function updateEditorNativeValues(){document.querySelectorAll('.modal-native-fie
 document.querySelectorAll('.modal-native-field input').forEach(el=>{el.addEventListener('input',updateEditorNativeValues);el.addEventListener('change',updateEditorNativeValues)});
 function plannedEndAt(shift){if(!shift||!/^\d{4}-\d{2}-\d{2}$/.test(shift.date||'')||!/^\d{2}:\d{2}$/.test(shift.start||'')||!/^\d{2}:\d{2}$/.test(shift.end||''))return null;const start=minutes(shift.start),end=minutes(shift.end);const d=parseDate(shift.date);if(Number.isNaN(d.getTime()))return null;d.setMinutes(end+(end<=start?1440:0));return d;}
 function isRecordPending(shift,now=new Date()){if(!shift||shift.status==='worked')return false;const end=plannedEndAt(shift);return Boolean(end&&now.getTime()>=end.getTime());}
-function preview(){updateEditorNativeValues();let x=candidate(),valid=x.start&&x.end;$('plan-breakdown').innerHTML=valid?dayBreakdown(x,false,'予定給与の内訳'):'';$('record-breakdown').innerHTML=valid?dayBreakdown(x,true,'勤務記録の給与内訳'):'';const pending=isRecordPending(x);$('record-state').textContent=x.status==='worked'?'✓ 勤務確定':pending?'記録待ち':'予定';$('record-state').classList.toggle('confirmed',x.status==='worked');$('record-state').classList.toggle('pending',pending);$('record-state').classList.toggle('scheduled',x.status!=='worked'&&!pending);$('undo-worked').style.visibility=x.status==='worked'?'visible':'hidden';$('undo-worked').style.display='block'}
+function preview(){updateEditorNativeValues();let x=candidate(),valid=x.start&&x.end;$('plan-breakdown').innerHTML=valid?dayBreakdown(x,false,'予定給与の内訳'):'';$('record-breakdown').innerHTML=valid?dayBreakdown(x,true,'勤務記録の給与内訳'):'';const pending=isRecordPending(x);$('record-state').textContent=x.status==='worked'?'勤務確定':pending?'記録待ち':'予定';$('record-state').classList.toggle('confirmed',x.status==='worked');$('record-state').classList.toggle('pending',pending);$('record-state').classList.toggle('scheduled',x.status!=='worked'&&!pending);const saved=editing?data.shifts.find(item=>item.id===editing):null;const isSavedConfirmed=Boolean(saved&&saved.status==='worked');$('copy-record').hidden=!isSavedConfirmed;$('copy-record').style.display=isSavedConfirmed?'':'none';$('undo-worked').style.display=x.status==='worked'?'':'none';$('pane-record').querySelector('.record-actions').classList.toggle('has-copy',isSavedConfirmed)}
 function closeModal(){$('modal-wrap').classList.remove('open')}
 function persistShift(status){let x=candidate();if(status)x.status=status;if(!x.date||!x.start||!x.end){alert('日付と勤務予定の開始・終了時刻を入力してください。');return false}if(editing)data.shifts=data.shifts.map(o=>o.id===editing?x:o);else data.shifts.push(x);editing=x.id;$('m-status').value=x.status;store();renderCal();renderPay();preview();return true}
 document.querySelectorAll('#modal-wrap input').forEach(el=>el.addEventListener('input',preview));$('save-shift').onclick=()=>{if(persistShift())closeModal()};$('confirm-worked').onclick=()=>{if(!$('m-actual-start').value)$('m-actual-start').value=$('m-start').value;if(!$('m-actual-end').value)$('m-actual-end').value=$('m-end').value;if(persistShift('worked')){preview();closeModal()}};$('undo-worked').onclick=()=>{if(confirm('勤務の確定を取り消しますか？')){persistShift('planned')}};$('delete-shift').onclick=()=>{if(editing&&confirm('この勤務予定を削除しますか？')){data.shifts=data.shifts.filter(x=>x.id!==editing);store();closeModal();renderCal();renderPay()}};$('close-modal').onclick=$('cancel-modal').onclick=closeModal;$('modal-wrap').addEventListener('click',e=>{if(e.target===$('modal-wrap'))closeModal()});
@@ -3485,8 +3539,7 @@ receiveShortcutCalendar();
   },true);
   button.addEventListener('click',()=>{
    const destination=button.dataset.page;
-   if(destination===leaving)return;
-   const saved=positions[destination]||0;
+   if(destination===leaving){positions[destination]=0;const activePage=document.getElementById(destination);activePage?.querySelectorAll('[data-page-scroll]')?.forEach(el=>el.scrollTo({top:0,behavior:'smooth'}));window.scrollTo({left:0,top:0,behavior:'smooth'});return;}    const saved=positions[destination]||0;
    window.scrollTo({left:0,top:saved,behavior:'instant'});
    requestAnimationFrame(()=>window.scrollTo({left:0,top:saved,behavior:'instant'}));
   });
