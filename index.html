@@ -2693,6 +2693,96 @@ html{scrollbar-gutter:stable}
 @media(max-width:650px){#modal-wrap .modal{height:calc(100dvh - 16px)!important}#modal-wrap .modal-pane .editor-scroll{scrollbar-gutter:auto}}
 @media(prefers-reduced-motion:reduce){.action-toast{transition:none!important}}
 
+
+/* 2026-10-23: modal field alignment and consistent, pinned footer actions. */
+#modal-wrap .editor-scroll > .fields{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  column-gap:10px!important;
+  row-gap:12px!important;
+  align-items:start;
+  width:100%;
+  box-sizing:border-box;
+}
+#modal-wrap .editor-scroll > .fields > label{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start;
+  min-width:0;
+  width:100%;
+  max-width:100%;
+  min-height:76px;
+  margin:0!important;
+  box-sizing:border-box;
+}
+/* Date is a compact dedicated row; start/end and break/break-start stay paired. */
+#pane-planned .editor-scroll > .fields > label:first-child{
+  grid-column:1 / -1!important;
+  width:min(100%,190px)!important;
+  min-height:76px;
+}
+#pane-planned .editor-scroll > .fields > label:nth-child(2){grid-column:1!important;grid-row:2!important;}
+#pane-planned .editor-scroll > .fields > label:nth-child(3){grid-column:2!important;grid-row:2!important;}
+#pane-planned .editor-scroll > .fields > label:nth-child(4){grid-column:1!important;grid-row:3!important;}
+#pane-planned .editor-scroll > .fields > label:nth-child(5){grid-column:2!important;grid-row:3!important;}
+#modal-wrap .editor-scroll > .fields .modal-native-field,
+#modal-wrap .editor-scroll > .fields .modal-break-unit{min-width:0;max-width:100%;width:100%;box-sizing:border-box;}
+/* The two footer variants have exactly the same height, including after a tab change. */
+#modal-wrap .modal-pane > .actions.copy-actions,
+#modal-wrap .modal-pane > .actions.record-actions,
+#modal-wrap .record-actions:not(.has-copy),
+#modal-wrap .record-actions.has-copy{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-auto-rows:56px!important;
+  gap:8px!important;
+  height:66px!important;
+  min-height:66px!important;
+  max-height:66px!important;
+  padding:10px 0 0!important;
+  margin:0!important;
+  align-items:stretch!important;
+  box-sizing:border-box!important;
+}
+#modal-wrap .modal-pane > .actions button,
+#modal-wrap .modal-pane > .actions #save-shift,
+#modal-wrap .modal-pane > .actions #confirm-worked{
+  min-width:0!important;
+  width:100%!important;
+  height:56px!important;
+  min-height:56px!important;
+  max-height:56px!important;
+  padding:8px 5px!important;
+  margin:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  line-height:1.3!important;
+  font-size:clamp(10px,2.6vw,13px)!important;
+  white-space:normal!important;
+  text-align:center!important;
+  box-sizing:border-box!important;
+}
+#modal-wrap .modal-pane > .actions button[hidden]{display:none!important;}
+#modal-wrap .record-actions:not(.has-copy) #confirm-worked,
+#modal-wrap .record-actions.has-copy #confirm-worked{grid-column:3!important;}
+@media(max-width:360px){
+ #modal-wrap .editor-scroll > .fields{column-gap:7px!important;}
+ #pane-planned .editor-scroll > .fields > label:first-child{width:min(100%,164px)!important;}
+}
+/* CSV export is in Settings > Data and uses the very same JSON action styling. */
+#settings .json-actions #export-csv{
+  grid-column:1 / -1;
+  width:calc((100% - 10px)/2)!important;
+  justify-self:center;
+  font-size:clamp(12px,3.2vw,14px)!important;
+  min-height:48px!important;
+  padding:11px 9px!important;
+  border-radius:999px!important;
+  white-space:nowrap;
+}
+#settings #csv-export-description{font-size:12px;margin:9px 0 2px;text-align:center;line-height:1.5;}
+
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -2723,7 +2813,7 @@ html{scrollbar-gutter:stable}
 </div>
 <div class="calendar-stage" id="calendar-stage"><div class="card" id="calendar-card"><div class="calendar" id="cal"></div><div class="calendar-legend"><span>● 予定</span><span>● 勤務確定</span><span class="legend-wait">● 記録待ち</span></div></div><div id="list-card" style="display:none"><div id="shift-list"></div></div></div></section>
 <section id="pay" class="page">
-<div class="unified-topline"><h2>給与計算</h2><button id="export-csv" class="secondary export-csv-button" type="button" title="表示中の給与期間の勤務データをCSVで保存">CSVを出力 <span aria-hidden="true">↓</span></button></div>
+<div class="unified-topline"><h2>給与計算</h2></div>
 <div class="unified-toolbar">
   <div class="view-switch unified-switch" role="group" aria-label="給与表示の切り替え">
     <button type="button" id="monthly" class="active">月別</button>
@@ -2736,7 +2826,7 @@ html{scrollbar-gutter:stable}
     <button class="secondary" id="pay-today" type="button">今期</button>
   </div>
 </div>
-<div id="pay-stage" class="pay-stage"><div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標</label><span class="goal-currency-field"><span class="goal-yen" aria-hidden="true">¥</span><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></span></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card variance-card" id="work-variance-card" hidden><h2>予定と実績の比較</h2><div id="work-variance-content"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></div></section>
+<div id="pay-stage" class="pay-stage"><div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標</label><span class="goal-currency-field"><span class="goal-yen" aria-hidden="true">¥</span><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></span></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></div></section>
 <section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div>
 <div class="adjacent-display-settings" role="group" aria-label="前後の日付の表示設定">
   <div class="adjacent-display-row"><div class="adjacent-display-copy"><strong>暦月基準</strong><small>前月・翌月の日付を表示</small></div><label class="premium-toggle" aria-label="暦月基準で前月・翌月の日付を表示"><input type="checkbox" id="show-adjacent-month"><span class="toggle-track" aria-hidden="true"></span></label></div>
@@ -2765,7 +2855,7 @@ html{scrollbar-gutter:stable}
 <label class="default-plan-item"><span class="default-plan-caption">休憩開始</span><span class="default-plan-time"><span class="default-plan-clock" aria-hidden="true">18:00</span><input type="time" id="default-plan-break-start" aria-label="予定の休憩開始時刻"></span></label>
 </div></fieldset>
 <p class="hint" id="default-plan-break-hint">休憩が自動の場合は、休憩時間と休憩開始時刻を設定できません。</p>
-</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクからショートカットを追加します。</li><li>追加したショートカットを編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls json-actions"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"></div><div class="reset-actions" aria-label="データの初期化"><button class="secondary danger" id="reset-shifts" type="button">勤務データの初期化</button><button class="secondary danger" id="reset-settings" type="button">設定の初期化</button><button class="secondary danger" id="reset" type="button">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月23日</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
+</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクからショートカットを追加します。</li><li>追加したショートカットを編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls json-actions"><button class="secondary" id="export" type="button">JSONを保存</button><button class="secondary" id="import-btn" type="button">JSONを読み込み</button><button class="secondary" id="export-csv" type="button" title="給与計算ページで選択中の給与期間の勤務データをCSVで保存">CSVを出力</button><input hidden type="file" id="import-file" accept="application/json,.json"></div><p class="hint" id="csv-export-description">CSVには給与計算ページで選択中の期間の勤務データを出力します。</p><div class="reset-actions" aria-label="データの初期化"><button class="secondary danger" id="reset-shifts" type="button">勤務データの初期化</button><button class="secondary danger" id="reset-settings" type="button">設定の初期化</button><button class="secondary danger" id="reset" type="button">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月23日</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
  <div class="setup-container">
   <div class="setup-topbar"><strong>初期設定</strong><span id="setup-number">1 / 8</span></div>
   <div class="setup-progress" id="setup-progress" aria-label="設定の進行状況"></div>
@@ -2779,7 +2869,7 @@ html{scrollbar-gutter:stable}
 <button data-page="pay" type="button"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="m8 6 4 6 4-6M8 12h8M8 15h8M12 12v6"/></svg><span>給与計算</span></button>
 <button data-page="settings" type="button"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.7 3.1 10 5.3a7 7 0 0 1 4 0l.3-2.2 2.1 1.2-1 2a7 7 0 0 1 2.1 2l2.1-1 1.2 2.1-1.9 1.3a7 7 0 0 1 0 3l1.9 1.3-1.2 2.1-2.1-1a7 7 0 0 1-2.1 2l1 2-2.1 1.2-.3-2.2a7 7 0 0 1-4 0l-.3 2.2-2.1-1.2 1-2a7 7 0 0 1-2.1-2l-2.1 1-1.2-2.1 1.9-1.3a7 7 0 0 1 0-3L3.1 9.4l1.2-2.1 2.1 1a7 7 0 0 1 2.1-2l-1-2z"/><circle cx="12" cy="12" r="3"/></svg><span>設定</span></button>
 </nav>
-<div class="modal-wrap" id="modal-wrap"><div class="modal"><div class="row"><h2 id="modal-title">勤務を登録</h2><button class="secondary" id="close-modal">✕</button></div><div class="modal-tabs" role="tablist"><button id="tab-planned" class="active" type="button" role="tab" aria-selected="true">勤務予定</button><button id="tab-record" type="button" role="tab" aria-selected="false">勤務記録</button></div><div class="modal-pane active" id="pane-planned"><div class="editor-scroll"><div class="fields"><label>日付<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-date" type="date"></span></label><label>予定開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-start" type="time"></span></label><label>予定終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-plan-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span><span class="auto-placeholder" aria-hidden="true">自動</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-plan-break-start" type="time"></span></label></div><div id="plan-breakdown"></div><div class="shift-validation" data-validation="planned" role="alert" hidden></div></div><div class="actions copy-actions"><button id="copy-shift" class="secondary" type="button">予定をコピー</button><button id="delete-shift" class="textbtn danger" type="button">この勤務を削除</button><button class="primary" id="save-shift" type="button">予定を保存</button></div></div><div class="modal-pane" id="pane-record"><div class="editor-scroll"><div class="record-state" id="record-state">勤務予定を登録すると記録できます。</div><div class="fields"><label>勤務開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-start" type="time"></span></label><label>勤務終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-break-start" type="time"></span></label></div><div id="record-breakdown"></div><section id="record-diff" class="shift-difference" hidden aria-live="polite"></section><div class="shift-validation" data-validation="record" role="alert" hidden></div></div><div class="actions record-actions"><button id="copy-record" class="secondary" type="button">勤務記録をコピー</button><button class="secondary danger" id="undo-worked" type="button">勤務記録を削除</button><button class="primary" id="confirm-worked" type="button">勤務記録を確定</button></div></div><select id="m-status" hidden><option value="planned">予定</option><option value="worked">勤務済み</option></select><div id="modal-pay" hidden></div><button id="cancel-modal" hidden></button></div></div>
+<div class="modal-wrap" id="modal-wrap"><div class="modal"><div class="row"><h2 id="modal-title">勤務を登録</h2><button class="secondary" id="close-modal">✕</button></div><div class="modal-tabs" role="tablist"><button id="tab-planned" class="active" type="button" role="tab" aria-selected="true">勤務予定</button><button id="tab-record" type="button" role="tab" aria-selected="false">勤務記録</button></div><div class="modal-pane active" id="pane-planned"><div class="editor-scroll"><div class="fields"><label>日付<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-date" type="date"></span></label><label>予定開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-start" type="time"></span></label><label>予定終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-plan-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span><span class="auto-placeholder" aria-hidden="true">自動</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-plan-break-start" type="time"></span></label></div><div id="plan-breakdown"></div><div class="shift-validation" data-validation="planned" role="alert" hidden></div></div><div class="actions copy-actions"><button id="copy-shift" class="secondary" type="button">予定をコピー</button><button id="delete-shift" class="textbtn danger" type="button">この予定を削除</button><button class="primary" id="save-shift" type="button">予定を保存</button></div></div><div class="modal-pane" id="pane-record"><div class="editor-scroll"><div class="record-state" id="record-state">勤務予定を登録すると記録できます。</div><div class="fields"><label>勤務開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-start" type="time"></span></label><label>勤務終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-break-start" type="time"></span></label></div><div id="record-breakdown"></div><section id="record-diff" class="shift-difference" hidden aria-live="polite"></section><div class="shift-validation" data-validation="record" role="alert" hidden></div></div><div class="actions record-actions"><button id="copy-record" class="secondary" type="button">勤務記録をコピー</button><button class="secondary danger" id="undo-worked" type="button">勤務記録を削除</button><button class="primary" id="confirm-worked" type="button">勤務記録を確定</button></div></div><select id="m-status" hidden><option value="planned">予定</option><option value="worked">勤務済み</option></select><div id="modal-pay" hidden></div><button id="cancel-modal" hidden></button></div></div>
 <div id="sync-feedback" class="sync-modal-wrap" aria-hidden="true"><section class="sync-modal" role="dialog" aria-modal="true" aria-labelledby="sync-modal-title" aria-describedby="sync-modal-message" tabindex="-1"><div class="sync-modal-heading"><h2 id="sync-modal-title">iCloudからの取得結果</h2></div><p id="sync-modal-message" role="status" aria-live="polite"></p><button type="button" class="primary sync-modal-close" id="sync-modal-close">閉じる</button></section></div><div class="copy-wrap" id="copy-wrap"><div class="copy-panel"><div class="row"><div><h2 style="margin:0" id="copy-title">勤務予定をコピー</h2><small class="muted" id="copy-source"></small></div><button class="secondary" id="copy-close" type="button">✕</button></div><p class="hint" id="copy-hint">コピー先の日付を選択してください。登録済みの日付も選択でき、コピー元の内容で上書きできます。</p><div class="copy-toolbar"><div class="controls"><button class="secondary" id="copy-prev" type="button">‹</button><strong id="copy-month"></strong><button class="secondary" id="copy-next" type="button">›</button></div><small class="muted" id="copy-count">0日選択中</small></div><div id="copy-grid" class="copy-grid"></div><div class="copy-footer"><button class="secondary" id="copy-cancel" type="button">キャンセル</button><button class="primary" id="copy-apply" type="button">✓ 選択した日にコピー</button></div></div></div><script>
 const key='shiftpay-prototype-v1';window.__shiftpayInitialSetupRequired=(()=>{
  const statusKey='shiftpay-setup-status-v1';
@@ -4065,21 +4155,6 @@ persistShift=function(status){
 };
 // Input changes clear errors as soon as the values are corrected.
 document.querySelectorAll('#modal-wrap input').forEach(input=>input.addEventListener('change',updateShiftValidation));
-// Show the planned/actual differences in the monthly/annual salary page as well.
-const payrollPreviousRenderPay=renderPay;
-renderPay=function(){
-  payrollPreviousRenderPay();
-  const records=(annual?shiftsForYear(py):shiftsForMonth(py,pm)).filter(x=>x.status==='worked');
-  const card=document.getElementById('work-variance-card');
-  if(!card)return;
-  card.hidden=records.length===0;
-  if(!records.length){document.getElementById('work-variance-content').innerHTML='';return;}
-  const comparisons=records.map(x=>({x,d:comparePlanActual(x)}));
-  const totalMinutes=comparisons.reduce((sum,c)=>sum+c.d.minutes,0);
-  const totalMoney=comparisons.reduce((sum,c)=>sum+c.d.amount,0);
-  const summary=`<div class="variance-grid"><span>実働時間の差（記録確定分）</span><strong>${signedWorkMinutes(totalMinutes)}</strong><span>給与の差（交通費込み）</span><strong>${signedYen(totalMoney)}</strong></div>`;
-  document.getElementById('work-variance-content').innerHTML=summary+comparisons.map(({x,d})=>`<div class="variance-item"><div class="variance-top"><span>${escapeHtml(x.date.replaceAll('-','/'))}</span><span>${signedWorkMinutes(d.minutes)}　${signedYen(d.amount)}</span></div><div class="variance-detail">予定 ${escapeHtml(x.start)}〜${escapeHtml(x.end)} ／ 実績 ${escapeHtml(x.actualStart||x.start)}〜${escapeHtml(x.actualEnd||x.end)}</div></div>`).join('');
-};
 function exportShiftCsv(){
   const entries=annual?shiftsForYear(py):shiftsForMonth(py,pm);
   const [from,to]=annual?[datesInPay(py,0)[0],datesInPay(py,11)[1]]:datesInPay(py,pm);
