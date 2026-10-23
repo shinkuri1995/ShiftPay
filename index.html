@@ -2783,13 +2783,94 @@ html{scrollbar-gutter:stable}
 }
 #settings #csv-export-description{font-size:12px;margin:9px 0 2px;text-align:center;line-height:1.5;}
 
+
+/* 2026-10-23: final eight fixes. No changes to data model or pay calculation. */
+/* Date uses the full combined width of the paired time inputs at all breakpoints. */
+#modal-wrap #pane-planned .editor-scroll > .fields > label:first-child{
+  width:100%!important; max-width:none!important;
+  grid-column:1 / -1!important;
+  box-sizing:border-box!important;
+}
+/* Reserve identical scroll space in both editor tabs, even when only one pane overflows. */
+#modal-wrap .modal-pane .editor-scroll{
+  box-sizing:border-box!important;
+  width:100%!important;
+  scrollbar-gutter:stable!important;
+  overflow-x:hidden!important;
+}
+#modal-wrap .modal-pane .editor-scroll > .fields{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  width:100%!important;
+  min-width:0!important;
+}
+#modal-wrap .modal-pane .editor-scroll > .fields > label{
+  min-width:0!important;box-sizing:border-box!important;
+}
+/* The CSV action matches the precise dimensions of Reset work data (set from its actual box). */
+#settings .json-actions #export-csv{
+  box-sizing:border-box!important;
+  justify-self:center!important;
+  max-width:100%!important;
+}
+/* Notice near the top safe-area, with a subtle entry motion from above. */
+.action-toast{
+  top:calc(15px + env(safe-area-inset-top))!important;
+  bottom:auto!important;
+  transform:translate3d(-50%,-12px,0)!important;
+}
+.action-toast.show{transform:translate3d(-50%,0,0)!important;}
+/* Copy calendar navigation stays fixed when months or selected-count text change. */
+#copy-wrap .copy-toolbar{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:2px!important;
+  align-items:center!important;
+}
+#copy-wrap .copy-toolbar .controls{
+  display:grid!important;
+  grid-template-columns:44px minmax(0,1fr) 44px!important;
+  column-gap:6px!important;
+  align-items:center!important;
+  width:100%!important;
+  min-width:0!important;
+}
+#copy-wrap .copy-toolbar #copy-prev,
+#copy-wrap .copy-toolbar #copy-next{
+  width:44px!important;height:40px!important;
+  min-width:44px!important;min-height:40px!important;
+  padding:0!important;justify-self:center!important;
+}
+#copy-wrap .copy-toolbar #copy-month{
+  white-space:nowrap!important;
+  text-align:center!important;
+  justify-self:stretch!important;
+  min-width:0!important;
+}
+#copy-wrap .copy-toolbar #copy-count{
+  min-height:18px!important;
+  text-align:right!important;
+  justify-self:end!important;
+  line-height:18px!important;
+}
+/* An empty copy selection is obviously unavailable; one selection restores its color. */
+#copy-wrap #copy-apply:disabled,
+#copy-wrap #copy-apply[aria-disabled="true"]{
+  background:var(--input-disabled,var(--input-fill))!important;
+  color:var(--muted)!important;
+  opacity:.48!important;
+  box-shadow:none!important;
+  cursor:not-allowed!important;
+  pointer-events:none!important;
+  filter:grayscale(1);
+}
+
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
   <h2>カレンダー</h2>
   <div class="calendar-top-actions">
     <button id="show-empty" class="secondary empty-toggle-button" type="button" aria-pressed="false" title="勤務なしの日も表示" style="visibility:hidden"><span class="empty-toggle-long">勤務なしの日も表示</span><span class="empty-toggle-short">勤務なし</span></button>
-    <button id="icloud-sync" class="secondary sync-trigger empty-toggle-button" type="button" title="iPhoneのショートカットから勤務予定を取り込む">↻ iCloudから取得</button>
+    <button id="icloud-sync" class="secondary sync-trigger empty-toggle-button" type="button" title="iPhoneのショートカットから勤務予定を取り込む">iCloudから取得</button>
   </div>
 </div>
 <div class="unified-toolbar">
@@ -3377,6 +3458,7 @@ function renderCopyCalendar(){
  const overwrites=[...copySelected].filter(date=>data.shifts.some(x=>x.date===date)).length;
  $('copy-count').textContent=`${copySelected.size}日選択中${overwrites?`（上書き ${overwrites}日）`:''}`;
  $('copy-apply').disabled=!copySelected.size;
+ $('copy-apply').setAttribute('aria-disabled',String(copySelected.size===0));
 }
 function beginShiftCopy(kind){
  if(!editing)return;
@@ -4186,6 +4268,56 @@ document.getElementById('delete-shift').addEventListener('click',()=>{
 });
 // Keep the salary comparison fresh after all edits, including import or period changes.
 renderPay();
+
+
+/* Re-tap an already-selected lower tab: scroll the visible page to its true top.
+   Capture the click before the legacy onClick renderer redraws that same page. */
+(function installActiveTabScrollToTop(){
+  document.querySelectorAll('.tabbar button[data-page]').forEach(button=>{
+    button.addEventListener('click',function(event){
+      if(!button.classList.contains('active'))return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const active=document.getElementById(button.dataset.page);
+      if(!active)return;
+      const targets=new Set([document.scrollingElement,document.documentElement,document.body,active]);
+      // Some layouts scroll a page-local pane rather than the document itself.
+      for(const node of active.querySelectorAll('*')){
+        if(node.scrollTop > 0 && node.scrollHeight > node.clientHeight+2){
+          const style=getComputedStyle(node);
+          if(/auto|scroll|overlay/.test(style.overflowY))targets.add(node);
+        }
+      }
+      targets.forEach(node=>{
+        if(node && node.scrollTop>0){
+          try{node.scrollTo({top:0,left:0,behavior:'smooth'});}catch(_){node.scrollTop=0;}
+        }
+      });
+      // Selection remains unchanged; avoid any size-changing rerender.
+    },true);
+  });
+})();
+/* Keep CSV output exactly as wide/tall as the reset-work button, on all devices. */
+(function matchCsvAndResetButtonSize(){
+  const reference=document.getElementById('reset-shifts');
+  const target=document.getElementById('export-csv');
+  if(!reference||!target)return;
+  let priorWidth=0,priorHeight=0;
+  function apply(){
+    const box=reference.getBoundingClientRect();
+    if(!box.width||!box.height)return;
+    const width=Math.round(box.width*100)/100;
+    const height=Math.round(box.height*100)/100;
+    if(width===priorWidth&&height===priorHeight)return;
+    priorWidth=width;priorHeight=height;
+    target.style.setProperty('width',width+'px','important');
+    target.style.setProperty('height',height+'px','important');
+    target.style.setProperty('min-height',height+'px','important');
+  }
+  requestAnimationFrame(apply);
+  if(typeof ResizeObserver!=='undefined')new ResizeObserver(apply).observe(reference);
+  window.addEventListener('resize',apply,{passive:true});
+})();
 
 </script><div id="action-toast" class="action-toast" role="status" aria-live="polite" aria-atomic="true"></div>
 </body></html>
