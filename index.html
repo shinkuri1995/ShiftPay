@@ -1699,6 +1699,128 @@ html[data-theme=dark]{--nav-glass-bg:rgba(35,43,55,.84);--nav-glass-edge:rgba(16
 .tabbar button{transition:color 170ms ease!important}
 @media(prefers-reduced-motion:reduce){.tabbar button{transition:none!important}}
 
+
+/* The new goals step makes nine setup stages; keep the entire progress indicator in one row. */
+#setup-wizard .setup-progress{grid-template-columns:repeat(9,minmax(0,1fr))!important;grid-auto-flow:row!important;gap:4px!important}
+#setup-wizard .setup-progress>span{min-width:0;max-width:100%;}
+/* 2026-10-23: iOS-inspired quiet glass surfaces and matching controls. */
+:root{
+ --ios-glass:rgba(249,250,252,.90);
+ --ios-glass-stroke:rgba(145,156,169,.29);
+ --ios-glass-highlight:rgba(255,255,255,.97);
+ --ios-selected:rgba(224,226,230,.92);
+ --ios-button:rgba(255,255,255,.84);
+ --ios-button-stroke:rgba(176,186,199,.28);
+ --ios-shadow:rgba(36,45,58,.10);
+}
+html[data-theme=dark]{
+ --ios-glass:rgba(34,39,47,.94);
+ --ios-glass-stroke:rgba(167,182,202,.16);
+ --ios-glass-highlight:rgba(221,233,251,.17);
+ --ios-selected:rgba(10,15,23,.96);
+ --ios-button:rgba(47,51,59,.88);
+ --ios-button-stroke:rgba(173,190,212,.12);
+ --ios-shadow:rgba(0,0,0,.24);
+}
+/* The nav's glass exists at its rim; its face has no heavy specular stripe. */
+.tabbar{
+ border-radius:999px!important;
+ background:var(--ios-glass)!important;
+ border:1px solid var(--ios-glass-stroke)!important;
+ box-shadow:0 6px 19px var(--ios-shadow),inset 0 1px 0 var(--ios-glass-highlight)!important;
+ -webkit-backdrop-filter:blur(18px) saturate(125%)!important;
+ backdrop-filter:blur(18px) saturate(125%)!important;
+}
+.tabbar>.selection-glider{
+ border-radius:999px!important;
+ background:var(--ios-selected)!important;
+ box-shadow:none!important;
+}
+.tabbar button{border-radius:999px!important;background:transparent!important;box-shadow:none!important}
+.tabbar button.active{color:var(--blue)!important}
+/* Keep the matching secondary segment controls restrained and unbroken. */
+#calendar .unified-switch,#pay .unified-switch,.modal-tabs{
+ background:var(--ios-glass)!important;
+ border:1px solid var(--ios-glass-stroke)!important;
+ box-shadow:inset 0 1px 0 var(--ios-glass-highlight),0 3px 12px var(--ios-shadow)!important;
+ -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)
+}
+#calendar .unified-switch .selection-glider,#pay .unified-switch .selection-glider,.modal-tabs .selection-glider{
+ background:var(--ios-selected)!important;box-shadow:none!important;
+}
+/* A consistent glass-touched button family, without colored blocks behind the action icons. */
+#calendar .calendar-top-actions button,
+#calendar .toolbar-period button,
+#pay .toolbar-period button,
+#copy-wrap .copy-toolbar button,
+#copy-wrap .copy-footer button.secondary,
+#copy-wrap #copy-close{
+ background:var(--ios-button)!important;
+ border:1px solid var(--ios-button-stroke)!important;
+ box-shadow:inset 0 1px 0 var(--ios-glass-highlight),0 2px 8px var(--ios-shadow)!important;
+ -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+ transition:background-color .18s ease,filter .18s ease,transform .18s ease;
+}
+#calendar .toolbar-period button:active,#pay .toolbar-period button:active,
+#calendar .calendar-top-actions button:active{transform:scale(.965)}
+/* Monetary goals: the symbol is in the surface, not in the label or stored number. */
+.goal-row{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:nowrap;min-height:60px;margin:4px 0!important}
+.goal-row>label{font-size:14px;white-space:nowrap;flex:0 0 auto}
+.goal-currency-field{display:flex;align-items:center;position:relative;flex:0 1 185px;min-width:0;max-width:200px;
+ background:var(--input-fill);border-radius:12px;padding:0 12px;box-sizing:border-box;min-height:44px;}
+.goal-currency-field .goal-yen{color:var(--muted);font-size:16px;font-weight:600;pointer-events:none}
+.goal-currency-field #monthly-goal{margin:0!important;padding:10px 4px 10px 8px!important;width:100%!important;
+ max-width:100%!important;min-width:0;background:transparent!important;border:0!important;box-shadow:none!important;
+ height:44px;text-align:right;font-size:17px;font-variant-numeric:tabular-nums}
+.goal-settings-card .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.goal-settings-card label{min-width:0}
+/* Copy actions remain single-line on narrow iPhones, without truncated labels. */
+#copy-wrap .copy-footer{display:flex;align-items:stretch;gap:8px!important;min-width:0}
+#copy-wrap .copy-footer #copy-cancel{flex:0 0 auto;min-width:104px;max-width:39%;padding:0 10px!important;
+ font-size:13px;white-space:nowrap!important;word-break:keep-all!important;line-height:1.2}
+#copy-wrap .copy-footer #copy-apply{flex:1 1 auto;min-width:0;padding:0 7px!important;
+ font-size:clamp(11px,2.9vw,14px);white-space:nowrap!important;word-break:keep-all!important;line-height:1.2}
+/* Copy overlay: uniform six-week calendar, excluding other-month dates. */
+.copy-wrap .copy-panel{width:min(530px,100%);max-height:min(94dvh,830px);overflow:auto;
+ border-radius:24px;padding:18px;background:var(--panel);}
+.copy-wrap .copy-toolbar{margin:14px 0 8px;gap:8px;align-items:center}
+.copy-wrap .copy-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:20px repeat(6,46px);
+ gap:5px;margin:10px 0 16px;align-content:start;min-width:0}
+.copy-wrap .copy-grid .copy-dow{text-align:center;color:var(--muted);font-size:12px;font-weight:650;line-height:20px}
+.copy-wrap .copy-grid .copy-dow.sunday{color:var(--negative,#d96464)}
+.copy-wrap .copy-grid .copy-dow.saturday{color:var(--blue)}
+.copy-wrap .copy-grid .copy-day{display:flex;min-width:0;min-height:0;align-items:center;justify-content:center;
+ border:0!important;border-radius:11px!important;padding:0;background:var(--input-fill)!important;
+ font-weight:700;font-variant-numeric:tabular-nums;font-size:14px;color:var(--text);
+ box-shadow:none!important;line-height:1}
+.copy-wrap .copy-grid .copy-day.copy-outside{background:transparent!important;pointer-events:none;visibility:hidden}
+.copy-wrap .copy-grid .copy-day.existing,.copy-wrap .copy-grid .copy-day.source{
+ background:color-mix(in srgb,var(--input-fill) 61%,var(--bg) 39%)!important;
+ color:var(--muted)!important;opacity:.56;cursor:not-allowed;border:0!important}
+.copy-wrap .copy-grid .copy-day.selected{background:var(--blue)!important;color:white!important;opacity:1!important}
+.copy-wrap .copy-grid .copy-day:not(:disabled):active{transform:scale(.95)}
+.copy-wrap .copy-grid .copy-day:not(:disabled):focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.copy-wrap .copy-footer{gap:10px;align-items:stretch}
+.copy-wrap .copy-footer button{min-height:45px}
+@media(max-width:650px){
+ .copy-wrap{padding:9px!important}
+ .copy-wrap .copy-panel{padding:15px}
+ .copy-wrap .copy-grid{grid-template-rows:18px repeat(6,40px);gap:4px}
+ .copy-wrap .copy-grid .copy-day{font-size:13px;border-radius:9px!important}
+ .goal-settings-card .fields{gap:9px}
+ .goal-row{gap:8px}
+ .goal-currency-field{flex-basis:160px}
+}
+@media(max-width:360px){
+ .copy-wrap .copy-grid{grid-template-rows:17px repeat(6,36px);gap:3px}
+ .copy-wrap .copy-grid .copy-day{font-size:12px}
+ .goal-row>label{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){
+ #calendar .toolbar-period button,#pay .toolbar-period button,
+ #calendar .calendar-top-actions button{transition:none!important}
+}
+
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -1735,8 +1857,8 @@ html[data-theme=dark]{--nav-glass-bg:rgba(35,43,55,.84);--nav-glass-edge:rgba(16
     <button class="secondary" id="pay-today" type="button">今月</button>
   </div>
 </div>
-<div id="pay-stage" class="pay-stage"><div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標（円）</label><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></div></section>
-<section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>基準実働時間</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">1出勤あたり</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">1給与期間あたり</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card break-settings-card" id="break-settings-card">
+<div id="pay-stage" class="pay-stage"><div class="card pay-gauge-card"><div class="goal-row" id="goal-row"><label for="monthly-goal" id="goal-label">月間目標</label><span class="goal-currency-field"><span class="goal-yen" aria-hidden="true">¥</span><input id="monthly-goal" type="text" inputmode="numeric" autocomplete="off" aria-label="給与目標"></span></div><div class="hint" id="goal-year-note" style="display:none">年別表示では、各月の目標を合計します。</div><div class="gauge-wrap"><svg viewBox="0 0 240 240" aria-hidden="true"><circle class="gauge-track" cx="120" cy="120" r="98"/><circle class="gauge-plan" id="gauge-plan" cx="120" cy="120" r="98"/><circle class="gauge-done" id="gauge-done" cx="120" cy="120" r="98"/></svg><div class="gauge-core"><small class="muted">今日までの給料<br><span style="font-size:10px">勤務記録を確定した金額</span></small><strong id="gauge-earned">¥0</strong></div></div><div class="gauge-legend"><span><i class="legend-dot" style="background:var(--positive)"></i>勤務記録</span><span><i class="legend-dot" style="background:var(--blue)"></i>登録した予定</span></div><div class="divider"></div><div class="forecast-summary"><div class="forecast-time"><small class="muted">勤務時間</small><strong id="forecast-work-time">0h0m</strong></div><div class="forecast-money"><small class="muted">給料見込み</small><div class="forecast-value" id="gauge-forecast">¥0</div></div></div><div class="gauge-caption" id="gauge-caption"></div><div class="goal-status" id="goal-remaining"></div><div id="goal-over" class="goal-exceeded"></div></div><div class="card"><h2>給与内訳</h2><div id="breakdown"></div></div><div class="card" id="period-list-card"><h2 id="period-list-title">勤務別の計算</h2><div id="pay-shifts"></div></div></div></section>
+<section id="settings" class="page"><h2>設定</h2><div class="card display-settings-card"><h2>表示</h2><div class="fields"><label>表示テーマ<select id="theme"><option value="auto">端末に合わせる</option><option value="light">ライト</option><option value="dark">ダーク</option></select></label><label>文字サイズ<select id="font-size"><option value="small">小さめ</option><option value="standard">標準</option><option value="large">大きめ</option></select></label></div></div><section class="pay-settings-outer"><div class="card"><h2>基本時給</h2><label>基本時給<input type="number" min="0" id="base-rate"></label><p class="hint">時間帯別時給が設定されていない時間に適用されます。</p></div><div class="card goal-settings-card"><h2>給与目標</h2><div class="fields"><label>月間目標<input id="default-monthly-goal" type="number" min="1" step="1" inputmode="numeric" aria-label="月間給与目標"></label><label>年間目標<input id="default-yearly-goal" type="number" min="1" step="1" inputmode="numeric" aria-label="年間給与目標"></label></div><p class="hint">各月・各年の個別目標は、給与計算ページから変更できます。</p></div><div class="card"><h2>時間帯別時給</h2><div id="rates"></div><div class="rate-add-wrap"><button class="secondary" id="add-rate" type="button"><span aria-hidden="true">＋</span> 時間帯を追加</button></div><p class="hint">時間帯が重なった場合は下の設定を優先します。翌日にまたがる設定も可能です。</p></div><div class="card premium-settings-card" id="night-settings-card"><div class="premium-heading"><h2>深夜割増</h2><label class="premium-toggle"><input type="checkbox" id="night-enabled" aria-label="深夜割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="night-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times"><label class="rate-time-row"><span>開始</span><span class="time-field"><span class="time-value" aria-hidden="true">22:00</span><input type="time" id="night-start" aria-label="深夜割増の開始時刻"></span></label><label class="rate-time-row"><span>終了</span><span class="time-field"><span class="time-value" aria-hidden="true">05:00</span><input type="time" id="night-end" aria-label="深夜割増の終了時刻"></span></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="night-bonus" min="0" step="1" inputmode="decimal" aria-label="深夜割増率"></label></div></div><p class="hint">設定した時間帯の時給に割増率を加算します。オフの場合は加算しません。</p></div><div class="card premium-settings-card" id="overtime-settings-card"><div class="premium-heading"><h2>残業割増</h2><label class="premium-toggle"><input type="checkbox" id="overtime-enabled" aria-label="残業割増のオンオフ"><span class="toggle-track" aria-hidden="true"></span><span class="toggle-caption" id="overtime-enabled-label">オン</span></label></div><div class="rate-card premium-rate-card"><div class="rate-editor"><div class="rate-times overtime-time-column"><label class="rate-time-row"><span>基準実働時間</span><input type="number" id="overtime-hours" min="0" max="24" step="0.25" inputmode="decimal" aria-label="残業の基準となる実働時間"></label></div><label class="rate-wage"><span>割増率</span><input type="number" id="overtime-bonus" min="0" step="1" inputmode="decimal" aria-label="残業割増率"></label></div></div><p class="hint">休憩を除いた1日の実働時間で判定します。深夜残業には両方の割増を加算します。</p></div><div class="card"><h2>交通費・所得税</h2><div class="fields"><label>交通費<span class="setting-subcaption">1出勤あたり</span><input type="number" min="0" id="transport"></label><label>所得税の初期控除<span class="setting-subcaption">1給与期間あたり</span><input type="number" min="0" id="tax"></label></div></div></section><div class="card break-settings-card" id="break-settings-card">
 <h2>休憩</h2>
 <label class="break-mode-label">休憩の設定方法<select id="break-mode"><option value="auto">自動</option><option value="manual">手動</option></select></label>
 <fieldset class="break-rule-fields" id="break-rule-fields">
@@ -1760,7 +1882,7 @@ html[data-theme=dark]{--nav-glass-bg:rgba(35,43,55,.84);--nav-glass-edge:rgba(16
 <label class="default-plan-item"><span class="default-plan-caption">休憩開始</span><span class="default-plan-time"><span class="default-plan-clock" aria-hidden="true">18:00</span><input type="time" id="default-plan-break-start" aria-label="予定の休憩開始時刻"></span></label>
 </div></fieldset>
 <p class="hint" id="default-plan-break-hint">休憩が自動の場合は、休憩時間と休憩開始時刻を設定できません。</p>
-</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクからショートカットを追加します。</li><li>追加したショートカットを編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls json-actions"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"></div><div class="reset-actions" aria-label="データの初期化"><button class="secondary danger" id="reset-shifts" type="button">勤務データの初期化</button><button class="secondary danger" id="reset-settings" type="button">設定の初期化</button><button class="secondary danger" id="reset" type="button">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月23日 02:10</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
+</div><div class="card"><h2>給与支払</h2><div class="fields"><label>締め日<select id="closing-day"></select></label><label>支払日<select id="payday"></select></label><label>支払月<select id="pay-month"><option value="0">当月</option><option value="1">翌月</option></select></label><label>銀行休業日の振替<select id="holiday-policy"><option value="before">前営業日</option><option value="after">翌営業日</option><option value="none">変更なし</option></select></label></div><p class="muted" style="font-size:12px">支払日が土日・日本の祝日・振替休日・銀行休業日（12月31日～1月3日）に当たる場合、設定に応じて営業日に振り替えます。将来の法改正や臨時休業日は反映されない場合があります。</p></div><div class="card"><h2>iCloudカレンダーから取得</h2><p class="hint" style="margin-top:0">iPhoneの勤務専用カレンダーから、取得ボタンを押したときだけ予定を取り込みます。</p><a class="secondary shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg>ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps"><li>上のリンクからショートカットを追加します。</li><li>追加したショートカットを編集し、「カレンダーの予定を検索」で<strong>仕事用カレンダー</strong>（勤務予定を登録しているカレンダー）を選択します。</li><li>カレンダー画面に戻り、<strong>「iCloudから取得」</strong>を押して予定を取り込みます。</li></ol><p class="hint">勤務確定済みの記録と手入力した予定は取得時に上書きしません。データはこの端末に保存されます。</p></div><div class="card"><h2>データ</h2><div class="controls json-actions"><button class="secondary" id="export">JSONを保存</button><button class="secondary" id="import-btn">JSONを読み込み</button><input hidden type="file" id="import-file" accept="application/json,.json"></div><div class="reset-actions" aria-label="データの初期化"><button class="secondary danger" id="reset-shifts" type="button">勤務データの初期化</button><button class="secondary danger" id="reset-settings" type="button">設定の初期化</button><button class="secondary danger" id="reset" type="button">すべて初期化</button></div><p class="muted" style="font-size:12px">データはこのブラウザにのみ保存されます。iPhoneとPC間の同期は未実装です。必要に応じてJSONでバックアップしてください。</p></div><div class="card setup-restart-card"><div><h2 style="margin:0">初期設定</h2><p class="hint">設定内容を確認・変更できます。登録済みの勤務データは残ります。</p></div><button class="secondary" type="button" id="restart-setup">初期設定をやり直す</button></div><p class="app-build-time" aria-label="最終更新日時">最終更新：2026年10月23日 02:49</p></section></main><section id="setup-wizard" hidden role="dialog" aria-modal="true" aria-label="給与計算の初期設定">
  <div class="setup-container">
   <div class="setup-topbar"><strong>給与計算 · 初期設定</strong><span id="setup-number">1 / 8</span></div>
   <div class="setup-progress" id="setup-progress" aria-label="設定の進行状況"></div>
@@ -1789,7 +1911,7 @@ const key='shiftpay-prototype-v1';window.__shiftpayInitialSetupRequired=(()=>{
   localStorage.setItem(statusKey,'in-progress');return true;
  }catch(e){return true}
 })();
-const defaults={theme:'auto',workplace:'ウエルシア',baseRate:1326,rates:[{from:'17:00',to:'20:00',rate:1346},{from:'20:00',to:'05:00',rate:1376}],nightStart:'22:00',nightEnd:'05:00',nightBonus:25,nightEnabled:true,overtimeEnabled:true,overtimeHours:8,overtimeBonus:25,defaultPlanStart:'15:00',defaultPlanEnd:'22:00',defaultPlanBreakStart:'18:00',defaultPlanBreakMin:0,breakMode:'auto',breakOffset:180,break45:360,break60:480,closingDay:32,payday:15,payMonth:1,holidayPolicy:'before',transport:500,tax:0};let data;try{data=JSON.parse(localStorage.getItem(key))}catch{}if(!data||!data.settings||!Array.isArray(data.shifts))data={settings:structuredClone(defaults),shifts:[]};data.settings={...defaults,...data.settings};if(!data.settings.ver8FontConverted){const old=data.settings.fontSize;data.settings.fontSize=old==='standard'?'small':old==='large'?'standard':old==='extra'?'large':'standard';data.settings.ver8FontConverted=true;try{localStorage.setItem(key,JSON.stringify(data))}catch(e){}}let today=new Date(),cy=today.getFullYear(),cm=today.getMonth(),py=cy,pm=cm,annual=false,editing=null;const $=id=>document.getElementById(id),money=x=>'¥'+Math.round(x).toLocaleString('ja-JP'),pad=x=>String(x).padStart(2,'0'),daystr=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`,parseDate=s=>new Date(s+'T00:00:00'),minutes=t=>{let [h,m]=(t||'00:00').split(':').map(Number);return h*60+m},duration=(a,b)=>{let n=minutes(b)-minutes(a);return n<=0?n+1440:n},inSlot=(m,a,b)=>{a=minutes(a);b=minutes(b);return a===b?true:a<b?m>=a&&m<b:m>=a||m<b};const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function store(){localStorage.setItem(key,JSON.stringify(data))}function theme(){let t=data.settings.theme;document.documentElement.dataset.theme=t==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.dataset.fontSize=data.settings.fontSize||'standard';const meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#f5f6fa'}theme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
+const defaults={theme:'auto',workplace:'ウエルシア',baseRate:1326,rates:[{from:'17:00',to:'20:00',rate:1346},{from:'20:00',to:'05:00',rate:1376}],nightStart:'22:00',nightEnd:'05:00',nightBonus:25,nightEnabled:true,overtimeEnabled:true,overtimeHours:8,overtimeBonus:25,defaultPlanStart:'15:00',defaultPlanEnd:'22:00',defaultPlanBreakStart:'18:00',defaultPlanBreakMin:0,breakMode:'auto',breakOffset:180,break45:360,break60:480,closingDay:32,payday:15,payMonth:1,holidayPolicy:'before',transport:500,tax:0,fontSize:'standard',ver8FontConverted:true,monthlyGoalDefault:100000,yearlyGoalDefault:1200000};let data;try{data=JSON.parse(localStorage.getItem(key))}catch{}if(!data||!data.settings||!Array.isArray(data.shifts))data={settings:structuredClone(defaults),shifts:[]};data.settings={...defaults,...data.settings};if(!data.settings.ver8FontConverted){const old=data.settings.fontSize;data.settings.fontSize=old==='standard'?'small':old==='large'?'standard':old==='extra'?'large':'standard';data.settings.ver8FontConverted=true;try{localStorage.setItem(key,JSON.stringify(data))}catch(e){}}let today=new Date(),cy=today.getFullYear(),cm=today.getMonth(),py=cy,pm=cm,annual=false,editing=null;const $=id=>document.getElementById(id),money=x=>'¥'+Math.round(x).toLocaleString('ja-JP'),pad=x=>String(x).padStart(2,'0'),daystr=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`,parseDate=s=>new Date(s+'T00:00:00'),minutes=t=>{let [h,m]=(t||'00:00').split(':').map(Number);return h*60+m},duration=(a,b)=>{let n=minutes(b)-minutes(a);return n<=0?n+1440:n},inSlot=(m,a,b)=>{a=minutes(a);b=minutes(b);return a===b?true:a<b?m>=a&&m<b:m>=a||m<b};const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function store(){localStorage.setItem(key,JSON.stringify(data))}function theme(){let t=data.settings.theme;document.documentElement.dataset.theme=t==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.dataset.fontSize=data.settings.fontSize||'standard';const meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#f5f6fa'}theme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
 function ratePartsAt(min){let s=data.settings,base=Number(s.baseRate)||0;for(const r of s.rates)if(inSlot(min,r.from,r.to))base=Number(r.rate)||0;let premium=s.nightEnabled!==false&&inSlot(min,s.nightStart,s.nightEnd)?base*(Number(s.nightBonus)||0)/100:0;return {base,premium}}function rateAt(min){let r=ratePartsAt(min);return r.base+r.premium}
 function comp(shift,useActual){
  const s=data.settings,start=useActual&&(shift.actualStart||shift.start)||shift.start,end=useActual&&(shift.actualEnd||shift.end)||shift.end;
@@ -1893,7 +2015,7 @@ function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport
 }
 function renderPay(){let entries=annual?shiftsForYear(py):shiftsForMonth(py,pm),sum=aggregate(entries);let circ=2*Math.PI*98,maxGauge=Math.max(1,sum.planned,sum.forecast,sum.actual);for(let [id,value] of [['gauge-plan',sum.planned],['gauge-done',sum.actual]]){let c=$(id);c.style.strokeDasharray=`${circ*Math.min(1,value/maxGauge)} ${circ}`;c.style.strokeDashoffset='0'}$('gauge-earned').textContent=money(sum.actual);$('gauge-forecast').textContent=money(sum.forecast);$('gauge-caption').textContent=`予定どおり働いた場合 ${money(sum.planned)} ・ 勤務確定 ${sum.days}回`;$('pay-period').textContent=annual?`${py}年`:`${py}年${pm+1}月分`; $('pay-today').textContent=annual?'今年':'今月';$('payday-under-gauge').innerHTML=annual?'':`<span class="payday-prefix">振込予定日 </span>${payDate(py,pm)}`;$('monthly').classList.toggle('active',!annual);$('yearly').classList.toggle('active',annual);let tax=Number(data.settings.tax)||0;let taxTotal=annual?12*tax:tax;let detail=[['記録分の給与（交通費除く）',money(sum.wage)],['記録分の交通費',money(sum.transport)],['記録した勤務時間',formatWorkTime(sum.minutes)],['記録した出勤回数',sum.days+'回'],['手入力の所得税（参考）','−'+money(taxTotal)],['記録分の暫定手取り',money(sum.actual-taxTotal)]];if(!annual)detail.push(['振込予定日',payDate(py,pm)]);$('breakdown').innerHTML=detail.map(([a,b])=>`<div class="detail"><span class="muted">${a}</span><strong>${b}</strong></div>`).join('');if(annual){let sums=Array.from({length:12},(_,m)=>aggregate(shiftsForMonth(py,m)));let max=Math.max(1,...sums.map(x=>x.forecast));$('period-list-title').textContent='月別推移';$('pay-shifts').innerHTML='<div class="months">'+sums.map((x,i)=>`<div class="month-cell"><small class="muted">${i+1}月</small><br><strong>${money(x.forecast)}</strong><div class="bar"><span class="bar-done" style="width:${100*x.actual/max}%"></span><span class="bar-planned" style="width:${100*Math.max(0,x.forecast-x.actual)/max}%"></span></div></div>`).join('')+'</div>'}else{$('period-list-title').textContent='勤務別の計算';$('pay-shifts').innerHTML=entries.length?entries.map(x=>{let p=comp(x,false),a=comp(x,true);return `<div class="list-item row"><div><strong>${escapeHtml(x.date.slice(5))}　${escapeHtml(x.start)}～${escapeHtml(x.end)}</strong><br><small class="muted">${x.status==='worked'?'勤務済み':'予定'}</small></div><div style="text-align:right"><small class="muted">予定 ${money(p.total)}</small><br><strong>${x.status==='worked'?'実績 '+money(a.total):'未確定'}</strong></div></div>`}).join(''):'<p class="muted">この給与期間に勤務予定はありません。</p>'}}
 const settingNumberUnits={
- 'base-rate':['¥','prefix'],'night-bonus':['%','suffix'],'overtime-hours':['時間','suffix'],
+ 'base-rate':['¥','prefix'],'default-monthly-goal':['¥','prefix'],'default-yearly-goal':['¥','prefix'],'night-bonus':['%','suffix'],'overtime-hours':['時間','suffix'],
  'overtime-bonus':['%','suffix'],'transport':['¥','prefix'],'tax':['¥','prefix'],
  'default-plan-break-min':['分','suffix'],
  'break-offset':['分','suffix'],'break-45':['分','suffix'],'break-60':['分','suffix']
@@ -2025,6 +2147,7 @@ function syncSettingBreak(){
 function renderSettings(){
  let s=data.settings;
  const fields={'theme':'theme','font-size':'fontSize','base-rate':'baseRate',
+ 'default-monthly-goal':'monthlyGoalDefault','default-yearly-goal':'yearlyGoalDefault',
  'default-plan-start':'defaultPlanStart','default-plan-end':'defaultPlanEnd',
  'default-plan-break-start':'defaultPlanBreakStart','default-plan-break-min':'defaultPlanBreakMin',
  'night-bonus':'nightBonus','night-start':'nightStart','night-end':'nightEnd',
@@ -2037,6 +2160,7 @@ function renderSettings(){
   input.value=s[field];
   input.onchange=()=>{
    s[field]=input.type==='number'||['closing-day','payday','pay-month'].includes(id)?Number(input.value):input.value;
+   if(['default-monthly-goal','default-yearly-goal'].includes(id)){s[field]=Math.max(1,Math.round(Number(input.value)||1));input.value=s[field];}
    if(id==='default-plan-break-min'&&s.breakMode==='manual'&&Number(s.defaultPlanBreakMin)<=0){
     s.defaultPlanBreakStart='';$('default-plan-break-start').value='';
    }
@@ -2152,14 +2276,24 @@ let copyTemplate=null,copyYear=cy,copyMonth=cm,copySelected=new Set();
 function copyMonthStep(dir){copyMonth+=dir;if(copyMonth<0){copyMonth=11;copyYear--}else if(copyMonth>11){copyMonth=0;copyYear++}renderCopyCalendar()}
 function renderCopyCalendar(){
  $('copy-month').textContent=`${copyYear}年${copyMonth+1}月`;
- let weekday=['日','月','火','水','木','金','土'];let first=new Date(copyYear,copyMonth,1).getDay();let total=new Date(copyYear,copyMonth+1,0).getDate();
- let html=weekday.map(x=>`<span class="copy-dow">${x}</span>`).join('')+'<span style="grid-column:span '+(first||7)+';display:'+(first?'block':'none')+'"></span>';
- for(let d=1;d<=total;d++){
-  let date=daystr(copyYear,copyMonth,d),existing=data.shifts.some(x=>x.date===date),source=copyTemplate.date===date,selected=copySelected.has(date);
-  html+=`<button class="copy-day ${selected?'selected':''} ${existing?'existing':''} ${source?'source':''}" data-copy-date="${date}" ${source?'disabled':''} aria-pressed="${selected}">${d}${existing&&!source?' ·':''}</button>`;
+ const weekdays=['日','月','火','水','木','金','土'];
+ const first=new Date(copyYear,copyMonth,1).getDay();
+ const total=new Date(copyYear,copyMonth+1,0).getDate();
+ let html=weekdays.map((x,i)=>`<span class="copy-dow ${i===0?'sunday':i===6?'saturday':''}">${x}</span>`).join('');
+ for(let cell=0;cell<42;cell++){
+  const d=cell-first+1;
+  if(d<1||d>total){html+='<span class="copy-day copy-outside" aria-hidden="true"></span>';continue;}
+  const date=daystr(copyYear,copyMonth,d);
+  const existing=data.shifts.some(x=>x.date===date),source=copyTemplate.date===date,selected=copySelected.has(date);
+  const locked=existing||source;
+  html+=`<button type="button" class="copy-day ${selected?'selected':''} ${locked?'existing':''} ${source?'source':''}" data-copy-date="${date}" ${locked?'disabled':''} aria-label="${copyMonth+1}月${d}日${locked?'（予定あり）':''}" aria-pressed="${selected}">${d}</button>`;
  }
  $('copy-grid').innerHTML=html;
- $('copy-grid').querySelectorAll('[data-copy-date]').forEach(btn=>btn.onclick=()=>{let date=btn.dataset.copyDate;if(copySelected.has(date))copySelected.delete(date);else copySelected.add(date);renderCopyCalendar()});
+ $('copy-grid').querySelectorAll('[data-copy-date]').forEach(btn=>btn.onclick=()=>{
+  const date=btn.dataset.copyDate;
+  if(copySelected.has(date))copySelected.delete(date);else copySelected.add(date);
+  renderCopyCalendar();
+ });
  $('copy-count').textContent=`${copySelected.size}日選択中`;
  $('copy-apply').disabled=!copySelected.size;
 }
@@ -2186,10 +2320,10 @@ $('copy-apply').onclick=()=>{
 // Monthly salary goal, saved independently by salary period.
 const goalKey='shiftpay-monthly-goals-v5';let goals={};try{goals=JSON.parse(localStorage.getItem(goalKey)||'{}')||{}}catch(e){}
 const defaultGoal=100000;
-const goalFor=(y,m)=>Math.max(1,Number(goals[`${y}-${m+1}`])||defaultGoal);
+const goalFor=(y,m)=>Math.max(1,Number(goals[`${y}-${m+1}`])||Number(data.settings.monthlyGoalDefault)||defaultGoal);
 // Monthly and yearly goals are independent and stored locally.
 const yearlyGoalKey='shiftpay-yearly-goals-v6';let yearlyGoals={};try{yearlyGoals=JSON.parse(localStorage.getItem(yearlyGoalKey)||'{}')||{}}catch(e){}
-const yearlyGoalFor=y=>Math.max(1,Number(yearlyGoals[String(y)])||1200000);
+const yearlyGoalFor=y=>Math.max(1,Number(yearlyGoals[String(y)])||Number(data.settings.yearlyGoalDefault)||1200000);
 const formatGoal=n=>Number(n).toLocaleString('ja-JP');
 $('monthly-goal').addEventListener('focus',e=>{e.target.value=e.target.value.replace(/,/g,'');e.target.select()});
 $('monthly-goal').addEventListener('input',e=>{let pos=e.target.selectionStart;let prev=e.target.value;let before=prev.slice(0,pos).replace(/[^0-9]/g,'').length;let raw=prev.replace(/[^0-9]/g,'');let pretty=raw?formatGoal(raw):'';e.target.value=pretty;let idx=0,seen=0;for(;idx<pretty.length&&seen<before;idx++)if(/[0-9]/.test(pretty[idx]))seen++;try{e.target.setSelectionRange(idx,idx)}catch(_){}});
@@ -2197,7 +2331,7 @@ $('monthly-goal').onchange=()=>{let n=Number($('monthly-goal').value.replace(/,/
 const renderPayV4=renderPay;
 renderPay=function(){renderPayV4();let entries=annual?shiftsForYear(py):shiftsForMonth(py,pm),sum=aggregate(entries);
  let goal=annual?yearlyGoalFor(py):goalFor(py,pm);
- $('goal-label').textContent=annual?'年間目標（円）':'月間目標（円）';$('monthly-goal').value=formatGoal(goal);
+ $('goal-label').textContent=annual?'年間目標':'月間目標';$('monthly-goal').value=formatGoal(goal);
  $('goal-row').style.display='flex';$('goal-year-note').style.display='none';
  let circ=2*Math.PI*98;
  for(let [id,value] of [['gauge-plan',sum.forecast],['gauge-done',sum.actual]]){
@@ -2551,9 +2685,9 @@ receiveShortcutCalendar();
  const wizard=document.getElementById('setup-wizard');
  const statusKey='shiftpay-setup-status-v1';
  const draftKey='shiftpay-setup-draft-v1';
- const stepLabels=['基本時給','時間帯別時給','割増設定','休憩','デフォルトの勤務予定','給与支払','iCloudから取得','完了'];
+ const stepLabels=['基本時給','時間帯別時給','割増設定','休憩','デフォルトの勤務予定','給与支払','給与目標','iCloudから取得','完了'];
  const field=document.getElementById('setup-fields');
- const freshSettings={...structuredClone(defaults),workplace:'',baseRate:0,rates:[],transport:0,tax:0,defaultPlanStart:'09:00',defaultPlanEnd:'18:00',defaultPlanBreakStart:'12:00',defaultPlanBreakMin:60,closingDay:32,payday:15,payMonth:1,breakMode:'auto'};
+ const freshSettings={...structuredClone(defaults),workplace:'',baseRate:0,rates:[],transport:0,tax:0,defaultPlanStart:'09:00',defaultPlanEnd:'18:00',defaultPlanBreakStart:'12:00',defaultPlanBreakMin:60,closingDay:32,payday:15,payMonth:1,breakMode:'auto',fontSize:'standard',monthlyGoalDefault:100000,yearlyGoalDefault:1200000};
  let draft=null,step=0,active=false,revisiting=false;
  const esc=s=>escapeHtml(String(s??''));
  const clone=x=>structuredClone(x);
@@ -2629,12 +2763,13 @@ receiveShortcutCalendar();
     </fieldset><p class="setup-hint" id="setup-plan-break-hint"></p>
    </div>`;
   if(step===5)return `<div class="setup-intro"><h2>給与支払</h2><p>給与の締め日・支払日、交通費などを設定します。</p></div>${fieldGrid(selectField('closingDay','締め日',monthDays())+selectField('payday','支払日',monthDays())+selectField('payMonth','支払月',[['0','当月'],['1','翌月']])+selectField('holidayPolicy','銀行休業日の振替',[['before','前営業日'],['after','翌営業日'],['none','変更なし']]))}<div class="setup-section">${fieldGrid(yenField('transport','交通費<span class="setup-subcaption">1出勤あたり</span>')+yenField('tax','所得税の初期控除<span class="setup-subcaption">1給与期間あたり</span>'))}</div><p class="setup-hint">銀行休業日の振替は、選択したルールで計算します。</p>`;
-  if(step===6)return `<div class="setup-intro"><h2>iCloudから取得</h2><p>iPhoneの勤務用カレンダーから予定を取り込むための設定です。利用しない場合はスキップできます。</p></div><div class="setup-section"><h3>ショートカットを追加</h3><a class="secondary shortcut-link setup-shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer">ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps setup-sync-steps"><li>リンクからiPhoneにショートカットを追加します。</li><li>ショートカットの「カレンダーの予定を検索」で、勤務用カレンダーを選択します。</li><li>設定完了後、カレンダー画面の「iCloudから取得」を押すと予定を取り込めます。</li></ol></div><p class="setup-hint">取得は自動ではありません。既存の勤務記録は上書きしません。後から設定ページでも確認できます。</p>`;
-  return `<div class="setup-intro setup-complete"><div class="setup-complete-symbol" aria-hidden="true">✓</div><h2>設定の準備ができました</h2><p>内容を確認し、カレンダーを開いてください。</p></div><div class="setup-summary"><div><span>基本時給</span><strong>¥${Math.round(Number(draft.baseRate)||0).toLocaleString('ja-JP')}</strong></div><div><span>時間帯別時給</span><strong>${draft.rates.length}件</strong></div><div><span>深夜割増</span><strong>${draft.nightEnabled?'オン':'オフ'}</strong></div><div><span>残業割増</span><strong>${draft.overtimeEnabled?'オン':'オフ'}</strong></div><div><span>勤務予定</span><strong>${esc(draft.defaultPlanStart)} ～ ${esc(draft.defaultPlanEnd)}</strong></div><div><span>締め日・支払日</span><strong>${draft.closingDay===32?'月末':draft.closingDay+'日'}・${draft.payday===32?'月末':draft.payday+'日'}</strong></div></div><p class="setup-hint">後から設定ページで変更できます。勤務データはこの端末のブラウザに保存されます。</p>`;
+  if(step===6)return `<div class="setup-intro"><h2>給与目標</h2><p>月間・年間の給与目標を設定してください。後から給与計算ページで期間ごとに変更できます。</p></div><div class="setup-section">${fieldGrid(yenField('monthlyGoalDefault','月間目標')+yenField('yearlyGoalDefault','年間目標'))}</div>`;
+  if(step===7)return `<div class="setup-intro"><h2>iCloudから取得</h2><p>iPhoneの勤務用カレンダーから予定を取り込むための設定です。利用しない場合はスキップできます。</p></div><div class="setup-section"><h3>ショートカットを追加</h3><a class="secondary shortcut-link setup-shortcut-link" href="https://www.icloud.com/shortcuts/a61d62aa14184bb181eab5ca4fb0443d" target="_blank" rel="noopener noreferrer">ショートカットを追加 <span aria-hidden="true">↗</span></a><ol class="sync-steps setup-sync-steps"><li>リンクからiPhoneにショートカットを追加します。</li><li>ショートカットの「カレンダーの予定を検索」で、勤務用カレンダーを選択します。</li><li>設定完了後、カレンダー画面の「iCloudから取得」を押すと予定を取り込めます。</li></ol></div><p class="setup-hint">取得は自動ではありません。既存の勤務記録は上書きしません。後から設定ページでも確認できます。</p>`;
+  return `<div class="setup-intro setup-complete"><div class="setup-complete-symbol" aria-hidden="true">✓</div><h2>設定の準備ができました</h2><p>内容を確認し、カレンダーを開いてください。</p></div><div class="setup-summary"><div><span>基本時給</span><strong>¥${Math.round(Number(draft.baseRate)||0).toLocaleString('ja-JP')}</strong></div><div><span>時間帯別時給</span><strong>${draft.rates.length}件</strong></div><div><span>深夜割増</span><strong>${draft.nightEnabled?'オン':'オフ'}</strong></div><div><span>残業割増</span><strong>${draft.overtimeEnabled?'オン':'オフ'}</strong></div><div><span>勤務予定</span><strong>${esc(draft.defaultPlanStart)} ～ ${esc(draft.defaultPlanEnd)}</strong></div><div><span>月間目標</span><strong>¥${Number(draft.monthlyGoalDefault||0).toLocaleString('ja-JP')}</strong></div><div><span>年間目標</span><strong>¥${Number(draft.yearlyGoalDefault||0).toLocaleString('ja-JP')}</strong></div><div><span>締め日・支払日</span><strong>${draft.closingDay===32?'月末':draft.closingDay+'日'}・${draft.payday===32?'月末':draft.payday+'日'}</strong></div></div><p class="setup-hint">後から設定ページで変更できます。勤務データはこの端末のブラウザに保存されます。</p>`;
  };
  function yenRate(i,value){return `<label class="setup-field"><span>時給</span><span class="setup-affixed"><span aria-hidden="true">¥</span><input aria-label="時間帯 ${i+1} の時給" type="number" min="0" inputmode="numeric" data-setup-rate-index="${i}" data-setup-rate-field="rate" value="${esc(value)}"></span></label>`;}
  function monthDays(){return [...Array.from({length:31},(_,i)=>[String(i+1),`${i+1}日`]),['32','月末']];}
- function persistDraft(){if(!active)return;try{localStorage.setItem(draftKey,JSON.stringify({step,settings:draft,revisiting,version:2}));if(!revisiting)localStorage.setItem(statusKey,'in-progress');}catch(e){}}
+ function persistDraft(){if(!active)return;try{localStorage.setItem(draftKey,JSON.stringify({step,settings:draft,revisiting,version:3}));if(!revisiting)localStorage.setItem(statusKey,'in-progress');}catch(e){}}
  function fromValue(el){return el.type==='checkbox'?el.checked:el.type==='number'?Number(el.value):el.value;}
  function readFields(){
   if(!active)return;
@@ -2654,6 +2789,7 @@ receiveShortcutCalendar();
     if(draft.breakMode!=='auto'&&(Number(draft.defaultPlanBreakMin)<0||(Number(draft.defaultPlanBreakMin)>0&&!draft.defaultPlanBreakStart))){showError('休憩時間がある場合は休憩開始時刻も設定してください。');return false;}
    }
    if(step===5&&(['transport','tax'].some(k=>!Number.isFinite(Number(draft[k]))||Number(draft[k])<0))){showError('交通費と所得税の金額を確認してください。');return false;}
+   if(step===6&&(['monthlyGoalDefault','yearlyGoalDefault'].some(k=>!Number.isSafeInteger(Number(draft[k]))||Number(draft[k])<=0))){showError('月間・年間目標は1円以上の整数を入力してください。');return false;}
    return true;
  }
  function showError(message){const el=document.getElementById('setup-error');el.textContent=message;el.hidden=false;}
@@ -2674,8 +2810,8 @@ receiveShortcutCalendar();
    syncSetupPremium();syncSetupBreak();
    const error=document.getElementById('setup-error');error.hidden=true;error.textContent='';
    document.getElementById('setup-back').hidden=step===0;
-   document.getElementById('setup-skip').hidden=step===0||step===7;
-   document.getElementById('setup-next').textContent=step===7?'設定を完了':'次へ';
+   document.getElementById('setup-skip').hidden=step===0||step===8;
+   document.getElementById('setup-next').textContent=step===8?'設定を完了':'次へ';
    wizard.querySelector('.setup-panel')?.scrollTo({top:0,behavior:'instant'});
    field.querySelectorAll('input,select').forEach(el=>{
      const update=()=>{
@@ -2703,7 +2839,7 @@ receiveShortcutCalendar();
    if(forceFresh){draft=clone(freshSettings);step=0;revisiting=false;}
    else if(isRevisit){draft=clone(data.settings);step=0;}
    else if(saved&&saved.settings&&Array.isArray(saved.settings.rates)){
-     draft={...clone(freshSettings),...saved.settings};step=Math.max(0,Math.min(stepLabels.length-1,(saved.version===2?Number(saved.step):Number(saved.step)>=4?Number(saved.step)+1:Number(saved.step))||0));
+     draft={...clone(freshSettings),...saved.settings};step=Math.max(0,Math.min(stepLabels.length-1,(saved.version===3?Number(saved.step):saved.version===2?(Number(saved.step)>=6?Number(saved.step)+1:Number(saved.step)):(Number(saved.step)>=4?Number(saved.step)+1:Number(saved.step)))||0));
    }else{draft=clone(freshSettings);step=0;}
    finishing=false;document.getElementById('setup-next').disabled=false;
    active=true;wizard.hidden=false;document.body.classList.add('setup-active');persistDraft();render();
@@ -2730,13 +2866,13 @@ receiveShortcutCalendar();
  }
  document.getElementById('setup-next').addEventListener('click',()=>{
    readFields();if(!validCurrent())return;
-   if(step===7){finishWithMotion();return;}
+   if(step===8){finishWithMotion();return;}
    step++;persistDraft();render(1);
  });
  document.getElementById('setup-back').addEventListener('click',()=>{readFields();if(step>0)step--;persistDraft();render(-1)});
  document.getElementById('setup-skip').addEventListener('click',()=>{
    readFields();if(step===1&&!revisiting)draft.rates=[];
-   step=Math.min(7,step+1);persistDraft();render(1);
+   step=Math.min(8,step+1);persistDraft();render(1);
  });
  window.shiftpayOpenFreshSetup=()=>{try{localStorage.removeItem(draftKey);localStorage.setItem(statusKey,'in-progress')}catch(e){}openSetup(false,true)};
  document.getElementById('restart-setup')?.addEventListener('click',()=>openSetup(true));
