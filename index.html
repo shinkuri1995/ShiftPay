@@ -2402,6 +2402,59 @@ html[data-theme="dark"] {
 /* Match the payroll '今月' control exactly to its calendar counterpart. */
 #pay .unified-toolbar #pay-today,
 #calendar .unified-toolbar #cal-today{border-radius:999px!important;}
+
+/* 2026-10-23: freeze calendar outer height at its current five-week dimension.
+   Four/six week layouts stretch/compress the DAY rows, never the entire grid. */
+#calendar #cal.calendar.month-period-grid,
+#calendar #cal.calendar.closing-period-grid {
+  --stable-header-height:22px;
+  --stable-week-height:96px;
+  --stable-week-gap:7px;
+  box-sizing:border-box;
+  height:calc(var(--stable-header-height) + 5 * var(--stable-week-height) + 5 * var(--stable-week-gap));
+  min-height:0;
+  grid-template-rows:var(--stable-header-height) repeat(var(--closing-weeks,5),minmax(0,1fr))!important;
+  grid-auto-rows:0!important;
+  align-content:stretch!important;
+  align-items:stretch!important;
+}
+#calendar #cal.calendar.month-period-grid > .day,
+#calendar #cal.calendar.closing-period-grid > .day {
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+/* A date with a month prefix has exactly the ordinary date-number font size. */
+#calendar #cal.calendar .day .date.month-transition {
+  font-size:13px!important;
+  letter-spacing:-.65px;
+  min-width:0;
+  width:max-content;
+  max-width:100%;
+  white-space:nowrap;
+  padding:0 2px;
+  font-variant-numeric:tabular-nums;
+}
+#calendar #cal.calendar[data-weeks="6"] .day .shift-entry{margin-top:1px;margin-bottom:1px;}
+#calendar #cal.calendar[data-weeks="6"] .day .yen{margin-top:3px;}
+@media(max-width:650px) {
+  #calendar #cal.calendar.month-period-grid,
+  #calendar #cal.calendar.closing-period-grid {
+    --stable-header-height:21px;
+    --stable-week-height:79px;
+    --stable-week-gap:3px;
+  }
+  #calendar #cal.calendar .day .date.month-transition {
+    font-size:12px!important;
+    letter-spacing:-.8px;
+    padding:0 1px;
+  }
+  #calendar #cal.calendar[data-weeks="6"] .day {padding-top:25px!important;padding-bottom:2px!important;}
+  #calendar #cal.calendar[data-weeks="6"] .day .shift-entry {padding-top:2px;padding-bottom:2px;}
+  #calendar #cal.calendar[data-weeks="6"] .day .yen{margin-top:2px;}
+}
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -2442,7 +2495,7 @@ html[data-theme="dark"] {
     <button class="secondary" id="pay-prev" type="button" aria-label="前の給与期間">‹</button>
     <span class="pay-period-stack"><strong id="pay-period"></strong></span>
     <button class="secondary" id="pay-next" type="button" aria-label="次の給与期間">›</button>
-    <button class="secondary" id="pay-today" type="button">今月</button>
+    <button class="secondary" id="pay-today" type="button">今期</button>
   </div>
   <div class="pay-date-line" id="pay-date-line" aria-live="polite"><span class="payday-prefix">振込予定日：</span><span id="payday-under-gauge"></span></div>
 </div>
@@ -2618,6 +2671,7 @@ function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport
   $('cal').classList.toggle('closing-period-grid',closing);
   $('cal').classList.toggle('month-period-grid',!closing);
   $('cal').style.setProperty('--closing-weeks',numWeeks);
+  $('cal').dataset.weeks=String(numWeeks);
   const now=new Date();
   const todayKey=daystr(now.getFullYear(),now.getMonth(),now.getDate());
   const holidaySets=new Map();
@@ -2651,7 +2705,7 @@ function aggregate(list){let sum={planned:0,actual:0,forecast:0,wage:0,transport
     openModal(item||null,el.dataset.date);
   });
 }
-function renderPay(){let entries=annual?shiftsForYear(py):shiftsForMonth(py,pm),sum=aggregate(entries);let circ=2*Math.PI*98,maxGauge=Math.max(1,sum.planned,sum.forecast,sum.actual);for(let [id,value] of [['gauge-plan',sum.planned],['gauge-done',sum.actual]]){let c=$(id);c.style.strokeDasharray=`${circ*Math.min(1,value/maxGauge)} ${circ}`;c.style.strokeDashoffset='0'}$('gauge-earned').textContent=money(sum.actual);$('gauge-forecast').textContent=money(sum.forecast);$('gauge-caption').textContent=`予定どおり働いた場合 ${money(sum.planned)} ・ 勤務確定 ${sum.days}回`;$('pay-period').textContent=annual?`${py}年`:`${py}年${pm+1}月分`; $('pay-today').textContent=annual?'今年':'今月';$('pay-date-line').style.display=annual?'none':'';$('payday-under-gauge').textContent=annual?'':payDate(py,pm);$('monthly').classList.toggle('active',!annual);$('yearly').classList.toggle('active',annual);let tax=Number(data.settings.tax)||0;let taxTotal=annual?12*tax:tax;let detail=[['記録分の給与（交通費除く）',money(sum.wage)],['記録分の交通費',money(sum.transport)],['記録した勤務時間',formatWorkTime(sum.minutes)],['記録した出勤回数',sum.days+'回'],['手入力の所得税（参考）','−'+money(taxTotal)],['記録分の暫定手取り',money(sum.actual-taxTotal)]];if(!annual)detail.push(['振込予定日',payDate(py,pm)]);$('breakdown').innerHTML=detail.map(([a,b])=>`<div class="detail"><span class="muted">${a}</span><strong>${b}</strong></div>`).join('');if(annual){let sums=Array.from({length:12},(_,m)=>aggregate(shiftsForMonth(py,m)));let max=Math.max(1,...sums.map(x=>x.forecast));$('period-list-title').textContent='月別推移';$('pay-shifts').innerHTML='<div class="months">'+sums.map((x,i)=>`<div class="month-cell"><small class="muted">${i+1}月</small><br><strong>${money(x.forecast)}</strong><div class="bar"><span class="bar-done" style="width:${100*x.actual/max}%"></span><span class="bar-planned" style="width:${100*Math.max(0,x.forecast-x.actual)/max}%"></span></div></div>`).join('')+'</div>'}else{$('period-list-title').textContent='勤務別の計算';$('pay-shifts').innerHTML=entries.length?entries.map(x=>{let p=comp(x,false),a=comp(x,true);return `<div class="list-item row"><div><strong>${escapeHtml(x.date.slice(5))}　${escapeHtml(x.start)}～${escapeHtml(x.end)}</strong><br><small class="muted">${x.status==='worked'?'勤務済み':'予定'}</small></div><div style="text-align:right"><small class="muted">予定 ${money(p.total)}</small><br><strong>${x.status==='worked'?'実績 '+money(a.total):'未確定'}</strong></div></div>`}).join(''):'<p class="muted">この給与期間に勤務予定はありません。</p>'}}
+function renderPay(){let entries=annual?shiftsForYear(py):shiftsForMonth(py,pm),sum=aggregate(entries);let circ=2*Math.PI*98,maxGauge=Math.max(1,sum.planned,sum.forecast,sum.actual);for(let [id,value] of [['gauge-plan',sum.planned],['gauge-done',sum.actual]]){let c=$(id);c.style.strokeDasharray=`${circ*Math.min(1,value/maxGauge)} ${circ}`;c.style.strokeDashoffset='0'}$('gauge-earned').textContent=money(sum.actual);$('gauge-forecast').textContent=money(sum.forecast);$('gauge-caption').textContent=`予定どおり働いた場合 ${money(sum.planned)} ・ 勤務確定 ${sum.days}回`;$('pay-period').textContent=annual?`${py}年`:`${py}年${pm+1}月分`; $('pay-today').textContent=annual?'今年':'今期';$('pay-date-line').style.display=annual?'none':'';$('payday-under-gauge').textContent=annual?'':payDate(py,pm);$('monthly').classList.toggle('active',!annual);$('yearly').classList.toggle('active',annual);let tax=Number(data.settings.tax)||0;let taxTotal=annual?12*tax:tax;let detail=[['記録分の給与（交通費除く）',money(sum.wage)],['記録分の交通費',money(sum.transport)],['記録した勤務時間',formatWorkTime(sum.minutes)],['記録した出勤回数',sum.days+'回'],['手入力の所得税（参考）','−'+money(taxTotal)],['記録分の暫定手取り',money(sum.actual-taxTotal)]];if(!annual)detail.push(['振込予定日',payDate(py,pm)]);$('breakdown').innerHTML=detail.map(([a,b])=>`<div class="detail"><span class="muted">${a}</span><strong>${b}</strong></div>`).join('');if(annual){let sums=Array.from({length:12},(_,m)=>aggregate(shiftsForMonth(py,m)));let max=Math.max(1,...sums.map(x=>x.forecast));$('period-list-title').textContent='月別推移';$('pay-shifts').innerHTML='<div class="months">'+sums.map((x,i)=>`<div class="month-cell"><small class="muted">${i+1}月</small><br><strong>${money(x.forecast)}</strong><div class="bar"><span class="bar-done" style="width:${100*x.actual/max}%"></span><span class="bar-planned" style="width:${100*Math.max(0,x.forecast-x.actual)/max}%"></span></div></div>`).join('')+'</div>'}else{$('period-list-title').textContent='勤務別の計算';$('pay-shifts').innerHTML=entries.length?entries.map(x=>{let p=comp(x,false),a=comp(x,true);return `<div class="list-item row"><div><strong>${escapeHtml(x.date.slice(5))}　${escapeHtml(x.start)}～${escapeHtml(x.end)}</strong><br><small class="muted">${x.status==='worked'?'勤務済み':'予定'}</small></div><div style="text-align:right"><small class="muted">予定 ${money(p.total)}</small><br><strong>${x.status==='worked'?'実績 '+money(a.total):'未確定'}</strong></div></div>`}).join(''):'<p class="muted">この給与期間に勤務予定はありません。</p>'}}
 const settingNumberUnits={
  'base-rate':['¥','prefix'],'default-monthly-goal':['¥','prefix'],'default-yearly-goal':['¥','prefix'],'night-bonus':['%','suffix'],'overtime-hours':['時間','suffix'],
  'overtime-bonus':['%','suffix'],'transport':['¥','prefix'],'tax':['¥','prefix'],
@@ -3034,7 +3088,7 @@ renderPay=function(){renderPayV4();let entries=annual?shiftsForYear(py):shiftsFo
 };
 // Return-to-current-month and missing-record indicators.
 $('cal-today').onclick=()=>{let d=new Date();if(calPeriodMode==='closing')d=closingMonthForDate(d);cy=d.getFullYear();cm=d.getMonth();renderCal()};
-$('pay-today').onclick=()=>{let d=new Date();py=d.getFullYear();pm=d.getMonth();renderPay()};
+$('pay-today').onclick=()=>{const now=new Date();const selected=annual?now:closingMonthForDate(now);py=selected.getFullYear();pm=selected.getMonth();renderPay()};
 const renderCalV5=renderCal;
 renderCal=function(){renderCalV5();
  $('cal').querySelectorAll('[data-date]').forEach(el=>{
@@ -3664,7 +3718,8 @@ receiveShortcutCalendar();
  const todayBtn=$('pay-today'),originalToday=todayBtn.onclick;
  todayBtn.onclick=()=>{
    const now=new Date();
-   const delta=annual?now.getFullYear()-py:(now.getFullYear()-py)*12+now.getMonth()-pm;
+   const target=annual?now:closingMonthForDate(now);
+   const delta=annual?target.getFullYear()-py:(target.getFullYear()-py)*12+target.getMonth()-pm;
    slidePeriod(delta<0?-1:1,originalToday);
  };
  let start=null,lastGesture=0;
