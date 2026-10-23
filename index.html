@@ -2500,6 +2500,51 @@ html[data-theme="dark"] {
  #pay .unified-toolbar{grid-template-rows:54px 54px!important;min-height:108px!important;}
  #pay .unified-toolbar .pay-period-stack{grid-row:2!important;}
 }
+
+
+/* 2026-10-23: unified rounded Liquid Glass actions (not date cells or switches). */
+button.primary,button.secondary,button.textbtn,
+#modal-wrap #close-modal,#modal-wrap .actions button,
+#copy-wrap #copy-close,#copy-wrap .copy-footer button,
+#setup-wizard #setup-next,#setup-wizard #setup-back,#setup-wizard #setup-skip,
+#settings .json-actions>button,#settings .reset-actions>button,#settings #restart-setup,
+#settings a.shortcut-link,#setup-wizard a.setup-shortcut-link,
+#sync-modal-close,#modal-wrap #save-shift,#modal-wrap #confirm-worked,
+#modal-wrap #delete-shift,#modal-wrap #undo-worked,#modal-wrap #copy-shift,
+#modal-wrap #copy-record,#copy-wrap #copy-apply,#copy-wrap #copy-cancel {border-radius:999px!important;}
+/* Icon-only close controls stay circular; preserve a generous tap target. */
+#modal-wrap #close-modal,#copy-wrap #copy-close {
+ border-radius:50%!important;aspect-ratio:1;min-width:42px;min-height:42px;
+ display:inline-grid;place-items:center;padding:0!important;flex:0 0 auto;
+}
+#modal-wrap #save-shift,#modal-wrap #confirm-worked {color:var(--blue)!important;}
+#modal-wrap #delete-shift,#modal-wrap #undo-worked {color:var(--negative,#d04b55)!important;}
+/* The previous/next-month arrows in the copy sheet are intentionally borderless. */
+#copy-wrap .copy-toolbar #copy-prev,#copy-wrap .copy-toolbar #copy-next {
+ border:0!important;background:transparent!important;box-shadow:none!important;
+ backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+ border-radius:999px!important;
+}
+#copy-wrap .copy-toolbar #copy-prev:focus-visible,#copy-wrap .copy-toolbar #copy-next:focus-visible {outline:2px solid var(--blue);outline-offset:2px;}
+/* The source date is disabled. Destinations with existing work are selectable and visibly marked. */
+#copy-wrap .copy-grid .copy-day.existing:not(.source) {
+ opacity:1!important;cursor:pointer!important;color:var(--text)!important;
+ background:color-mix(in srgb,var(--input-fill) 79%,var(--blue) 21%)!important;
+ outline:1px dashed var(--blue);outline-offset:-2px;
+}
+#copy-wrap .copy-grid .copy-day.selected:not(.source),
+#copy-wrap .copy-grid .copy-day.existing.selected:not(.source) {
+ color:white!important;background:var(--blue)!important;outline:0!important;opacity:1!important;
+}
+#copy-wrap #copy-count{font-size:clamp(10px,2.65vw,12px);}
+#modal-wrap .modal .record-actions #copy-record{grid-column:1;}
+#modal-wrap .modal .record-actions #undo-worked{grid-column:2;}
+#modal-wrap .modal .record-actions #confirm-worked{grid-column:3;}
+/* No vertical reflow flash during gestures: animated stage height follows the content. */
+#calendar-stage.is-changing-month,#pay-stage.is-changing-period{overflow:hidden!important;}
+@media(prefers-reduced-motion:reduce){
+ #calendar-stage,#pay-stage{animation:none!important;}
+}
 </style></head><body><main class="shell">
 <section id="calendar" class="page active">
 <div class="unified-topline calendar-topline">
@@ -2586,8 +2631,8 @@ html[data-theme="dark"] {
 <button data-page="pay" type="button"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="m8 6 4 6 4-6M8 12h8M8 15h8M12 12v6"/></svg><span>給与計算</span></button>
 <button data-page="settings" type="button"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.7 3.1 10 5.3a7 7 0 0 1 4 0l.3-2.2 2.1 1.2-1 2a7 7 0 0 1 2.1 2l2.1-1 1.2 2.1-1.9 1.3a7 7 0 0 1 0 3l1.9 1.3-1.2 2.1-2.1-1a7 7 0 0 1-2.1 2l1 2-2.1 1.2-.3-2.2a7 7 0 0 1-4 0l-.3 2.2-2.1-1.2 1-2a7 7 0 0 1-2.1-2l-2.1 1-1.2-2.1 1.9-1.3a7 7 0 0 1 0-3L3.1 9.4l1.2-2.1 2.1 1a7 7 0 0 1 2.1-2l-1-2z"/><circle cx="12" cy="12" r="3"/></svg><span>設定</span></button>
 </nav>
-<div class="modal-wrap" id="modal-wrap"><div class="modal"><div class="row"><h2 id="modal-title">勤務を登録</h2><button class="secondary" id="close-modal">✕</button></div><div class="modal-tabs" role="tablist"><button id="tab-planned" class="active" type="button" role="tab" aria-selected="true">勤務予定</button><button id="tab-record" type="button" role="tab" aria-selected="false">勤務記録</button></div><div class="modal-pane active" id="pane-planned"><div class="fields"><label>日付<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-date" type="date"></span></label><label>予定開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-start" type="time"></span></label><label>予定終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-plan-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span><span class="auto-placeholder" aria-hidden="true">自動</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-plan-break-start" type="time"></span></label></div><div id="plan-breakdown"></div><div class="actions copy-actions"><button id="copy-shift" class="secondary" type="button">予定をコピー</button><button id="delete-shift" class="textbtn danger" type="button">この勤務を削除</button><button class="primary" id="save-shift" type="button">予定を保存</button></div></div><div class="modal-pane" id="pane-record"><div class="record-state" id="record-state">勤務予定を登録すると記録できます。</div><div class="fields"><label>勤務開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-start" type="time"></span></label><label>勤務終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-break-start" type="time"></span></label></div><div id="record-breakdown"></div><div class="actions record-actions"><span class="action-spacer" aria-hidden="true"></span><button class="secondary danger" id="undo-worked" type="button">勤務記録を削除</button><button class="primary" id="confirm-worked" type="button">勤務記録を確定</button></div></div><select id="m-status" hidden><option value="planned">予定</option><option value="worked">勤務済み</option></select><div id="modal-pay" hidden></div><button id="cancel-modal" hidden></button></div></div>
-<div id="sync-feedback" class="sync-modal-wrap" aria-hidden="true"><section class="sync-modal" role="dialog" aria-modal="true" aria-labelledby="sync-modal-title" aria-describedby="sync-modal-message" tabindex="-1"><div class="sync-modal-heading"><h2 id="sync-modal-title">iCloudからの取得結果</h2></div><p id="sync-modal-message" role="status" aria-live="polite"></p><button type="button" class="primary sync-modal-close" id="sync-modal-close">閉じる</button></section></div><div class="copy-wrap" id="copy-wrap"><div class="copy-panel"><div class="row"><div><h2 style="margin:0">勤務予定をコピー</h2><small class="muted" id="copy-source"></small></div><button class="secondary" id="copy-close" type="button">✕</button></div><p class="hint">コピー先の日付を選択し、「選択した日にコピー」を押してください。元の勤務予定は残ります。すでに勤務がある日は上書きしません。</p><div class="copy-toolbar"><div class="controls"><button class="secondary" id="copy-prev" type="button">‹</button><strong id="copy-month"></strong><button class="secondary" id="copy-next" type="button">›</button></div><small class="muted" id="copy-count">0日選択中</small></div><div id="copy-grid" class="copy-grid"></div><div class="copy-footer"><button class="secondary" id="copy-cancel" type="button">キャンセル</button><button class="primary" id="copy-apply" type="button">✓ 選択した日にコピー</button></div></div></div><script>
+<div class="modal-wrap" id="modal-wrap"><div class="modal"><div class="row"><h2 id="modal-title">勤務を登録</h2><button class="secondary" id="close-modal">✕</button></div><div class="modal-tabs" role="tablist"><button id="tab-planned" class="active" type="button" role="tab" aria-selected="true">勤務予定</button><button id="tab-record" type="button" role="tab" aria-selected="false">勤務記録</button></div><div class="modal-pane active" id="pane-planned"><div class="fields"><label>日付<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-date" type="date"></span></label><label>予定開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-start" type="time"></span></label><label>予定終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-plan-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span><span class="auto-placeholder" aria-hidden="true">自動</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-plan-break-start" type="time"></span></label></div><div id="plan-breakdown"></div><div class="actions copy-actions"><button id="copy-shift" class="secondary" type="button">予定をコピー</button><button id="delete-shift" class="textbtn danger" type="button">この勤務を削除</button><button class="primary" id="save-shift" type="button">予定を保存</button></div></div><div class="modal-pane" id="pane-record"><div class="record-state" id="record-state">勤務予定を登録すると記録できます。</div><div class="fields"><label>勤務開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-start" type="time"></span></label><label>勤務終了<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-actual-end" type="time"></span></label><label>休憩<span class="modal-break-unit"><input id="m-break-min" type="number" min="0" inputmode="numeric" placeholder="自動なら空欄"><span class="unit-label" aria-hidden="true">分</span></span></label><label>休憩開始<span class="modal-native-field"><span class="modal-native-value" aria-hidden="true">—</span><input id="m-break-start" type="time"></span></label></div><div id="record-breakdown"></div><div class="actions record-actions"><button id="copy-record" class="secondary" type="button">勤務記録をコピー</button><button class="secondary danger" id="undo-worked" type="button">勤務記録を削除</button><button class="primary" id="confirm-worked" type="button">勤務記録を確定</button></div></div><select id="m-status" hidden><option value="planned">予定</option><option value="worked">勤務済み</option></select><div id="modal-pay" hidden></div><button id="cancel-modal" hidden></button></div></div>
+<div id="sync-feedback" class="sync-modal-wrap" aria-hidden="true"><section class="sync-modal" role="dialog" aria-modal="true" aria-labelledby="sync-modal-title" aria-describedby="sync-modal-message" tabindex="-1"><div class="sync-modal-heading"><h2 id="sync-modal-title">iCloudからの取得結果</h2></div><p id="sync-modal-message" role="status" aria-live="polite"></p><button type="button" class="primary sync-modal-close" id="sync-modal-close">閉じる</button></section></div><div class="copy-wrap" id="copy-wrap"><div class="copy-panel"><div class="row"><div><h2 style="margin:0" id="copy-title">勤務予定をコピー</h2><small class="muted" id="copy-source"></small></div><button class="secondary" id="copy-close" type="button">✕</button></div><p class="hint" id="copy-hint">コピー先の日付を選択してください。登録済みの日付も選択でき、コピー元の内容で上書きできます。</p><div class="copy-toolbar"><div class="controls"><button class="secondary" id="copy-prev" type="button">‹</button><strong id="copy-month"></strong><button class="secondary" id="copy-next" type="button">›</button></div><small class="muted" id="copy-count">0日選択中</small></div><div id="copy-grid" class="copy-grid"></div><div class="copy-footer"><button class="secondary" id="copy-cancel" type="button">キャンセル</button><button class="primary" id="copy-apply" type="button">✓ 選択した日にコピー</button></div></div></div><script>
 const key='shiftpay-prototype-v1';window.__shiftpayInitialSetupRequired=(()=>{
  const statusKey='shiftpay-setup-status-v1';
  try{
@@ -3067,8 +3112,9 @@ $('undo-worked').onclick=()=>{
  $('m-break-start').value='';$('m-break-min').value='';$('m-status').value='planned';
  store();renderCal();renderPay();preview();
 };
-// Plan copy: select any number of days across months. Existing records never overwritten.
-let copyTemplate=null,copyYear=cy,copyMonth=cm,copySelected=new Set();
+// Planned shifts and confirmed records can be copied across months.
+// On conflicts, the copied shift replaces the target date exactly once.
+let copyTemplate=null,copyKind='planned',copyYear=cy,copyMonth=cm,copySelected=new Set();
 function copyMonthStep(dir){copyMonth+=dir;if(copyMonth<0){copyMonth=11;copyYear--}else if(copyMonth>11){copyMonth=0;copyYear++}renderCopyCalendar()}
 function renderCopyCalendar(){
  $('copy-month').textContent=`${copyYear}年${copyMonth+1}月`;
@@ -3080,38 +3126,62 @@ function renderCopyCalendar(){
   const d=cell-first+1;
   if(d<1||d>total){html+='<span class="copy-day copy-outside" aria-hidden="true"></span>';continue;}
   const date=daystr(copyYear,copyMonth,d);
-  const existing=data.shifts.some(x=>x.date===date),source=copyTemplate.date===date,selected=copySelected.has(date);
-  const locked=existing||source;
-  html+=`<button type="button" class="copy-day ${selected?'selected':''} ${locked?'existing':''} ${source?'source':''}" data-copy-date="${date}" ${locked?'disabled':''} aria-label="${copyMonth+1}月${d}日${locked?'（予定あり）':''}" aria-pressed="${selected}">${d}</button>`;
+  const existing=data.shifts.some(x=>x.date===date);
+  const source=copyTemplate.date===date,selected=copySelected.has(date);
+  html+=`<button type="button" class="copy-day ${selected?'selected':''} ${existing?'existing':''} ${source?'source':''}" data-copy-date="${date}" ${source?'disabled':''} aria-label="${copyMonth+1}月${d}日${source?'（コピー元）':existing?'（上書きできます）':''}" aria-pressed="${selected}" title="${source?'コピー元':existing?'選択すると既存の勤務を上書き':'コピー先として選択'}">${d}</button>`;
  }
  $('copy-grid').innerHTML=html;
- $('copy-grid').querySelectorAll('[data-copy-date]').forEach(btn=>btn.onclick=()=>{
+ $('copy-grid').querySelectorAll('[data-copy-date]:not(:disabled)').forEach(btn=>btn.onclick=()=>{
   const date=btn.dataset.copyDate;
   if(copySelected.has(date))copySelected.delete(date);else copySelected.add(date);
   renderCopyCalendar();
  });
- $('copy-count').textContent=`${copySelected.size}日選択中`;
+ const overwrites=[...copySelected].filter(date=>data.shifts.some(x=>x.date===date)).length;
+ $('copy-count').textContent=`${copySelected.size}日選択中${overwrites?`（上書き ${overwrites}日）`:''}`;
  $('copy-apply').disabled=!copySelected.size;
 }
-$('copy-shift').onclick=()=>{
+function beginShiftCopy(kind){
  if(!editing)return;
- let x=candidate();copyTemplate={...x};copySelected.clear();
- let date=parseDate(x.date);copyYear=date.getFullYear();copyMonth=date.getMonth();
- $('copy-source').textContent=`コピー元 ${x.date}　${x.start}～${x.end}`;
+ const original=data.shifts.find(x=>x.id===editing);
+ if(!original)return;
+ if(kind==='worked'&&original.status!=='worked'){alert('勤務記録を確定してからコピーしてください。');return;}
+ // Copy the saved, confirmed record as a coherent set; never copy iCloud sync identifiers.
+ const {id,icloudKey,icloudSource,...fields}=original;
+ copyTemplate={...fields,actualStart:fields.actualStart||fields.start,actualEnd:fields.actualEnd||fields.end};
+ copyKind=kind;
+ if(kind==='planned')copyTemplate={...copyTemplate,status:'planned',actualStart:'',actualEnd:'',breakStart:'',breakMin:''};
+ else copyTemplate.status='worked';
+ copySelected.clear();
+ const date=parseDate(copyTemplate.date);copyYear=date.getFullYear();copyMonth=date.getMonth();
+ const kindName=kind==='worked'?'勤務記録':'勤務予定';
+ $('copy-title').textContent=`${kindName}をコピー`;
+ $('copy-source').textContent=`コピー元 ${copyTemplate.date}　${kind==='worked'?copyTemplate.actualStart:copyTemplate.start}～${kind==='worked'?copyTemplate.actualEnd:copyTemplate.end}`;
+ $('copy-hint').textContent=`コピー先の日付を選択し、下のボタンで${kindName}をコピーします。登録済みの日付も上書きできます。コピー元は変更しません。`;
+ $('copy-apply').textContent=`✓ 選択した日にコピー`;
  closeModal();$('copy-wrap').classList.add('open');renderCopyCalendar();
-};
-function closeCopy(){$('copy-wrap').classList.remove('open')}
+}
+$('copy-shift').onclick=()=>beginShiftCopy('planned');
+$('copy-record').onclick=()=>beginShiftCopy('worked');
+function closeCopy(){$('copy-wrap').classList.remove('open');copySelected.clear()}
 $('copy-close').onclick=$('copy-cancel').onclick=closeCopy;
 $('copy-prev').onclick=()=>copyMonthStep(-1);$('copy-next').onclick=()=>copyMonthStep(1);
 $('copy-wrap').addEventListener('click',e=>{if(e.target===$('copy-wrap'))closeCopy()});
 $('copy-apply').onclick=()=>{
- let added=0,skipped=0;
- for(let date of [...copySelected].sort()){
-  if(data.shifts.some(x=>x.date===date)){skipped++;continue}
-  data.shifts.push({id:String(Date.now())+'-'+Math.random().toString(36).slice(2,9),date,start:copyTemplate.start,end:copyTemplate.end,planBreakStart:copyTemplate.planBreakStart||'',planBreakMin:copyTemplate.planBreakMin??'',actualStart:'',actualEnd:'',breakStart:'',breakMin:'',status:'planned'});added++;
+ if(!copyTemplate||!copySelected.size)return;
+ const dates=[...copySelected].sort().filter(date=>date!==copyTemplate.date);
+ const existingDates=dates.filter(date=>data.shifts.some(x=>x.date===date));
+ if(existingDates.length&&!confirm(`選択した${existingDates.length}日には勤務が登録されています。既存の勤務情報を上書きしますか？`))return;
+ let inserted=0,replaced=0;
+ for(const date of dates){
+  const old=data.shifts.filter(x=>x.date===date);
+  const entry={...copyTemplate,id:old[0]?.id||String(Date.now())+'-'+Math.random().toString(36).slice(2,9),date};
+  // Exactly one item remains on the date, even when old imported data had duplicates.
+  data.shifts=data.shifts.filter(x=>x.date!==date);
+  data.shifts.push(entry);
+  if(old.length)replaced++;else inserted++;
  }
  store();renderCal();renderPay();closeCopy();
- alert(`${added}日分の勤務予定をコピーしました。`+(skipped?` すでに勤務が登録されている${skipped}日分はコピーしませんでした。`:''));
+ alert(`${copyKind==='worked'?'勤務記録':'勤務予定'}を${inserted+replaced}日分コピーしました。${replaced?`（${replaced}日分は上書き）`:''}`);
 };
 // Monthly salary goal, saved independently by salary period.
 const goalKey='shiftpay-monthly-goals-v5';let goals={};try{goals=JSON.parse(localStorage.getItem(goalKey)||'{}')||{}}catch(e){}
@@ -3321,8 +3391,10 @@ receiveShortcutCalendar();
     before.style.display='';
     // If the selected period does not change, avoid a gratuitous slide.
     const y=cy,m=cm;
+    const fromHeight=calendarStage.getBoundingClientRect().height;
     go();
     if(y===cy&&m===cm)return;
+    const toHeight=calendarStage.getBoundingClientRect().height;
     const incoming=$(calMode==='calendar'?'calendar-card':'list-card');
     calendarStage.classList.add('is-changing-month');
     calendarStage.appendChild(before);ghost=before;
@@ -3337,12 +3409,16 @@ receiveShortcutCalendar();
       {transform:`translateX(${direction*distance}px)`,opacity:.78},
       {transform:'translateX(0)',opacity:1}
     ],{duration:230,easing:'cubic-bezier(.2,.78,.28,1)',fill:'both'});
-    currentSlide=[oldAnim,nextAnim];
+    const sizeAnim=Math.abs(fromHeight-toHeight)>1?calendarStage.animate([
+      {height:`${fromHeight}px`},{height:`${toHeight}px`}
+    ],{duration:230,easing:'cubic-bezier(.2,.78,.28,1)',fill:'both'}):null;
+    currentSlide=[oldAnim,nextAnim,...(sizeAnim?[sizeAnim]:[])];
     oldAnim.addEventListener('finish',()=>{
       if(ghost===before){before.remove();ghost=null;}
     },{once:true});
     nextAnim.addEventListener('finish',()=>{
       if(ghost===before){before.remove();ghost=null;}
+      sizeAnim?.cancel();
       calendarStage.classList.remove('is-changing-month');
       currentSlide=[];
     },{once:true});
@@ -3727,8 +3803,10 @@ receiveShortcutCalendar();
    prior.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
    prior.setAttribute('aria-hidden','true');
    const year=py,month=pm,isAnnual=annual;
+   const fromHeight=panel.getBoundingClientRect().height;
    update();
    if(year===py&&month===pm&&isAnnual===annual)return;
+   const toHeight=panel.getBoundingClientRect().height;
    // Only after the data update do we introduce the inert outgoing layer.
    panel.classList.add('is-changing-period');
    panel.appendChild(prior);ghost=prior;
@@ -3743,7 +3821,10 @@ receiveShortcutCalendar();
      {opacity:.72,transform:`translate3d(${direction*offset}px,0,0)`},
      {opacity:1,transform:'translate3d(0,0,0)'}
    ],{duration:235,easing:'cubic-bezier(.2,.78,.28,1)',fill:'both'}));
-   motion=[old,...arriving];
+   const sizeAnim=Math.abs(fromHeight-toHeight)>1?panel.animate([
+     {height:`${fromHeight}px`},{height:`${toHeight}px`}
+   ],{duration:235,easing:'cubic-bezier(.2,.78,.28,1)',fill:'both'}):null;
+   motion=[old,...arriving,...(sizeAnim?[sizeAnim]:[])];
    let remaining=arriving.length;
    const done=()=>{if(--remaining<=0){stop()}};
    arriving.forEach(a=>a.addEventListener('finish',done,{once:true}));
